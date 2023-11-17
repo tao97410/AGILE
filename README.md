@@ -1,2 +1,2 @@
 # AGILE
-Development of an entire project about a delivery system. 
+Development of an entire project of a delivery system. 
