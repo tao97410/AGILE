@@ -1,0 +1,50 @@
+@startuml
+
+class Intersection {
+    - id : long
+    - latitude : double
+    - longitude : double
+}
+
+class Segment {
+    - origin : Intersection
+    - destination : Intersection
+    - length : double
+    - name : String
+}
+
+class Map {
+    - intersections : HashMap<long, Intersection>
+    - adjacency : HashMap<long, List<Segment>>
+    - warehouse : Intersection
+    + getDestinationsById(long) : List<Segment>
+    + getIntersectionById(long) : Intersection
+}
+
+class Tour {
+    - course : List<Segment>
+    - courier : Courier
+    + getTotalLength() : double
+}
+
+class GlobalTour {
+    - tours : List<Tour>
+}
+
+class Courier {
+    - id : long
+    - name : String
+}
+
+Segment -> Intersection : use
+Map --> Intersection : use
+Map --> Segment : use
+Tour --> Segment : use
+Tour --> Courier : use
+GlobalTour -> Tour : use
+
+
+
+
+
+@enduml

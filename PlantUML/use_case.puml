@@ -1,0 +1,26 @@
+@startuml
+left to right direction
+actor "User" as usr
+rectangle CourierSystem {
+  usecase "Load map" as lmap
+  usecase "Save global tour" as stour
+  usecase "Load global tour" as ltour
+  usecase "Modify courier list" as modcour
+  usecase "Add courier" as addcour
+  usecase "Delete courier" as delcour
+  usecase "Plan a global tour" as newreq
+  usecase "Modify global tour" as modtour
+
+}
+
+usr --> lmap
+usr --> ltour
+usr ---> newreq
+usr --> modcour
+modcour <|-- addcour
+modcour <|- delcour
+lmap <.. newreq : include
+newreq <.. stour : extends
+ltour <.. modtour : extends
+
+@enduml

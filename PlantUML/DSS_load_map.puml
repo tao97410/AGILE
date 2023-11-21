@@ -1,0 +1,14 @@
+@startuml
+
+Actor user as user
+
+user -> HMI : onClickLoadAMap() 
+HMI -> user : openDialogBox()
+user --> HMI : :string : path of XML file
+HMI -> OpenMap : loadMap(xmlPath)
+OpenMap --> HMI : :parsedData
+HMI -> user : openDialogBox()
+
+
+
+@enduml
