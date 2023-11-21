@@ -24,7 +24,9 @@ class Map {
 class Tour {
     - course : List<Segment>
     - courier : Courier
+    - deliveryPoints : List<pair<Intersection, TIME_WINDOW>>
     + getTotalLength() : double
+    + addSegment(Segment) : void
 }
 
 class GlobalTour {
