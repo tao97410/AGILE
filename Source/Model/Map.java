@@ -16,6 +16,14 @@ public class Map {
         return this.intersections.get(id);
     }
 
+    public boolean hasIntersection (long id){
+        return intersections.get(id) != null;
+    }
+
+    public void addIntersection(Intersection inter){
+        intersections.put(inter.getId(),inter);
+    } 
+
     public List<Segment> getDestinationsById(long id){
         return this.adjacency.get(id);
     }

@@ -43,11 +43,11 @@ public class XMLdeserializer {
     private static void buildFromDOMXML(Element noeudDOMRacine, Map map) throws ExceptionXML, NumberFormatException{
        	NodeList intersectionsList = noeudDOMRacine.getElementsByTagName("intersection");
        	for (int i = 0; i < circleList.getLength(); i++) {
-        	map.add(createCircle((Element) intersectionsList.item(i)));
+        	map.addIntersection((createCircle((Element) intersectionsList.item(i))));
        	}
        	NodeList segmentList = noeudDOMRacine.getElementsByTagName("segment");
        	for (int i = 0; i < rectangleList.getLength(); i++) {
-          	map.add(createRectangle((Element) segmentList.item(i)));
+          	map.add(createRectangle((Element) segmentList.item(i),map));
        	}
     }
     
@@ -55,22 +55,23 @@ public class XMLdeserializer {
    		double latitude = Double.parseDouble(elt.getAttribute("latitude"));
    		double longitude = Double.parseDouble(elt.getAttribute("longitude"));
 		long id = Long.parseLong(elt.getAttribute("id"));
+		if(id<0)
+			throw new ExceptionXML("Error when reading file: The id of an intersection must be positive");
    		return new Intersection(id,latitude,longitude);
     }
     
-    private static Segment createSegment(Element elt) throws ExceptionXML{
-   		int x = Integer.parseInt(elt.getAttribute("x"));
-   		int y = Integer.parseInt(elt.getAttribute("y"));
-   		Point p = PointFactory.createPoint(x, y);
-   		if (p == null)
-   			throw new ExceptionXML("Error when reading file: Point coordinates must belong to the plan");
-      	int rectangleWidth = Integer.parseInt(elt.getAttribute("width"));
-   		if (rectangleWidth <= 0)
-   			throw new ExceptionXML("Error when reading file: Rectangle width must be positive");
-      	int rectangleHeight = Integer.parseInt(elt.getAttribute("height"));
-   		if (rectangleHeight <= 0)
-   			throw new ExceptionXML("Error when reading file: Rectangle height must be positive");
-   		return new Rectangle(p, rectangleWidth, rectangleHeight);
+    private static Segment createSegment(Element elt,Map map) throws ExceptionXML{
+   		long idDestination = Long.parseLong(elt.getAttribute("destination"));
+   		long idOrigin = Long.parseLong(elt.getAttribute("origin"));
+   		if (!map.hasIntersection(idOrigin) || !map.hasIntersection(idDestination))
+   			throw new ExceptionXML("Error when reading file: The origin and destination of a segment must be an existing intersection");
+		Intersection origin = map.getIntersectionById(idOrigin);
+		Intersection destination = map.getIntersectionById(idDestination);
+      	double length = Double.parseDouble(elt.getAttribute("length"));
+		if(length<=0)
+			throw new ExceptionXML("Error when reading file: The length of a segment must be positive");
+		String name = elt.getAttribute("name");
+   		return new Segment(origin, destination,length,name);
     }
  
 }
