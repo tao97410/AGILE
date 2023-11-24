@@ -1,3 +1,4 @@
+package model;
 public class Segment {
     private Intersection origin;
     private Intersection destination;

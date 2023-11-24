@@ -1,3 +1,4 @@
+package model;
 public class Courier {
     private long id;
     private String name;
