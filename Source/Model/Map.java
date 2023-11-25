@@ -1,5 +1,8 @@
 package model;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class Map {
     private HashMap<Long,Intersection> intersections;
@@ -25,33 +28,24 @@ public class Map {
     } 
 
     public void addSegment(Segment seg){
-        if (adjacency.containsKey(seg.getOrigin())){
+        if (adjacency.containsKey(seg.getOrigin().getId())){
             // If the origin exists, add the segment to the existing list
-            List<Segment> segmentList = adjacency.get(seg.getOrigin());
+            List<Segment> segmentList = adjacency.get(seg.getOrigin().getId());
             segmentList.add(seg);
         } else {
             // If the origin doesn't exist, create a new list with the segment and put it in the hashmap
             List<Segment> newSegmentList = new ArrayList<>();
             newSegmentList.add(seg);
-            adjacency.put(seg.getOrigin(), newSegmentList);
+            adjacency.put(seg.getOrigin().getId(), newSegmentList);
         }
-        if (adjacency.containsKey(seg.getDestination())) {
-            // If the destination exists, add the segment to the existing list
-            List<Segment> segmentList = adjacency.get(seg.getDestination());
-            segmentList.add(seg);
-        } else {
-            // If the destination doesn't exist, create a new list with the segment and put it in the hashmap
-            List<Segment> newSegmentList = new ArrayList<>();
-            newSegmentList.add(seg);
-            adjacency.put(seg.getDestination(), newSegmentList);
-        }
+        
     }
 
     public String toString(){
         StringBuilder result = new StringBuilder();
         result.append("warehouse:  ").append(warehouse.getId()).append("\n");
         int intersectionCount = 0;
-        for (Map.Entry<Long, Intersection> entry : intersections.entrySet()) {
+        for (Entry<Long, Intersection> entry : intersections.entrySet()) {
             if (intersectionCount >= 10) {
                 break;
             }
@@ -69,7 +63,7 @@ public class Map {
 
         // Iterate through the first ten adjacency entries
         int adjacencyCount = 0;
-        for (Map.Entry<Long, List<Segment>> entry : adjacency.entrySet()) {
+        for (Entry<Long, List<Segment>> entry : adjacency.entrySet()) {
             if (adjacencyCount >= 10) {
                 break;
             }

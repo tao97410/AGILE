@@ -47,10 +47,10 @@ public class XMLdeserializer {
        	}
        	NodeList segmentList = noeudDOMRacine.getElementsByTagName("segment");
        	for (int i = 0; i < segmentList.getLength(); i++) {
-          	map.addSegment(createSegement((Element) segmentList.item(i),map));
+          	map.addSegment(createSegment((Element) segmentList.item(i),map));
        	}
 		Element warehouseElem = (Element) noeudDOMRacine.getElementsByTagName("warehouse").item(0);
-		long warehouseId = warehouseElem.getAttribute("adress"); 
+		long warehouseId = Long.parseLong(warehouseElem.getAttribute("address")); 
 		if (!map.hasIntersection(warehouseId))
    			throw new ExceptionXML("Error when reading file: The adress of the warehouse must be an existing intersection");
 		Intersection warehouse = map.getIntersectionById(warehouseId);
