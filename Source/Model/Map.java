@@ -24,6 +24,81 @@ public class Map {
         intersections.put(inter.getId(),inter);
     } 
 
+    public void addSegment(Segment seg){
+        if (adjacency.containsKey(seg.getOrigin())){
+            // If the origin exists, add the segment to the existing list
+            List<Segment> segmentList = adjacency.get(seg.getOrigin());
+            segmentList.add(seg);
+        } else {
+            // If the origin doesn't exist, create a new list with the segment and put it in the hashmap
+            List<Segment> newSegmentList = new ArrayList<>();
+            newSegmentList.add(seg);
+            adjacency.put(seg.getOrigin(), newSegmentList);
+        }
+        if (adjacency.containsKey(seg.getDestination())) {
+            // If the destination exists, add the segment to the existing list
+            List<Segment> segmentList = adjacency.get(seg.getDestination());
+            segmentList.add(seg);
+        } else {
+            // If the destination doesn't exist, create a new list with the segment and put it in the hashmap
+            List<Segment> newSegmentList = new ArrayList<>();
+            newSegmentList.add(seg);
+            adjacency.put(seg.getDestination(), newSegmentList);
+        }
+    }
+
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+        result.append("warehouse:  ").append(warehouse.getId()).append("\n");
+        int intersectionCount = 0;
+        for (Map.Entry<Long, Intersection> entry : intersections.entrySet()) {
+            if (intersectionCount >= 10) {
+                break;
+            }
+
+            Long key = entry.getKey();
+            Intersection intersection = entry.getValue();
+            double latitude = intersection.getLatitude();
+            double longitude = intersection.getLongitude();
+
+            result.append(key).append(": ").append("Latitude: ").append(latitude)
+                    .append(", Longitude: ").append(longitude).append("\n");
+
+            intersectionCount++;
+        }
+
+        // Iterate through the first ten adjacency entries
+        int adjacencyCount = 0;
+        for (Map.Entry<Long, List<Segment>> entry : adjacency.entrySet()) {
+            if (adjacencyCount >= 10) {
+                break;
+            }
+
+            Long key = entry.getKey();
+            List<Segment> segmentList = entry.getValue();
+
+            result.append(key).append(": ");
+
+            // Append the names of segments separated by a comma
+            for (Segment segment : segmentList) {
+                result.append(segment.getName()).append(", ");
+            }
+
+            // Remove the trailing comma and space
+            if (!segmentList.isEmpty()) {
+                result.setLength(result.length() - 2);
+            }
+
+            result.append("\n");
+
+            adjacencyCount++;
+        }
+
+        return result.toString();
+    }
+         
+    
+
     public List<Segment> getDestinationsById(long id){
         return this.adjacency.get(id);
     }

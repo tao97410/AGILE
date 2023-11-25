@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Tour {
     private List<Segment> course;
-    private List<pair<Intersection, TIME_WINDOW>>;
+    private List<pair<Intersection, TIME_WINDOW>> delivery;
     private Courier courier;
 
     public Tour(Courier aCourier) {

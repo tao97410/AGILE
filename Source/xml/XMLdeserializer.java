@@ -42,13 +42,19 @@ public class XMLdeserializer {
 
     private static void buildFromDOMXML(Element noeudDOMRacine, Map map) throws ExceptionXML, NumberFormatException{
        	NodeList intersectionsList = noeudDOMRacine.getElementsByTagName("intersection");
-       	for (int i = 0; i < circleList.getLength(); i++) {
-        	map.addIntersection((createCircle((Element) intersectionsList.item(i))));
+       	for (int i = 0; i < intersectionsList.getLength(); i++) {
+        	map.addIntersection((createIntersection((Element) intersectionsList.item(i))));
        	}
        	NodeList segmentList = noeudDOMRacine.getElementsByTagName("segment");
-       	for (int i = 0; i < rectangleList.getLength(); i++) {
-          	map.add(createRectangle((Element) segmentList.item(i),map));
+       	for (int i = 0; i < segmentList.getLength(); i++) {
+          	map.addSegment(createSegement((Element) segmentList.item(i),map));
        	}
+		Element warehouseElem = (Element) noeudDOMRacine.getElementsByTagName("warehouse").item(0);
+		long warehouseId = warehouseElem.getAttribute("adress"); 
+		if (!map.hasIntersection(warehouseId))
+   			throw new ExceptionXML("Error when reading file: The adress of the warehouse must be an existing intersection");
+		Intersection warehouse = map.getIntersectionById(warehouseId);
+		map.setWarehouse(warehouse);		
     }
     
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
