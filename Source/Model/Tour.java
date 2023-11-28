@@ -51,12 +51,4 @@ public class Tour {
         this.deliveryPoints.add(point);
     }
 
-    public void addSegment(Segment segment){
-        this.course.add(segment);
-    }
-
-    public void addDeliveryPoint(DeliveryPoint point){
-        this.deliveryPoints.add(point);
-    }
-
 }

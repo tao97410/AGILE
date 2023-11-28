@@ -101,14 +101,12 @@ public class Map {
      * @return HashMap<long,Intersection> return the intersections
      */
     public HashMap<Long,Intersection> getIntersections() {
-    public HashMap<Long,Intersection> getIntersections() {
         return intersections;
     }
 
     /**
      * @param intersections the intersections to set
      */
-    public void setIntersections(HashMap<Long,Intersection> intersections) {
     public void setIntersections(HashMap<Long,Intersection> intersections) {
         this.intersections = intersections;
     }
@@ -117,14 +115,12 @@ public class Map {
      * @return HashMap<long,List<Segment>> return the adjacency
      */
     public HashMap<Long,List<Segment>> getAdjacency() {
-    public HashMap<Long,List<Segment>> getAdjacency() {
         return adjacency;
     }
 
     /**
      * @param adjacency the adjacency to set
      */
-    public void setAdjacency(HashMap<Long,List<Segment>> adjacency) {
     public void setAdjacency(HashMap<Long,List<Segment>> adjacency) {
         this.adjacency = adjacency;
     }

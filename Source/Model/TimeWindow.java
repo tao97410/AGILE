@@ -1,3 +1,5 @@
+package model;
+
 public enum TimeWindow {
     EIGHT_NINE,
     NINE_TEN,
