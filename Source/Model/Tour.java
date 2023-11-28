@@ -1,3 +1,4 @@
+package model;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,18 @@ public class Tour {
     }
 
     /**
-     * @param courier the courier to set
-     */
+      * @param courier the courier to set
+      */
     public void setCourier(Courier courier) {
-        this.courier = courier;
+         this.courier = courier;
+    }
+
+    public void addSegment(Segment segment){
+        this.course.add(segment);
+    }
+
+    public void addDeliveryPoint(DeliveryPoint point){
+        this.deliveryPoints.add(point);
     }
 
     public void addSegment(Segment segment){

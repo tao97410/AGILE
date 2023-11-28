@@ -1,3 +1,4 @@
+package model;
 public class Intersection {
     private long id;
     private double latitude;
