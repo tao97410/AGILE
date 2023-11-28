@@ -1,4 +1,4 @@
-package model;
+package h4131.model;
 public class Intersection {
     private long id;
     private double latitude;

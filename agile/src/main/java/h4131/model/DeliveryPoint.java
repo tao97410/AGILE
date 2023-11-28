@@ -1,4 +1,4 @@
-package model;
+package h4131.model;
 public class DeliveryPoint {
     private Intersection place;
     private TimeWindow time;

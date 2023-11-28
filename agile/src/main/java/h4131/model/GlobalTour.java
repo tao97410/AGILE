@@ -1,4 +1,4 @@
-package model;
+package h4131.model;
 import java.util.List;
 
 public class GlobalTour {

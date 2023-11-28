@@ -1,4 +1,4 @@
-package xml;
+package h4131.xml;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,9 +17,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import model.Intersection;
-import model.Map;
-import model.Segment;
+import h4131.model.Intersection;
+import h4131.model.Map;
+import h4131.model.Segment;
 
 public class SVGCreator {
     

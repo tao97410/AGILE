@@ -1,5 +1,6 @@
 package h4131.view;
 
+import h4131.xml.SVGCreator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -37,6 +38,7 @@ public class HomeSceneController {
     
     @FXML
     void doLoadTour(ActionEvent event) {
+        SVGCreator.createSvg();
         System.out.println("load tour");
     }
 

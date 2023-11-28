@@ -1,4 +1,4 @@
-package model;
+package h4131.model;
 
 public enum TimeWindow {
     EIGHT_NINE,

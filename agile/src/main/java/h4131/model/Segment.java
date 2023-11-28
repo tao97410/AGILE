@@ -1,4 +1,4 @@
-package model;
+package h4131.model;
 public class Segment {
     private Intersection origin;
     private Intersection destination;

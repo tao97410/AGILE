@@ -1,4 +1,4 @@
-package model;
+package h4131.model;
 public class Courier {
     private long id;
     private String name;
