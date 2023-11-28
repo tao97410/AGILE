@@ -1,13 +1,15 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Tour {
     private List<Segment> course;
-    private List<pair<Intersection, TIME_WINDOW>>;
+    private List<DeliveryPoint> deliveryPoints;
     private Courier courier;
 
     public Tour(Courier aCourier) {
         this.courier = aCourier;
-        this.course = new List<>();
+        this.course = new ArrayList<>();
+        this.deliveryPoints = new ArrayList<>();
     }
 
     
@@ -38,6 +40,14 @@ public class Tour {
      */
     public void setCourier(Courier courier) {
         this.courier = courier;
+    }
+
+    public void addSegment(Segment segment){
+        this.course.add(segment);
+    }
+
+    public void addDeliveryPoint(DeliveryPoint point){
+        this.deliveryPoints.add(point);
     }
 
 }

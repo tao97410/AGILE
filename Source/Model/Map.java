@@ -1,8 +1,9 @@
 import java.util.HashMap;
+import java.util.List;
 
 public class Map {
-    private HashMap<long,Intersection> intersections;
-    private HashMap<long,List<Segment>> adjacency;
+    private HashMap<Long,Intersection> intersections;
+    private HashMap<Long,List<Segment>> adjacency;
     private Intersection warehouse;
 
     public Map(Intersection aWarehouse){
@@ -22,28 +23,28 @@ public class Map {
     /**
      * @return HashMap<long,Intersection> return the intersections
      */
-    public HashMap<long,Intersection> getIntersections() {
+    public HashMap<Long,Intersection> getIntersections() {
         return intersections;
     }
 
     /**
      * @param intersections the intersections to set
      */
-    public void setIntersections(HashMap<long,Intersection> intersections) {
+    public void setIntersections(HashMap<Long,Intersection> intersections) {
         this.intersections = intersections;
     }
 
     /**
      * @return HashMap<long,List<Segment>> return the adjacency
      */
-    public HashMap<long,List<Segment>> getAdjacency() {
+    public HashMap<Long,List<Segment>> getAdjacency() {
         return adjacency;
     }
 
     /**
      * @param adjacency the adjacency to set
      */
-    public void setAdjacency(HashMap<long,List<Segment>> adjacency) {
+    public void setAdjacency(HashMap<Long,List<Segment>> adjacency) {
         this.adjacency = adjacency;
     }
 
