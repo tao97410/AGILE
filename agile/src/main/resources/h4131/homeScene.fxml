@@ -28,7 +28,7 @@
          </toggleGroup></RadioButton>
       <RadioButton fx:id="bigMapButton" mnemonicParsing="false" text="Big map" toggleGroup="$mapChoice" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
       <RadioButton fx:id="mediumMapButton" mnemonicParsing="false" selected="true" text="Medium Map" toggleGroup="$mapChoice" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-      <Button fx:id="createTourButton" mnemonicParsing="false" onAction="#doCreateDeliveryTour" text="Create a delivery tour" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+      <Button fx:id="createTourButton" mnemonicParsing="false" onAction="#doCreateTour" text="Create a delivery tour" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
       <Button fx:id="loadTourButton" mnemonicParsing="false" onAction="#doLoadTour" text="Load a tour from an XML file" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Button fx:id="manageCourriersButton" mnemonicParsing="false" onAction="#doManageCouriers" text="Manage your couriers" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
    </children>

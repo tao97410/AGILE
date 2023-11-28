@@ -1,5 +1,6 @@
 package h4131.view;
 
+import h4131.controller.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,6 +8,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 
 public class HomeSceneController {
+
+    private Controller controller;
 
     @FXML
     private RadioButton bigMapButton;
@@ -29,8 +32,16 @@ public class HomeSceneController {
     @FXML
     private RadioButton smallMapButton;
 
+    /**
+	 * Method called by the windowBuilder to set the controller when creating homeScene
+	 * @param c the global controller of the application
+	 */
+    public void setController(Controller c){
+        this.controller = c;
+    }
+
     @FXML
-    void doCreateDeliveryTour(ActionEvent event) {
+    void doCreateTour(ActionEvent event) {
         RadioButton selectedMapButton = (RadioButton) mapChoice.getSelectedToggle();
         System.out.println("create delivery tour with the " + selectedMapButton.getText());
     }
@@ -38,6 +49,7 @@ public class HomeSceneController {
     @FXML
     void doLoadTour(ActionEvent event) {
         System.out.println("load tour");
+        controller.loadGlobalTour();
     }
 
     @FXML

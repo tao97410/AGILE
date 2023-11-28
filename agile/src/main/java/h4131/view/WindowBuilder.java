@@ -2,6 +2,7 @@ package h4131.view;
 
 import java.io.IOException;
 
+import h4131.controller.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,11 +13,16 @@ public class WindowBuilder {
 
     Stage stage;
     Parent root;
+    Controller controller;
 
-    public WindowBuilder(Stage primaryStage){
+    public WindowBuilder(Controller controller, Stage primaryStage){
+        this.controller = controller;
         this.stage = primaryStage;
         try {
-            this.root = FXMLLoader.load(getClass().getResource("/h4131/homeScene.fxml"));
+            FXMLLoader homeSceneLoader = new FXMLLoader(getClass().getResource("/h4131/homeScene.fxml"));
+            this.root = homeSceneLoader.load();
+            HomeSceneController homeSceneController = homeSceneLoader.getController();
+            homeSceneController.setController(controller);
 
             Image icon = new Image(getClass().getResourceAsStream("/h4131/insa_logo.png"));
             stage.getIcons().add(icon);
