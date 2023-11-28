@@ -16,9 +16,4 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         WindowBuilder windowBuilder = new WindowBuilder(stage);
     }
-
-    public static void main(String[] args) {
-        launch();
-    }
-
 }

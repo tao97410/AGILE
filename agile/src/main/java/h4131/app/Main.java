@@ -1,7 +1,9 @@
 package h4131.app;
 
+import javafx.application.Application;
+
 public class Main {
     public static void main(String [] args){
-        App.main(args);
+        Application.launch(App.class, args);
     }
 }
