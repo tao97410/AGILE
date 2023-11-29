@@ -24,3 +24,7 @@ Button {
 Button:hover {
     -fx-text-fill: red;
 }
+
+Circle:hover {
+    -fx-fill: blue;
+}
