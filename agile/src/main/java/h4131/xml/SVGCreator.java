@@ -23,7 +23,7 @@ import h4131.model.Segment;
 
 public class SVGCreator {
     
-    public static void createSvg(){
+    public static void createSvg(double screenHeight){
 
         Map map = new Map(null);
         
@@ -58,14 +58,14 @@ public class SVGCreator {
                 Intersection origine = map.getIntersectionById(key);
                 List<Segment> segments = entry.getValue();
                 for(int i = 0; i<segments.size(); i++){
-                    drawSegment(svgRootElement, segments.get(i), map, latMin, latMax, longMin, longMax, origine);
+                    drawSegment(svgRootElement, segments.get(i), map, latMin, latMax, longMin, longMax, origine, screenHeight);
                 }
             }
-            writeToSvgFile(svgRootElement, "output.svg"); // Remplacez "output.svg" par le nom de fichier de sortie souhaité
+            writeToSvgFile(svgRootElement, "src/main/resources/h4131/output.svg");
 
             svgRootElement.appendChild(svgRootElement.getOwnerDocument().createElement("desc"));
 
-            saveSvgToFile(svgRootElement, "output.svg");
+            saveSvgToFile(svgRootElement, "src/main/resources/h4131/output.svg");
 
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             // TODO Auto-generated catch block
@@ -79,19 +79,21 @@ public class SVGCreator {
         try {
             docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
-            return doc.createElement("svg");
+            Element element = doc.createElement("svg");
+            element.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+            return element;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private static void drawSegment(Element svgRootElement, Segment segment, Map map, double latMin, double latMax, double longMin, double longMax, Intersection origine) {
+    private static void drawSegment(Element svgRootElement, Segment segment, Map map, double latMin, double latMax, double longMin, double longMax, Intersection origine, double height) {
         
-        double originX = ((origine.getLongitude() - longMin) / (longMax - longMin)) * 800.0;
-        double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * 800.0;
-        double originY = 800.0 - ((origine.getLatitude() - latMin) / (latMax - latMin)) * 800.0;
-        double destY = 800.0 - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * 800.0;
+        double originX = ((origine.getLongitude() - longMin) / (longMax - longMin)) * height;
+        double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * height;
+        double originY = height - ((origine.getLatitude() - latMin) / (latMax - latMin)) * height;
+        double destY = height - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * height;
 
         // Ajouter un trait au fichier SVG (vous devez remplacer ces valeurs par les coordonnées calculées)
         Element line = svgRootElement.getOwnerDocument().createElement("line");
@@ -106,7 +108,7 @@ public class SVGCreator {
         dot.setAttribute("cx", Double.toString(originX));
         dot.setAttribute("cy", Double.toString(originY));
         dot.setAttribute("r", "2");
-        dot.setAttribute("style", "fill:transparent");
+        dot.setAttribute("style", "fill:black");
         svgRootElement.appendChild(dot);
 
 
@@ -125,7 +127,6 @@ public class SVGCreator {
         }
     }
 
-    // Ajoutez cette fonction à votre classe
     private static void saveSvgToFile(Element svgRootElement, String fileName) {
         try {
             // Créer une source DOM pour la transformation

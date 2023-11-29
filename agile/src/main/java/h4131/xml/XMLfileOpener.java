@@ -3,8 +3,6 @@ package h4131.xml;
 import java.io.File;
 
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.*;
-import javafx.stage.Stage;
 
 public class XMLfileOpener {// Singleton
 	

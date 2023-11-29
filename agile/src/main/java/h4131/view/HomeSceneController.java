@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.Screen;
 
 public class HomeSceneController {
 
@@ -48,8 +49,8 @@ public class HomeSceneController {
     
     @FXML
     void doLoadTour(ActionEvent event) {
-        System.out.println("load tour");
-        controller.loadGlobalTour();
+        Screen screen = Screen.getPrimary();
+        controller.loadGlobalTour(screen.getVisualBounds().getHeight());
     }
 
     @FXML

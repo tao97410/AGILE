@@ -12,12 +12,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import h4131.model.Courier;
 import h4131.model.Map;
 import h4131.model.Intersection;
 import h4131.model.Segment;
-import h4131.model.Tour;
-import h4131.view.WindowBuilder;
 
 
 public class XMLdeserializer {

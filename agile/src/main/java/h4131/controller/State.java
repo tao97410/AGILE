@@ -7,8 +7,9 @@ public interface State {
 	 * Method called by the controller after a click on the button "load a tour"
 	 * @param c the controller
 	 * @param w the window
+	 * @param screenHeight
 	 */
-	public default void loadGlobalTour(Controller c, WindowBuilder w){};
+	public default void loadGlobalTour(Controller c, WindowBuilder w, double screenHeight){};
 	
 	/**
 	 * Method called by the controller after a click on the button "Create tour"
