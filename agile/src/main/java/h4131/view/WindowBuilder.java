@@ -54,9 +54,12 @@ public class WindowBuilder {
             WebView webView = loadTourSceneController.getWebView();
             URL url = getClass().getResource("/h4131/output.svg");
             webView.getEngine().load(url.toExternalForm());
+            Screen screen = Screen.getPrimary();
+            webView.setPrefHeight(screen.getVisualBounds().getHeight());
+            webView.setPrefWidth(screen.getVisualBounds().getWidth());
+            webView.setCache(true);
 
             stage.setScene(new Scene(root));           
-            Screen screen = Screen.getPrimary();
             stage.setWidth(screen.getVisualBounds().getWidth());
             stage.setHeight(screen.getVisualBounds().getHeight());
 

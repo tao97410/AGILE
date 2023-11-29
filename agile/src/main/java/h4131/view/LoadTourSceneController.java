@@ -1,11 +1,9 @@
 package h4131.view;
 
 import h4131.controller.Controller;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebView;
 
@@ -13,12 +11,42 @@ public class LoadTourSceneController {
 
     private Controller controller;
     private double scaleFactor = 1.0;
+    private double lastX;
+    private double lastY;
 
     @FXML
     private WebView webView;
     
     @FXML
     private ScrollPane scrollPane;
+
+    public void initialize(){
+        addZoomingFunctionality();
+    }
+
+    @FXML
+    void handleMouseDragEntered(MouseDragEvent event) {
+        lastX = event.getX();
+        lastY = event.getY();
+        System.out.println("mouse pressed");
+    }
+
+    @FXML
+    void handleMouseDragReleased(MouseDragEvent event) {
+        System.out.println("mouse dragged");
+        double deltaX = event.getX() - lastX;
+        double deltaY = event.getY() - lastY;
+
+        double hValue = scrollPane.getHvalue();
+        double vValue = scrollPane.getVvalue();
+
+        // Ajuster les valeurs horizontales et verticales en fonction du déplacement de la souris
+        scrollPane.setHvalue(hValue - deltaX / webView.getWidth());
+        scrollPane.setVvalue(vValue - deltaY / webView.getHeight());
+
+        lastX = event.getX();
+        lastY = event.getY();
+    }
 
     /**
 	 * Method called by the windowBuilder to set the controller when creating loadTourScene
@@ -32,13 +60,8 @@ public class LoadTourSceneController {
         return webView;
     }
 
-    public void initialize() {
-        addZoomingFunctionality();
-        addPanningFunctionality();
-    }
-
     private void addZoomingFunctionality() {
-        webView.addEventFilter(ScrollEvent.ANY, event -> {
+        webView.addEventFilter(ScrollEvent.SCROLL, event -> {
             if (event.getDeltaY() == 0) {
                 return;
             }
@@ -51,27 +74,8 @@ public class LoadTourSceneController {
             webView.setZoom(scaleFactor);
             event.consume();
         });
+        
     }
 
-    private void addPanningFunctionality() {
-        final ObjectProperty<Point2D> lastMouseCoordinates = new SimpleObjectProperty<>();
-
-        webView.setOnMousePressed(event -> {
-            lastMouseCoordinates.set(new Point2D(event.getX(), event.getY()));
-        });
-
-        webView.setOnMouseDragged(event -> {
-            double deltaX = event.getX() - lastMouseCoordinates.get().getX();
-            double deltaY = event.getY() - lastMouseCoordinates.get().getY();
-
-            double width = scrollPane.getContent().getBoundsInLocal().getWidth();
-            double vValue = scrollPane.getVvalue();
-            double hValue = scrollPane.getHvalue();
-
-            scrollPane.setHvalue(hValue - deltaX / width);
-            scrollPane.setVvalue(vValue - deltaY / width);
-
-            lastMouseCoordinates.set(new Point2D(event.getX(), event.getY()));
-        });
-    }
+    
 }

@@ -8,9 +8,9 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.LoadTourSceneController">
     <children>
-        <ScrollPane fx:id="scrollPane">
+        <ScrollPane fx:id="scrollPane" onMouseDragEntered="#handleMouseDragEntered" onMouseDragReleased="#handleMouseDragReleased">
             <content>
-                <WebView fx:id="webView" prefHeight="1017.0" prefWidth="1920.0" />
+                <WebView fx:id="webView" />
             </content>
         </ScrollPane>
     </children>
