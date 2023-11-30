@@ -29,6 +29,6 @@ IntersectionCircle:hover {
     -fx-fill: red;
 }
 
-Pane {
+Pane, VBox, Group, StackPane {
     -fx-background-color: rgb(40, 40, 40);
 }
