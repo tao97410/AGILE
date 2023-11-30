@@ -25,6 +25,10 @@ Button:hover {
     -fx-text-fill: red;
 }
 
-Circle:hover {
-    -fx-fill: blue;
+IntersectionCircle:hover {
+    -fx-fill: red;
+}
+
+Pane {
+    -fx-background-color: rgb(40, 40, 40);
 }
