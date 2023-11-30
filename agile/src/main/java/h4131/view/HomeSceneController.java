@@ -45,6 +45,8 @@ public class HomeSceneController {
     void doCreateTour(ActionEvent event) {
         RadioButton selectedMapButton = (RadioButton) mapChoice.getSelectedToggle();
         System.out.println("create delivery tour with the " + selectedMapButton.getText());
+        Screen screen = Screen.getPrimary();
+        controller.createTour(screen.getVisualBounds().getHeight());
     }
     
     @FXML

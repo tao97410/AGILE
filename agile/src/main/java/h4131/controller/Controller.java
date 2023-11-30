@@ -41,8 +41,8 @@ public class Controller {
     /**
 	 * Method called after click on button "Create a tour"
 	 */
-	public void createTour() {
-		currentState.createTour(this, windowBuilder);
+	public void createTour(double screenHeight) {
+		currentState.createTour(this, windowBuilder, screenHeight);
 	}
 
     /**

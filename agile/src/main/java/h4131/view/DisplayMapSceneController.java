@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 
@@ -47,6 +48,12 @@ public class DisplayMapSceneController {
         if(event.getSource() instanceof IntersectionCircle){
             IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
             System.out.println(intersectionClicked.getIntersectionId());
+            if(intersectionClicked.getStroke() == Color.RED){
+                intersectionClicked.setStroke(null);
+            }else{
+                intersectionClicked.setStroke(Color.RED);
+            }
+            
             //controller.leftclick(intersectionClicked.getIntersectionId());
         }
 	} 

@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import h4131.controller.Controller;
+import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.Segment;
+import h4131.model.Tour;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -47,7 +49,7 @@ public class WindowBuilder {
         }       
     }
 
-    public void drawMap(Map map){
+    public void drawMapAndGlobalTour(Map map, GlobalTour globalTour){
         // Get screen dimensions
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -114,6 +116,23 @@ public class WindowBuilder {
                 addCircle(shapesPane, intersectionX, intersectionY, 4, intersection.getId(), displayMapSceneController);
             }
 
+            //drawing tours if necessary
+            if(globalTour != null){
+                System.out.println(globalTour);
+                int color = 0;   
+                for(Tour tour : globalTour.getTours()){             
+                    for(Segment segment : tour.getCourse()){
+                        double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                        double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+                        double originY = screenHeight - ((segment.getOrigin().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                        double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+
+                        addLineTour(shapesPane, originX, originY, destX, destY, color);
+                    }
+                    color++;
+                }
+            }
+
             Scene scene = new Scene(root, screenWidth, screenHeight);
             stage.setScene(scene);
             
@@ -132,6 +151,14 @@ public class WindowBuilder {
     private void addLine(Pane pane, double startX, double startY, double endX, double endY) {
         Line line = new Line(startX, startY, endX, endY);
         line.setStroke(Color.WHITE);
+        pane.getChildren().add(line);
+    }
+
+    private void addLineTour(Pane pane, double startX, double startY, double endX, double endY, int color) {
+        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
+        Line line = new Line(startX, startY, endX, endY);
+        line.setStroke(colors[(color%6)]);
+        line.setStrokeWidth(2.0);
         pane.getChildren().add(line);
     }
 }

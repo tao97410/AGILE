@@ -2,6 +2,7 @@ package h4131.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,9 +13,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import h4131.model.Courier;
+import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Intersection;
 import h4131.model.Segment;
+import h4131.model.Tour;
+import h4131.model.TimeWindow;
+import h4131.model.DeliveryPoint;
+import h4131.view.WindowBuilder;
 
 
 public class XMLdeserializer {
@@ -26,19 +33,26 @@ public class XMLdeserializer {
 	 * @throws IOException
 	 * @throws ExceptionXML
 	 */
-	public static void load(Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
-		File xml = XMLfileOpener.getInstance().open(true);
+
+	private static Element openFile(String fileType) throws ExceptionXML, ParserConfigurationException, SAXException, IOException{
+		File xml = XMLfileOpener.getInstance().open(true, fileType);
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();	
         Document document = docBuilder.parse(xml);
         Element root = document.getDocumentElement();
+		return root;
+	} 
+
+	/////////////////MAP////////////////////////////////
+	public static void loadMap(Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+		Element root = openFile("Choose a map");
         if (root.getNodeName().equals("map")) {
-           buildFromDOMXML(root, map);
+           buildFromDOMXMLMap(root, map);
         }
         else
         	throw new ExceptionXML("Wrong format");
 	}
-
-    private static void buildFromDOMXML(Element noeudDOMRacine, Map map) throws ExceptionXML, NumberFormatException{
+	
+    private static void buildFromDOMXMLMap(Element noeudDOMRacine, Map map) throws ExceptionXML, NumberFormatException{
        	NodeList intersectionsList = noeudDOMRacine.getElementsByTagName("intersection");
        	for (int i = 0; i < intersectionsList.getLength(); i++) {
         	map.addIntersection((createIntersection((Element) intersectionsList.item(i))));
@@ -54,6 +68,24 @@ public class XMLdeserializer {
 		Intersection warehouse = map.getIntersectionById(warehouseId);
 		map.setWarehouse(warehouse);		
     }
+	//////////////////GLOBAL TOUR////////////////////////////
+	public static void loadGlobalTour(GlobalTour gt,Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+		Element root = openFile("Choose a tour");
+        if (root.getNodeName().equals("globalTour")) {
+           buildFromDOMXMLGT(root, gt,map);
+        }
+        else
+        	throw new ExceptionXML("Wrong format");
+	}
+	
+    private static void buildFromDOMXMLGT(Element noeudDOMRacine, GlobalTour gt,Map map) throws ExceptionXML, NumberFormatException{
+		NodeList TourList = noeudDOMRacine.getElementsByTagName("tour");
+		for(int i =0;i<TourList.getLength();i++){
+			gt.addTour(createTour((Element)TourList.item(i),map));
+		}
+       		
+    }
+
     
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
    		double latitude = Double.parseDouble(elt.getAttribute("latitude"));
@@ -77,5 +109,39 @@ public class XMLdeserializer {
 		String name = elt.getAttribute("name");
    		return new Segment(origin, destination,length,name);
     }
+
+	private static Tour createTour(Element elt,Map map) throws ExceptionXML{
+		long CourierId = Long.parseLong(elt.getAttribute("courierId"));
+		if(CourierId<0){
+			throw new ExceptionXML("Error when reading file: The id of the courier must be positive");
+		}
+		String CourierName = "Livreur " + elt.getAttribute("courierId");
+		Courier courier = new Courier(CourierId, CourierName);
+		Tour tour = new Tour(courier);
+		NodeList routes = elt.getElementsByTagName("route");
+		NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
+		for (int i=0; i<deliverypointList.getLength(); i++ ){
+			DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
+			tour.addDeliveryPoint(deliveryPoint);
+		}
+		for (int i=0; i<routes.getLength(); i++ ){
+			Segment route = createSegment((Element) routes.item(i), map);
+			tour.addSegment(route);
+		}
+		return tour;
+		
+	}
+
+	private static DeliveryPoint createDeliveryPoint(Element elt, Map map) throws ExceptionXML{
+		TimeWindow[] timeWindows = TimeWindow.values();
+		long idDP = Long.parseLong(elt.getAttribute("idIntersection"));
+			if(!map.hasIntersection(idDP))
+				throw new ExceptionXML("Error when reading file: The delivery points must exist in the loaded map");
+			Intersection intersectionDP = map.getIntersectionById(idDP);
+			int TWindex = Integer.parseInt(elt.getAttribute("timeWindow"));
+			if(TWindex<0 || TWindex>3)
+				throw new ExceptionXML("Error when reading file: The time window doesn't correspond to anything");//a changer
+			return new DeliveryPoint(intersectionDP,timeWindows[TWindex]);
+	} 
  
 }

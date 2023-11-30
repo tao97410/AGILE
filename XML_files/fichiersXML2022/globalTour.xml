@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<globalTour>
+<tour courierId="1">
+<route destination="2129259180" length="122.619156" name="Rue Bara" origin="25303831"/>
+<route destination="2129259178" length="25.26484" name="" origin="2129259180"/>
+<route destination="25303831" length="118.890465" name="Avenue Lacassagne" origin="2129259178"/>
+<deliveryPoint idIntersection="2129259180" timeWindow="0" />
+<deliveryPoint idIntersection="2129259178" timeWindow="1"/>
+</tour>
+<tour courierId="2">
+<route destination="194605201" length="155.09645" name="Avenue Franklin Roosevelt" origin="194610463"/>
+<route destination="194605205" length="7.4975743" name="Avenue Franklin Roosevelt" origin="194605201"/>
+<route destination="194605210" length="13.703798" name="Avenue Franklin Roosevelt" origin="194605205"/>
+<route destination="245023220" length="257.00735" name="Rue Docteur Charles Faguin" origin="194605210"/>
+<route destination="245023208" length="65.48641" name="Rue du Square" origin="245023220"/>
+<deliveryPoint idIntersection="194605210" timeWindow="0" />
+<deliveryPoint idIntersection="245023208" timeWindow="1"/>
+</tour>
+</globalTour>

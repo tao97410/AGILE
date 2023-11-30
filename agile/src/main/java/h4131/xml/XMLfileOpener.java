@@ -15,9 +15,9 @@ public class XMLfileOpener {// Singleton
 	}
 
 
- 	public File open(boolean read ) throws ExceptionXML{
+ 	public File open(boolean read, String fileType ) throws ExceptionXML{
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Resource File");
+		fileChooser.setTitle(fileType);
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
         File selectedFile = (fileChooser.showOpenDialog(null));
 		if (accept(selectedFile)){

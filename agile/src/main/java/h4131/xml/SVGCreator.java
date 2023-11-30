@@ -28,7 +28,7 @@ public class SVGCreator {
         Map map = new Map(null);
         
         try {
-            XMLdeserializer.load(map);
+            XMLdeserializer.loadMap(map);
             double longMax = 0;
             double longMin = 1000;
             double latMax = 0;
