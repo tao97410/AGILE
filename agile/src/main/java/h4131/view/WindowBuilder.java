@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import h4131.controller.Controller;
+import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
@@ -144,6 +145,13 @@ public class WindowBuilder {
 
                         addLineTour(shapesPane, originX, originY, destX, destY, color);
                     }
+                    for(DeliveryPoint deliveryPoint : tour.getDeliveryPoints()){
+                        Intersection intersection = deliveryPoint.getPlace();
+                        double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+                        double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                        addCircleTour(shapesPane, intersectionX, intersectionY, 2, intersection.getId(), displayMapSceneController, color);
+
+                    }
                     color++;
                 }
             }
@@ -184,5 +192,13 @@ public class WindowBuilder {
         line.setStroke(colors[(color%6)]);
         line.setStrokeWidth(2.0);
         pane.getChildren().add(line);
+    }
+    
+    private void addCircleTour(Pane pane, double x, double y, double radius, Long intersectionId, DisplayMapSceneController sceneController, int color) {
+        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
+        IntersectionCircle circle = new IntersectionCircle(x, y, radius, Color.TRANSPARENT, intersectionId);
+        circle.setOnMouseClicked(sceneController::handleIntersectionClicked);
+        circle.setStroke(colors[(color%6)]);
+        pane.getChildren().add(circle);
     }
 }

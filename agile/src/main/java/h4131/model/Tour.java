@@ -43,6 +43,10 @@ public class Tour {
          this.courier = courier;
     }
 
+    public List<DeliveryPoint> getDeliveryPoints(){
+        return this.deliveryPoints;
+    }
+
     public void addSegment(Segment segment){
         this.course.add(segment);
     }
