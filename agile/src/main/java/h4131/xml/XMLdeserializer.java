@@ -118,7 +118,7 @@ public class XMLdeserializer {
    		return new Segment(origin, destination,length,name);
     }
 
-	private static Tour createTour(Element elt,Map map) throws ExceptionXML{
+	private static Tour createTour(Element elt, Map map) throws ExceptionXML{
 		long CourierId = Long.parseLong(elt.getAttribute("courierId"));
 		if(CourierId<0){
 			throw new ExceptionXML("Error when reading file: The id of the courier must be positive");
@@ -144,7 +144,7 @@ public class XMLdeserializer {
 		TimeWindow[] timeWindows = TimeWindow.values();
 		long idDP = Long.parseLong(elt.getAttribute("idIntersection"));
 			if(!map.hasIntersection(idDP))
-				throw new ExceptionXML("Error when reading file: The delivery points must exist in the loaded map");
+				throw new ExceptionXML("Error when reading global tour file: The delivery points must exist in the loaded map");
 			Intersection intersectionDP = map.getIntersectionById(idDP);
 			int TWindex = Integer.parseInt(elt.getAttribute("timeWindow"));
 			if(TWindex<0 || TWindex>3)

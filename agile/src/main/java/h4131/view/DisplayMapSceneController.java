@@ -52,9 +52,6 @@ public class DisplayMapSceneController {
         controller.loadGlobalTour();
     }
 
-    public void setChoiceBoxValue(String value){
-        mapChoiceBox.setValue(value);
-    }
     /**
 	 * Method called by the windowBuilder to set the controller when creating homeScene
 	 * @param c the global controller of the application
@@ -78,7 +75,6 @@ public class DisplayMapSceneController {
 		
         if(event.getSource() instanceof IntersectionCircle){
             IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            System.out.println(intersectionClicked.getIntersectionId());
             if(intersectionClicked.getStroke() == Color.RED){
                 intersectionClicked.setStroke(null);
             }else{
@@ -95,9 +91,9 @@ public class DisplayMapSceneController {
 	public void handleIntersectionEntered(MouseEvent event) {
 		
         if(event.getSource() instanceof IntersectionCircle){
-            IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            intersectionClicked.setFill(Color.RED);
-            intersectionClicked.setCursor(Cursor.HAND);
+            IntersectionCircle intersection = (IntersectionCircle) event.getSource();
+            intersection.setFill(Color.RED);
+            intersection.setCursor(Cursor.HAND);
         }
 	} 
 
@@ -107,9 +103,33 @@ public class DisplayMapSceneController {
 	public void handleIntersectionExited(MouseEvent event) {
 		
         if(event.getSource() instanceof IntersectionCircle){
-            IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            intersectionClicked.setFill(Color.TRANSPARENT);
-            intersectionClicked.setCursor(Cursor.DEFAULT);
+            IntersectionCircle intersection = (IntersectionCircle) event.getSource();
+            intersection.setFill(Color.TRANSPARENT);
+            intersection.setCursor(Cursor.DEFAULT);
+        }
+	} 
+
+    /**
+	 * Method called after the cursor entered a segment on the map
+	 */
+	public void handleSegmentEntered(MouseEvent event) {
+
+        if(event.getSource() instanceof SegmentLine){
+            SegmentLine segment = (SegmentLine) event.getSource();
+            segment.setPreviousColor(segment.getStroke());
+            segment.setStroke(Color.RED);
+            segment.setCursor(Cursor.DEFAULT);
+        }
+	} 
+
+    /**
+	 * Method called after the cursor exited an segment on the map
+	 */
+	public void handleSegmentExited(MouseEvent event) {
+		
+        if(event.getSource() instanceof SegmentLine){
+            SegmentLine segment = (SegmentLine) event.getSource();
+            segment.setStroke(segment.getPreviousColor());
         }
 	} 
 

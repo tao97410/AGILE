@@ -31,6 +31,14 @@ public class Controller {
 	public void setMap(Map aMap){
 		this.map = aMap;
 	}
+
+	public GlobalTour getGlobalTour(){
+		return this.globalTour;
+	}
+
+	public void setGlobalTour(GlobalTour aGlobalTour){
+		this.globalTour = aGlobalTour;
+	}
     
     /**
 	 * Create the controller of the application

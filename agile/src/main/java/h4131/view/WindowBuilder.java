@@ -17,14 +17,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class WindowBuilder {
 
@@ -36,8 +37,7 @@ public class WindowBuilder {
     private double longMax;
     private double latMin;
     private double latMax;
-
-    
+    private DisplayMapSceneController displayMapSceneController;
 
     public WindowBuilder(Controller controller, Stage primaryStage, Map firstMap){
         this.controller = controller;
@@ -52,6 +52,7 @@ public class WindowBuilder {
         stage.setMaximized(true);
         stage.setFullScreenExitHint("Press ESC to escape full screen mode");
         stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
         
         stage.show();    
     }
@@ -82,7 +83,7 @@ public class WindowBuilder {
             // load fxml
             FXMLLoader displayMapSceneLoader = new FXMLLoader(getClass().getResource("/h4131/displayMapScene.fxml"));
             this.root = displayMapSceneLoader.load();
-            DisplayMapSceneController displayMapSceneController = displayMapSceneLoader.getController();
+            displayMapSceneController = displayMapSceneLoader.getController();
             displayMapSceneController.setController(controller);
             
             shapesPane = new Pane();
@@ -127,7 +128,7 @@ public class WindowBuilder {
                     double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                     double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
 
-                    addLine(shapesPane, originX, originY, destX, destY);
+                    addLine(originX, originY, destX, destY, segment);
                 }  
             }
 
@@ -136,7 +137,7 @@ public class WindowBuilder {
                 Intersection intersection = entry.getValue();
                 double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                 double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                addCircle(shapesPane, intersectionX, intersectionY, 4, intersection.getId(), displayMapSceneController);
+                addCircle(intersectionX, intersectionY, 2, intersection.getId());
             }
 
             Group group = new Group(shapesPane);
@@ -148,7 +149,6 @@ public class WindowBuilder {
             layout.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight());
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setFullScreenExitHint("");
             stage.setFullScreen(true);
             
 
@@ -173,7 +173,7 @@ public class WindowBuilder {
                 double originY = screenHeight - ((segment.getOrigin().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
                 double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
 
-                addLineTour(shapesPane, originX, originY, destX, destY, color);
+                addLineTour(originX, originY, destX, destY, color, segment);
             }
             color++;
         }
@@ -181,25 +181,34 @@ public class WindowBuilder {
 
     
 
-    private void addCircle(Pane pane, double x, double y, double radius, Long intersectionId, DisplayMapSceneController sceneController) {
+    private void addCircle(double x, double y, double radius, Long intersectionId) {
         IntersectionCircle circle = new IntersectionCircle(x, y, radius, Color.TRANSPARENT, intersectionId);
-        circle.setOnMouseClicked(sceneController::handleIntersectionClicked);
-        circle.setOnMouseEntered(sceneController::handleIntersectionEntered);
-        circle.setOnMouseExited(sceneController::handleIntersectionExited);
-        pane.getChildren().add(circle);
+        circle.setOnMouseClicked(displayMapSceneController::handleIntersectionClicked);
+        circle.setOnMouseEntered(displayMapSceneController::handleIntersectionEntered);
+        circle.setOnMouseExited(displayMapSceneController::handleIntersectionExited);
+        shapesPane.getChildren().add(circle);
     }
 
-    private void addLine(Pane pane, double startX, double startY, double endX, double endY) {
-        Line line = new Line(startX, startY, endX, endY);
+    private void addLine(double startX, double startY, double endX, double endY, Segment segment) {
+        SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(Color.WHITE);
-        pane.getChildren().add(line);
+        line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
+        line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
+        Tooltip tooltip = new Tooltip("Name : "+segment.getName()+"\nLength : "+segment.getLength()+"m");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(line, tooltip);
+        shapesPane.getChildren().add(line);
     }
 
-    private void addLineTour(Pane pane, double startX, double startY, double endX, double endY, int color) {
+    private void addLineTour(double startX, double startY, double endX, double endY, int color, Segment segment) {
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
-        Line line = new Line(startX, startY, endX, endY);
+        SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(colors[(color%6)]);
         line.setStrokeWidth(2.0);
-        pane.getChildren().add(line);
+        line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
+        line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
+        shapesPane.getChildren().add(line);
     }
 }
