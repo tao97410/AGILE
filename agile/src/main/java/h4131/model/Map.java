@@ -1,8 +1,11 @@
 package h4131.model;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+
+import h4131.calculus.Graph;
 
 public class Map {
     private HashMap<Long,Intersection> intersections;
@@ -19,15 +22,15 @@ public class Map {
         return this.intersections.get(id);
     }
 
-    public boolean hasIntersection (long id){
+    public boolean hasIntersection (long id) {
         return intersections.get(id) != null;
     }
 
-    public void addIntersection(Intersection inter){
+    public void addIntersection (Intersection inter) {
         intersections.put(inter.getId(),inter);
     } 
 
-    public void addSegment(Segment seg){
+    public void addSegment(Segment seg) {
         if (adjacency.containsKey(seg.getOrigin().getId())){
             // If the origin exists, add the segment to the existing list
             List<Segment> segmentList = adjacency.get(seg.getOrigin().getId());
@@ -39,6 +42,12 @@ public class Map {
             adjacency.put(seg.getOrigin().getId(), newSegmentList);
         }
         
+    }
+
+    public Graph getGraphFromPoints(LinkedList<DeliveryPoint> deliveryPoints) {
+        
+        return null;
+
     }
 
     public String toString(){
