@@ -32,8 +32,7 @@ public class InitialState implements State{
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            w.alert(e.getMessage());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -52,8 +51,7 @@ public class InitialState implements State{
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            w.alert(e.getMessage());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
