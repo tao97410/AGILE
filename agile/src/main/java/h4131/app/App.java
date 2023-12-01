@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import h4131.view.WindowBuilder;
+import h4131.controller.Controller;
 
 /**
  * JavaFX App
@@ -14,11 +14,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        WindowBuilder windowBuilder = new WindowBuilder(stage);
+        new Controller(stage);
     }
-
-    public static void main(String[] args) {
-        launch();
-    }
-
 }

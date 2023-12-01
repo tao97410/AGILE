@@ -1,16 +1,12 @@
 package h4131.view;
 
-import h4131.xml.SVGCreator;
+import h4131.controller.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-
 public class HomeSceneController {
 
-    @FXML
-    private RadioButton bigMapButton;
+    private Controller controller;
 
     @FXML
     private Button createTourButton;
@@ -18,28 +14,25 @@ public class HomeSceneController {
     @FXML
     private Button loadTourButton;
 
-    @FXML
-    private Button manageCourriersButton;
+    // @FXML
+    // private Button manageCourriersButton;
+
+    /**
+	 * Method called by the windowBuilder to set the controller when creating homeScene
+	 * @param c the global controller of the application
+	 */
+    public void setController(Controller c){
+        this.controller = c;
+    }
 
     @FXML
-    private ToggleGroup mapChoice;
-
-    @FXML
-    private RadioButton mediumMapButton;
-
-    @FXML
-    private RadioButton smallMapButton;
-
-    @FXML
-    void doCreateDeliveryTour(ActionEvent event) {
-        RadioButton selectedMapButton = (RadioButton) mapChoice.getSelectedToggle();
-        System.out.println("create delivery tour with the " + selectedMapButton.getText());
+    void doCreateTour(ActionEvent event) {
+        controller.createTour();
     }
     
     @FXML
     void doLoadTour(ActionEvent event) {
-        SVGCreator.createSvg();
-        System.out.println("load tour");
+        controller.loadGlobalTour();
     }
 
     @FXML

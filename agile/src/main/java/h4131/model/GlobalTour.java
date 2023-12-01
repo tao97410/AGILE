@@ -21,5 +21,16 @@ public class GlobalTour {
     public void setTours(List<Tour> tours) {
         this.tours = tours;
     }
+    
+    public void addTour (Tour tour){
+        tours.add(tour);
+    }
 
+    public String toString(){
+        StringBuilder result = new StringBuilder();
+        for(Tour tour : tours){
+            result.append(tour).append("\n");
+        }
+        return result.toString();
+    }
 }
