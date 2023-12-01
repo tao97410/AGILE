@@ -2,7 +2,6 @@ package h4131.xml;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,7 +20,6 @@ import h4131.model.Segment;
 import h4131.model.Tour;
 import h4131.model.TimeWindow;
 import h4131.model.DeliveryPoint;
-import h4131.view.WindowBuilder;
 
 
 public class XMLdeserializer {

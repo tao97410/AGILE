@@ -32,17 +32,17 @@ public class Controller {
 	// Methods corresponding to user events 
 	/**
 	 * Method called after click on button "Load a global Tour"
-	 * @param screenHeight
+	 * 
 	 */
-	public void loadGlobalTour(double screenHeight) {
-		currentState.loadGlobalTour(this, windowBuilder, screenHeight);
+	public void loadGlobalTour() {
+		currentState.loadGlobalTour(this, windowBuilder);
 	}
 
     /**
 	 * Method called after click on button "Create a tour"
 	 */
-	public void createTour(double screenHeight) {
-		currentState.createTour(this, windowBuilder, screenHeight);
+	public void createTour() {
+		currentState.createTour(this, windowBuilder);
 	}
 
     /**

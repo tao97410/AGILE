@@ -18,7 +18,7 @@ import h4131.xml.XMLdeserializer;
 public class InitialState implements State{
     
     @Override
-    public void loadGlobalTour(Controller c, WindowBuilder w, double screenHeight){
+    public void loadGlobalTour(Controller c, WindowBuilder w){
         
         Map loadedMap = new Map(null);
         List<Tour> course = new ArrayList<>();
@@ -27,6 +27,7 @@ public class InitialState implements State{
             XMLdeserializer.loadMap(loadedMap);
             XMLdeserializer.loadGlobalTour(loadedGlobalTour, loadedMap);
             w.drawMapAndGlobalTour(loadedMap, loadedGlobalTour);
+            //controller.setState(...);
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -37,13 +38,12 @@ public class InitialState implements State{
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ExceptionXML e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            w.alert(e.getMessage());
         } 
     }
 
     @Override
-    public void createTour(Controller c, WindowBuilder w, double screenHeight){
+    public void createTour(Controller c, WindowBuilder w){
         Map loadedMap = new Map(null);
         try {
             XMLdeserializer.loadMap(loadedMap);
@@ -58,8 +58,7 @@ public class InitialState implements State{
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ExceptionXML e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //Do nothing
         } 
     }
 }

@@ -15,10 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
-import javafx.util.Duration;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
