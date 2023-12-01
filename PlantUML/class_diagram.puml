@@ -1,52 +1,291 @@
 @startuml
 
-class Intersection {
+package xml {
+
+    class XMLdeserializer {
+        + XMLdeserializer()
+        + loadGlobalTour(GlobalTour) : void
+        + loadMap(Map) : void
+    }
+
+    class XMLfileOpener {
+        + XMLfileOpener()
+        + open(boolean) : File
+        + accept(File) : boolean
+        + getDescription() : String
+    }
+
+    abstract class FileFilter {
+        + FileFilter()
+        + {abstract} accept(File) : boolean
+        + {abstract} getDescription() : String
+    }
+
+    class XMLserializer {
+        + XMLserializer()
+        + saveGlobalTour(GlobalTour) : void
+    }
+
+}
+
+
+package controller {
+    
+    class Controller {
+        + Controller()
+        + undo() : void
+        + redo() : void
+        + modifyGlobalTour() : void
+        + addTour() : void
+        + cancelDeliveryPoint() : void
+        + leftClick() : void
+        + addDeliveryPoint() : void
+        + rightClick() : void
+        + createTour() : void
+        + computeTour() : void
+        + saveGlobalTour() : void
+        + loadGlobalTour() : void
+        + goBack() : void
+        + manageCourier() : void
+        + addCourier() : void
+        + modifyCourier() : void
+        + deleteCourier() : void
+    }
+
+    class ListOfCommands {
+        + ListOfCommands()
+        + add(Command) : void
+        + undo() : void
+        + redo() : void
+    }
+
+    interface Command {
+        + doCommand() : void
+        + undoCommand() : void
+    }
+
+    class ReverseCommand {
+        + ReverseCommand()
+        + doCommand() : void
+        + undoCommand() : void
+    }
+
+    class AddCourierCommand {
+        + AddCourierCommand(Courier)
+        + doCommand() : void
+        + undoCommand() : void
+    }
+
+    class AddIntersectionCommand {
+        + AddIntersectionCommand(Intersection, TIME_WINDOW)
+        + doCommand() : void
+        + undoCommand() : void
+    }
+
+    class AddTourCommand {
+        + AddTourCommand(Tour)
+        + doCommand() : void
+        + undoCommand() : void
+    }
+
+    interface State {
+        + modifyGlobalTour() : void
+        + addTour() : void
+        + cancelDeliveryPoint() : void
+        + leftClick() : void
+        + addDeliveryPoint() : void
+        + rightClick() : void
+        + createTour() : void
+        + computeTour() : void
+        + saveGlobalTour() : void
+        + loadGlobalTour() : void
+        + goBack() : void
+        + manageCourier() : void
+        + addCourier() : void
+        + modifyCourier() : void
+        + deleteCourier() : void
+    }
+
+    class CreateTourState {
+        + leftClick() : void
+        + rightClick() : void
+        + computeTour() : void
+    }
+
+    class AddDeliveryPointState {
+        + cancelDeliveryPoint() : void
+        + addDeliveryPoint() : void
+    }
+
+    class DisplayTourState {
+        + addTour() : void
+        + saveGlobalTour() : void
+    }
+
+    class InitialState {
+        + loadGlobalTour() : void
+        + createTour() : void
+        + manageCourier() : void
+    }
+
+    class ManageCourierState {
+        + deleteCourier() : void
+        + modifyCourier() : void
+        + addCourier() : void
+        + goBack() : void
+    }
+
+    class LoadGlobalTourState {
+        + manageCourier() : void
+        + goBack() : void
+        + modifyGlobalTour() : void
+    }
+    
+}
+
+package view {
+    
+    class MouseListener {}
+
+    class ButtonListener {}
+
+    class Window {}
+    
+    class TextualView {}
+
+    class GraphicalView {}
+
+}
+
+package model {
+    class Intersection {
     - id : long
     - latitude : double
     - longitude : double
 }
 
-class Segment {
-    - origin : Intersection
-    - destination : Intersection
-    - length : double
-    - name : String
+    class Segment {
+        - origin : Intersection
+        - destination : Intersection
+        - length : double
+        - name : String
+    }
+
+    class Map {
+        - intersections : HashMap<long, Intersection>
+        - adjacency : HashMap<long, List<Segment>>
+        - warehouse : Intersection
+        + getDestinationsById(long) : List<Segment>
+        + getIntersectionById(long) : Intersection
+    }
+
+    class Tour {
+        - course : List<Segment>
+        - courier : Courier
+        - deliveryPoints : List<DeliveryPoint>
+        + getTotalLength() : double
+        + addSegment(Segment) : void
+    }
+
+    class GlobalTour {
+        - tours : List<Tour>
+    }
+
+    class Courier {
+        - id : long
+        - name : String
+    }
+
+    enum TimeWindow {
+        EIGHT_NINE
+        NINE_TEN
+        TEN_ELEVEN
+        ELEVEN_TWELVE
+    }
+
+    class DeliveryPoint {
+        - place : Intersection
+        - time : TimeWindow
+    }
+
 }
 
-class Map {
-    - intersections : HashMap<long, Intersection>
-    - adjacency : HashMap<long, List<Segment>>
-    - warehouse : Intersection
-    + getDestinationsById(long) : List<Segment>
-    + getIntersectionById(long) : Intersection
+package observer {
+    class Observable {
+        + Observable()
+        + addObserver() : void
+        + notifyObservers() : void
+    }
+
+    interface Observer {
+        + update() : void
+    }
 }
 
-class Tour {
-    - course : List<Segment>
-    - courier : Courier
-    - deliveryPoints : List<pair<Intersection, TIME_WINDOW>>
-    + getTotalLength() : double
-    + addSegment(Segment) : void
-}
-
-class GlobalTour {
-    - tours : List<Tour>
-}
-
-class Courier {
-    - id : long
-    - name : String
-}
-
-Segment -> Intersection : use
-Map --> Intersection : use
-Map --> Segment : use
-Tour --> Segment : use
-Tour --> Courier : use
-GlobalTour -> Tour : use
-
-
-
-
+Controller -right-> State
+Controller -right-> ListOfCommands
+Observable -left-> Observer
+GraphicalView .down.|> Observer
+GraphicalView -[hidden]-> Observer
+GraphicalView -[hidden]> TextualView
+TextualView ..|> Observer
+XMLfileOpener --|> FileFilter
+XMLdeserializer --> XMLfileOpener
+XMLserializer --> GlobalTour
+XMLserializer --> XMLfileOpener
+ButtonListener --> Controller
+Window --> ButtonListener
+GlobalTour -[hidden]-> Map
+GraphicalView -[hidden]-> GlobalTour
+ButtonListener -[hidden]-> MouseListener
+Window -->  MouseListener
+Window -down-> TextualView
+Window -down-> GraphicalView
+GraphicalView -down-> GlobalTour
+TextualView -> GlobalTour
+MouseListener --> Window
+MouseListener --> GraphicalView
+MouseListener --> Controller
+InitialState .right.|> State
+ManageCourierState .right.|> State
+LoadGlobalTourState .up.|> State
+InitialState -[hidden]-> ManageCourierState
+LoadGlobalTourState -[hidden]> AddDeliveryPointState
+AddDeliveryPointState -[hidden]> DisplayTourState
+DisplayTourState .up.|> State
+CreateTourState .left.|> State
+AddDeliveryPointState .up.|> State
+AddIntersectionCommand ..|> Command
+AddIntersectionCommand -> Tour
+AddTourCommand ..|> Command
+AddTourCommand -> Tour
+AddTourCommand -> GlobalTour
+AddCourierCommand -up-> Courier
+AddCourierCommand .up.|> Command
+ReverseCommand -up-> Command
+ReverseCommand .up.|> Command
+AddCourierCommand -[hidden]> ReverseCommand
+ListOfCommands -right-> Command
+ListOfCommands -[hidden]-> AddCourierCommand
+Controller -[hidden]-> CreateTourState
+Controller -> Window
+Controller -down-> GlobalTour
+Controller -down-> Map
+Segment -left-> Intersection
+Map --> Intersection
+Map --> Segment
+XMLdeserializer -[hidden]> XMLserializer
+Map -right-> XMLdeserializer
+Tour --> Segment
+Tour --> Courier
+Tour -up-> Observable
+Tour -down-> DeliveryPoint
+DeliveryPoint -left-> TimeWindow
+Courier -[hidden]-> DeliveryPoint
+Observable -[hidden]-> Tour
+GlobalTour --> XMLdeserializer
+GlobalTour -> Tour
+GlobalTour -[hidden]> XMLdeserializer
+DeliveryPoint -> Intersection
 
 @enduml
