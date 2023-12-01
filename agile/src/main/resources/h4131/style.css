@@ -25,10 +25,10 @@ Button:hover {
     -fx-text-fill: red;
 }
 
-IntersectionCircle:hover {
+/* IntersectionCircle:hover {
     -fx-fill: red;
-    -fx-cursor: pointer;
-}
+    -fx-cursor: hand;
+} */
 
 Pane, VBox, Group, StackPane {
     -fx-background-color: rgb(40, 40, 40);
@@ -36,13 +36,8 @@ Pane, VBox, Group, StackPane {
 
 ScrollPane {
     -fx-cursor: move;
-    -fx-cursor: grab;
+    /* -fx-cursor: grab;
     -fx-cursor: -moz-grab;
-    -fx-cursor: -webkit-grab;
-  }
+    -fx-cursor: -webkit-grab; */
+}
   
-  ScrollPane:active {
-    -fx-cursor: grabbing;
-    -fx-cursor: -moz-grabbing;
-    -fx-cursor: -webkit-grabbing;
-  }

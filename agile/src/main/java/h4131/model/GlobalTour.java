@@ -1,24 +1,25 @@
 package h4131.model;
+import java.util.Collection;
 import java.util.List;
 
 public class GlobalTour {
-    private List<Tour> tours;
+    private Collection<Tour> tours;
 
-    public GlobalTour(List<Tour> someTours){
+    public GlobalTour(Collection<Tour> someTours){
         this.tours = someTours;
     }
 
     /**
      * @return List<Tour> return the tours
      */
-    public List<Tour> getTours() {
+    public Collection<Tour> getTours() {
         return tours;
     }
 
     /**
      * @param tours the tours to set
      */
-    public void setTours(List<Tour> tours) {
+    public void setTours(Collection<Tour> tours) {
         this.tours = tours;
     }
     

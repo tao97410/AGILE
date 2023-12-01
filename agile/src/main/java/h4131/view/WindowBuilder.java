@@ -28,31 +28,32 @@ import javafx.stage.Stage;
 
 public class WindowBuilder {
 
-    Stage stage;
-    Parent root;
-    Controller controller;
+    private Stage stage;
+    private Parent root;
+    private Controller controller;
+    private Pane shapesPane;
+    private double longMin;
+    private double longMax;
+    private double latMin;
+    private double latMax;
+
     
 
-    public WindowBuilder(Controller controller, Stage primaryStage){
+    public WindowBuilder(Controller controller, Stage primaryStage, Map firstMap){
         this.controller = controller;
         this.stage = primaryStage;
-        try {
-            FXMLLoader homeSceneLoader = new FXMLLoader(getClass().getResource("/h4131/homeScene.fxml"));
-            this.root = homeSceneLoader.load();
-            HomeSceneController homeSceneController = homeSceneLoader.getController();
-            homeSceneController.setController(controller);
 
-            Image icon = new Image(getClass().getResourceAsStream("/h4131/insa_logo.png"));
-            stage.getIcons().add(icon);
+        drawMap(firstMap);
 
-            stage.setTitle("INSA Path Master");
-            stage.setScene(new Scene(root));
-            stage.setMaximized(true);
-            stage.show();
+        Image icon = new Image(getClass().getResourceAsStream("/h4131/insa_logo.png"));
+        stage.getIcons().add(icon);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }       
+        stage.setTitle("INSA Path Master");
+        stage.setMaximized(true);
+        stage.setFullScreenExitHint("Press ESC to escape full screen mode");
+        stage.setFullScreen(true);
+        
+        stage.show();    
     }
 
     public void alert(String message) {
@@ -60,11 +61,18 @@ public class WindowBuilder {
         alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
+
+        stage.setFullScreen(false);
         alert.showAndWait();
+        stage.setFullScreen(true);
+    }
+
+    public void setFullScreen(boolean bool){
+        stage.setFullScreen(bool);
     }
 
 
-    public void drawMapAndGlobalTour(Map map, GlobalTour globalTour){
+    public void drawMap(Map map){
         // Get screen dimensions
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -77,15 +85,15 @@ public class WindowBuilder {
             DisplayMapSceneController displayMapSceneController = displayMapSceneLoader.getController();
             displayMapSceneController.setController(controller);
             
-            Pane shapesPane = new Pane();
+            shapesPane = new Pane();
             shapesPane.setPrefHeight(screenHeight);
             shapesPane.setPrefWidth(screenWidth); 
             
             //Determine max and min lat and long of intersections to convert to screen coordinates
-            double longMax = 0;
-            double longMin = 1000;
-            double latMax = 0;
-            double latMin = 1000;
+            longMax = 0;
+            longMin = 1000;
+            latMax = 0;
+            latMin = 1000;
 
             for (Entry<Long, Intersection> entry : map.getIntersections().entrySet()) {
                 Intersection intersection = entry.getValue();
@@ -131,23 +139,6 @@ public class WindowBuilder {
                 addCircle(shapesPane, intersectionX, intersectionY, 4, intersection.getId(), displayMapSceneController);
             }
 
-            //drawing tours if necessary
-            if(globalTour != null){
-                System.out.println(globalTour);
-                int color = 0;   
-                for(Tour tour : globalTour.getTours()){             
-                    for(Segment segment : tour.getCourse()){
-                        double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                        double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
-                        double originY = screenHeight - ((segment.getOrigin().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                        double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
-
-                        addLineTour(shapesPane, originX, originY, destX, destY, color);
-                    }
-                    color++;
-                }
-            }
-
             Group group = new Group(shapesPane);
             Parent zoomPane = displayMapSceneController.createZoomPane(group);
             VBox layout = displayMapSceneController.getLayout();
@@ -155,12 +146,36 @@ public class WindowBuilder {
             VBox.setVgrow(zoomPane, Priority.ALWAYS);
             layout.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
             layout.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight());
-            Scene scene = new Scene(layout);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setFullScreenExitHint("");
             stage.setFullScreen(true);
+            
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void drawGlobalTour(GlobalTour globalTour){
+
+        // Get screen dimensions
+        Screen screen = Screen.getPrimary();
+        double screenHeight = screen.getVisualBounds().getHeight();
+        double screenWidth = screen.getVisualBounds().getWidth();
+
+        int color = 0;   
+
+        for(Tour tour : globalTour.getTours()){             
+            for(Segment segment : tour.getCourse()){
+                double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+                double originY = screenHeight - ((segment.getOrigin().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+
+                addLineTour(shapesPane, originX, originY, destX, destY, color);
+            }
+            color++;
         }
     }
 
@@ -169,6 +184,8 @@ public class WindowBuilder {
     private void addCircle(Pane pane, double x, double y, double radius, Long intersectionId, DisplayMapSceneController sceneController) {
         IntersectionCircle circle = new IntersectionCircle(x, y, radius, Color.TRANSPARENT, intersectionId);
         circle.setOnMouseClicked(sceneController::handleIntersectionClicked);
+        circle.setOnMouseEntered(sceneController::handleIntersectionEntered);
+        circle.setOnMouseExited(sceneController::handleIntersectionExited);
         pane.getChildren().add(circle);
     }
 
