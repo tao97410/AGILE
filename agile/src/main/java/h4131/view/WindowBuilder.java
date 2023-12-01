@@ -10,11 +10,15 @@ import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.Segment;
 import h4131.model.Tour;
+
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Screen;
@@ -56,13 +60,13 @@ public class WindowBuilder {
         double screenWidth = screen.getVisualBounds().getWidth();
 
         try {
-            //load fxml
+            // load fxml
             FXMLLoader displayMapSceneLoader = new FXMLLoader(getClass().getResource("/h4131/displayMapScene.fxml"));
             this.root = displayMapSceneLoader.load();
             DisplayMapSceneController displayMapSceneController = displayMapSceneLoader.getController();
             displayMapSceneController.setController(controller);
-            Pane shapesPane = displayMapSceneController.getShapesPane();
-
+            
+            Pane shapesPane = new Pane();
             shapesPane.setPrefHeight(screenHeight);
             shapesPane.setPrefWidth(screenWidth); 
             
@@ -133,14 +137,23 @@ public class WindowBuilder {
                 }
             }
 
-            Scene scene = new Scene(root, screenWidth, screenHeight);
+            Group group = new Group(shapesPane);
+            Parent zoomPane = displayMapSceneController.createZoomPane(group);
+            VBox layout = displayMapSceneController.getLayout();
+            layout.getChildren().setAll(zoomPane);
+            VBox.setVgrow(zoomPane, Priority.ALWAYS);
+            layout.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
+            layout.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight());
+            Scene scene = new Scene(layout);
             stage.setScene(scene);
-            
+            stage.setFullScreen(true);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    
 
     private void addCircle(Pane pane, double x, double y, double radius, Long intersectionId, DisplayMapSceneController sceneController) {
         IntersectionCircle circle = new IntersectionCircle(x, y, radius, Color.TRANSPARENT, intersectionId);

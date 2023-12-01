@@ -1,28 +1,34 @@
 package h4131.view;
 
 import h4131.controller.Controller;
-import javafx.animation.ScaleTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.util.Duration;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
 
 public class DisplayMapSceneController {
     
     private Controller controller;
-    private static final double TRANSLATION_FACTOR = 1.4;
-    private static final double ZOOM_FACTOR = 1.4;
-    private static final Duration ZOOM_DURATION = Duration.millis(150);
-    private double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
-    private double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
-    private double lastMouseX;
-    private double lastMouseY;
-    
+
     @FXML
-    private Pane shapesPane;
+    private VBox layout;
 
     /**
 	 * Method called by the windowBuilder to set the controller when creating homeScene
@@ -33,11 +39,11 @@ public class DisplayMapSceneController {
     }
 
     /**
-	 * Method called by the windowBuilder to get the shapes pane when drawing map
-	 * @return the attribute Pane shapesPane
+	 * Method called by the windowBuilder to get the VBox map layout when drawing map
+	 * @return the attribute VBox layout
 	 */
-    public Pane getShapesPane(){
-        return shapesPane;
+    public VBox getLayout(){
+        return layout;
     }
 
     /**
@@ -58,76 +64,115 @@ public class DisplayMapSceneController {
         }
 	} 
 
-    @FXML
-    void handleZoom(ScrollEvent event) {
-        double scrollY = event.getDeltaY();
-        double scale = (scrollY > 0) ? ZOOM_FACTOR : 1.0 / ZOOM_FACTOR;
-        if(isValidScale(shapesPane, scale)){  
-            scaleTransition(shapesPane, scale);
-            
-            double leftBorder = shapesPane.localToScene(shapesPane.getBoundsInLocal().getMinX(), 0).getX();
-            double rightBorder = shapesPane.localToScene(shapesPane.getBoundsInLocal().getMaxX(), 0).getX();
-            double topBorder = shapesPane.localToScene(shapesPane.getBoundsInLocal().getMinY(), 0).getY();
-            double bottomBorder = shapesPane.localToScene(0, shapesPane.getBoundsInParent().getMaxY()).getY();
-            
-            if(leftBorder>0)
-                shapesPane.setTranslateX(shapesPane.getTranslateX() - leftBorder );
-            else if(rightBorder<screenWidth)
-                shapesPane.setTranslateX(shapesPane.getTranslateX() + (screenWidth-rightBorder));
-            if(topBorder>0)
-                shapesPane.setTranslateY(shapesPane.getTranslateY() - topBorder );
-            else if(bottomBorder<screenHeight)
-                shapesPane.setTranslateY(shapesPane.getTranslateY() + (screenHeight-bottomBorder));
-            
-            event.consume();
-        }     
-    }
+    public Parent createZoomPane(Group group) {
+        final double SCALE_DELTA = 1.1;
+        final StackPane zoomPane = new StackPane();
 
-    private boolean isValidScale(Pane pane, double scale) {
-        double newScaleX = pane.getScaleX() * scale;
-        double newScaleY = pane.getScaleY() * scale;
-    
-        return newScaleX >= 1.0 && newScaleY >= 1.0;
-    }
+        zoomPane.getChildren().add(group);
+        Group zoomContent = new Group(zoomPane);
+        StackPane canvasPane = new StackPane();
+        canvasPane.getChildren().add(zoomContent);
 
-    private void scaleTransition(Pane pane, double scale) {
-        ScaleTransition scaleTransition = new ScaleTransition(ZOOM_DURATION, pane);
-        scaleTransition.setToX(pane.getScaleX() * scale);
-        scaleTransition.setToY(pane.getScaleY() * scale);
-        scaleTransition.play();
-    }
+        final ScrollPane scroller = new ScrollPane();
+        final Group scrollContent = new Group(canvasPane);
+        scroller.setContent(scrollContent);
 
-    @FXML
-    void handleMousePressed(MouseEvent event) {
-        lastMouseX = event.getX();
-        lastMouseY = event.getY();
-    }
+        scroller.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+            @Override
+            public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
+                canvasPane.setMinSize(newValue.getWidth(), newValue.getHeight());
+            }
+        });
 
-    @FXML
-    void handleMouseDragged(MouseEvent event) {
-        double deltaX = event.getX() - lastMouseX;
-        double deltaY = event.getY() - lastMouseY;
+        zoomPane.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                event.consume();
 
-        double leftBorder = shapesPane.localToScene(shapesPane.getBoundsInLocal().getMinX(), 0).getX();
-        double rightBorder = shapesPane.localToScene(shapesPane.getBoundsInLocal().getMaxX(), 0).getX();
-        double topBorder = shapesPane.localToScene(0, shapesPane.getBoundsInLocal().getMinY()).getY();
-        double bottomBorder = shapesPane.localToScene(0, shapesPane.getBoundsInLocal().getMaxY()).getY();
-        
-        double newLeftBorder = leftBorder + deltaX*TRANSLATION_FACTOR;
-        double newRightBorder = rightBorder + deltaX*TRANSLATION_FACTOR;
-        double newTopBorder = topBorder + deltaY*TRANSLATION_FACTOR;
-        double newBottomBorder = bottomBorder + deltaY*TRANSLATION_FACTOR;
+                if (event.getDeltaY() == 0) {
+                    return;
+                }
 
-        if(newLeftBorder <=0 && newRightBorder >= screenWidth){
-            shapesPane.setTranslateX(shapesPane.getTranslateX() + deltaX*TRANSLATION_FACTOR);
+                double scaleFactor = (event.getDeltaY() > 0) ? SCALE_DELTA : 1 / SCALE_DELTA;
+
+                // amount of scrolling in each direction in scrollContent coordinate
+                // units
+                Point2D scrollOffset = figureScrollOffset(scrollContent, scroller);
+
+                double newScaleX = group.getScaleX() * scaleFactor;
+                double newScaleY = group.getScaleY() * scaleFactor;
+
+                // Prevent zooming out beyond the original size
+                if (newScaleX < 1.0 || newScaleY < 1.0) {
+                    return;
+                }
+
+                group.setScaleX(newScaleX);
+                group.setScaleY(newScaleY);
+                
+
+                // move viewport so that old center remains in the center after the
+                // scaling
+                repositionScroller(scrollContent, scroller, scaleFactor, scrollOffset);
+            }
+        });
+
+        // Panning via drag....
+        final ObjectProperty<Point2D> lastMouseCoordinates = new SimpleObjectProperty<Point2D>();
+        scrollContent.setOnMousePressed(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            lastMouseCoordinates.set(new Point2D(event.getX(), event.getY()));
         }
+        });
 
-        if(newTopBorder <= 0 && newBottomBorder >= screenHeight-20){
-            shapesPane.setTranslateY(shapesPane.getTranslateY() + deltaY*TRANSLATION_FACTOR);
+        scrollContent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            double deltaX = event.getX() - lastMouseCoordinates.get().getX();
+            double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
+            double deltaH = deltaX * (scroller.getHmax() - scroller.getHmin()) / extraWidth;
+            double desiredH = (Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - deltaH;
+            scroller.setHvalue(Math.max(0, Math.min(scroller.getHmax(), desiredH)));
+
+            double deltaY = event.getY() - lastMouseCoordinates.get().getY();
+            double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
+            double deltaV = deltaY * (scroller.getVmax() - scroller.getVmin()) / extraHeight;
+            double desiredV = (Double.isNaN(scroller.getVvalue()) ? 0:scroller.getVvalue()) - deltaV;
+            scroller.setVvalue(Math.max(0, Math.min(scroller.getVmax(), desiredV)));
         }
+        });
 
-        lastMouseX = event.getX();
-        lastMouseY = event.getY();
+        return scroller;
+    }    
+    private Point2D figureScrollOffset(Node scrollContent, ScrollPane scroller) {
+        double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
+        double hScrollProportion = ((Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - scroller.getHmin()) / (scroller.getHmax() - scroller.getHmin());
+        double scrollXOffset = hScrollProportion * Math.max(0, extraWidth);
+        double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
+        double vScrollProportion = ((Double.isNaN(scroller.getVvalue()) ? 0:scroller.getVvalue()) - scroller.getVmin()) / (scroller.getVmax() - scroller.getVmin());
+        double scrollYOffset = vScrollProportion * Math.max(0, extraHeight);
+        return new Point2D(scrollXOffset, scrollYOffset);
     }
 
+    private void repositionScroller(Node scrollContent, ScrollPane scroller, double scaleFactor, Point2D scrollOffset) {
+        double scrollXOffset = scrollOffset.getX();
+        double scrollYOffset = scrollOffset.getY();
+        double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
+        if (extraWidth > 0) {
+            double halfWidth = scroller.getViewportBounds().getWidth() / 2 ;
+            double newScrollXOffset = (scaleFactor - 1) *  halfWidth + scaleFactor * scrollXOffset;
+            scroller.setHvalue(scroller.getHmin() + newScrollXOffset * (scroller.getHmax() - scroller.getHmin()) / extraWidth);
+        } else {
+            scroller.setHvalue(scroller.getHmin());
+        }
+        double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
+        if (extraHeight > 0) {
+            double halfHeight = scroller.getViewportBounds().getHeight() / 2 ;
+            double newScrollYOffset = (scaleFactor - 1) * halfHeight + scaleFactor * scrollYOffset;
+            scroller.setVvalue(scroller.getVmin() + newScrollYOffset * (scroller.getVmax() - scroller.getVmin()) / extraHeight);
+        } else {
+            scroller.setVvalue(scroller.getVmin());
+        }
+    }
 }
