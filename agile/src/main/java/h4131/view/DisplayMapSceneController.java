@@ -53,7 +53,7 @@ public class DisplayMapSceneController {
     }
 
     /**
-	 * Method called by the windowBuilder to set the controller when creating homeScene
+	 * Method called by the windowBuilder to set the controller when creating the scene
 	 * @param c the global controller of the application
 	 */
     public void setController(Controller c){
@@ -133,6 +133,13 @@ public class DisplayMapSceneController {
         }
 	} 
 
+    /**
+     * Method called by the WindowBuilder to create the scrollPane 
+     * (with zooming and panning features) that will contains the shapes 
+     * used to draw the map
+     * @param group containing the shapes
+     * @return the scrollPane
+     */
     public Parent createZoomPane(Group group) {
         final double SCALE_DELTA = 1.1;
         final StackPane zoomPane = new StackPane();
@@ -213,7 +220,14 @@ public class DisplayMapSceneController {
         });
 
         return scroller;
-    }    
+    } 
+    
+    /**
+     * Computes the amount of scrolling in each direction in scrollContent coordinate units
+     * @param scrollContent
+     * @param scroller 
+     * @return a point containing the scrolling in X and Y directions
+     */
     private Point2D figureScrollOffset(Node scrollContent, ScrollPane scroller) {
         double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
         double hScrollProportion = ((Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - scroller.getHmin()) / (scroller.getHmax() - scroller.getHmin());
@@ -224,6 +238,13 @@ public class DisplayMapSceneController {
         return new Point2D(scrollXOffset, scrollYOffset);
     }
 
+    /**
+     * method called after a zoom to reposition the previous center in the new center.
+     * @param scrollContent
+     * @param scroller
+     * @param scaleFactor the zooming factor
+     * @param scrollOffset
+     */
     private void repositionScroller(Node scrollContent, ScrollPane scroller, double scaleFactor, Point2D scrollOffset) {
         double scrollXOffset = scrollOffset.getX();
         double scrollYOffset = scrollOffset.getY();

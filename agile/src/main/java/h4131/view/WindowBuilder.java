@@ -39,6 +39,12 @@ public class WindowBuilder {
     private double latMax;
     private DisplayMapSceneController displayMapSceneController;
 
+    /**
+     * creates a window builder and displays the first scene of the application
+     * @param controller
+     * @param primaryStage
+     * @param firstMap
+     */
     public WindowBuilder(Controller controller, Stage primaryStage, Map firstMap){
         this.controller = controller;
         this.stage = primaryStage;
@@ -57,6 +63,10 @@ public class WindowBuilder {
         stage.show();    
     }
 
+    /**
+     * creates a pop-up error message
+     * @param message the message to display
+     */
     public void alert(String message) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
@@ -68,11 +78,18 @@ public class WindowBuilder {
         stage.setFullScreen(true);
     }
 
+    /**
+     * set the window fullscreen or not
+     * @param bool true or false
+     */
     public void setFullScreen(boolean bool){
         stage.setFullScreen(bool);
     }
 
-
+    /**
+     * Method called to draw the map using shapes 
+     * @param map the map to draw
+     */
     public void drawMap(Map map){
         // Get screen dimensions
         Screen screen = Screen.getPrimary();
@@ -157,6 +174,10 @@ public class WindowBuilder {
         }
     }
 
+    /**
+     * Method called to draw a glabal tour
+     * @param the Global Tour to display
+     */
     public void drawGlobalTour(GlobalTour globalTour){
 
         // Get screen dimensions
