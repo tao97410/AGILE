@@ -2,6 +2,7 @@ package h4131.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,20 +21,20 @@ public class InitialState implements State{
     @Override
     public void loadGlobalTour(Controller c, WindowBuilder w){
         
-        Map loadedMap = new Map(null);
-        List<Tour> course = new ArrayList<>();
+        Map map = c.getMap();
+        Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
-            XMLdeserializer.loadMap(loadedMap);
-            XMLdeserializer.loadGlobalTour(loadedGlobalTour, loadedMap);
-            w.drawMapAndGlobalTour(loadedMap, loadedGlobalTour);
+            w.setFullScreen(false);
+            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map);
+            w.setFullScreen(true);
+            w.drawGlobalTour(loadedGlobalTour);
             //controller.setState(...);
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            w.alert(e.getMessage());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -43,17 +44,17 @@ public class InitialState implements State{
     }
 
     @Override
-    public void createTour(Controller c, WindowBuilder w){
-        Map loadedMap = new Map(null);
+    public void loadMap(Controller c, WindowBuilder w, String fileName){
+        Map newMap = new Map(null);
         try {
-            XMLdeserializer.loadMap(loadedMap);
-            w.drawMapAndGlobalTour(loadedMap, null);
+            XMLdeserializer.loadMap(fileName, newMap);
+            w.drawMap(newMap);
+            c.setMap(newMap);
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            w.alert(e.getMessage());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

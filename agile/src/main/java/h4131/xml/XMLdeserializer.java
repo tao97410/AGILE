@@ -2,6 +2,7 @@ package h4131.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,13 +42,22 @@ public class XMLdeserializer {
 	} 
 
 	/////////////////MAP////////////////////////////////
-	public static void loadMap(Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
-		Element root = openFile("Choose a map");
-        if (root.getNodeName().equals("map")) {
-           buildFromDOMXMLMap(root, map);
-        }
-        else
-        	throw new ExceptionXML("Wrong format");
+	public static void loadMap(String mapFileName, Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+		File xml;
+		try {
+			xml = new File(XMLdeserializer.class.getResource("/h4131/"+mapFileName).toURI());
+			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();	
+			Document document = docBuilder.parse(xml);
+			Element root = document.getDocumentElement();
+			if (root.getNodeName().equals("map")) {
+				buildFromDOMXMLMap(root, map);
+			}
+        	else
+        		throw new ExceptionXML("Wrong format");
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
     private static void buildFromDOMXMLMap(Element noeudDOMRacine, Map map) throws ExceptionXML, NumberFormatException{

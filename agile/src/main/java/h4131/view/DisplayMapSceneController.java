@@ -5,13 +5,16 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -27,6 +30,31 @@ public class DisplayMapSceneController {
     @FXML
     private VBox layout;
 
+    @FXML
+    private ChoiceBox<String> mapChoiceBox;
+
+    @FXML
+    private void initialize(){
+        mapChoiceBox.setValue("Select a map...");
+        mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
+    }
+
+    @FXML
+    void doLoadMap(ActionEvent event) {
+        if(!mapChoiceBox.getValue().equals("Select a map...")){
+            String fileName = mapChoiceBox.getValue() + ".xml";
+            controller.loadMap(fileName);
+        }       
+    }
+
+    @FXML
+    void doLoadTour(ActionEvent event) {
+        controller.loadGlobalTour();
+    }
+
+    public void setChoiceBoxValue(String value){
+        mapChoiceBox.setValue(value);
+    }
     /**
 	 * Method called by the windowBuilder to set the controller when creating homeScene
 	 * @param c the global controller of the application
@@ -58,6 +86,30 @@ public class DisplayMapSceneController {
             }
             
             //controller.leftclick(intersectionClicked.getIntersectionId());
+        }
+	} 
+
+    /**
+	 * Method called after the cursor entered an intersection on the map
+	 */
+	public void handleIntersectionEntered(MouseEvent event) {
+		
+        if(event.getSource() instanceof IntersectionCircle){
+            IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
+            intersectionClicked.setFill(Color.RED);
+            intersectionClicked.setCursor(Cursor.HAND);
+        }
+	} 
+
+    /**
+	 * Method called after the cursor exited an intersection on the map
+	 */
+	public void handleIntersectionExited(MouseEvent event) {
+		
+        if(event.getSource() instanceof IntersectionCircle){
+            IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
+            intersectionClicked.setFill(Color.TRANSPARENT);
+            intersectionClicked.setCursor(Cursor.DEFAULT);
         }
 	} 
 
@@ -117,27 +169,27 @@ public class DisplayMapSceneController {
         // Panning via drag....
         final ObjectProperty<Point2D> lastMouseCoordinates = new SimpleObjectProperty<Point2D>();
         scrollContent.setOnMousePressed(new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            lastMouseCoordinates.set(new Point2D(event.getX(), event.getY()));
-        }
+            @Override
+            public void handle(MouseEvent event) {
+                lastMouseCoordinates.set(new Point2D(event.getX(), event.getY()));
+            }
         });
 
         scrollContent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            double deltaX = event.getX() - lastMouseCoordinates.get().getX();
-            double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
-            double deltaH = deltaX * (scroller.getHmax() - scroller.getHmin()) / extraWidth;
-            double desiredH = (Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - deltaH;
-            scroller.setHvalue(Math.max(0, Math.min(scroller.getHmax(), desiredH)));
+            @Override
+            public void handle(MouseEvent event) {
+                double deltaX = event.getX() - lastMouseCoordinates.get().getX();
+                double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
+                double deltaH = deltaX * (scroller.getHmax() - scroller.getHmin()) / extraWidth;
+                double desiredH = (Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - deltaH;
+                scroller.setHvalue(Math.max(0, Math.min(scroller.getHmax(), desiredH)));
 
-            double deltaY = event.getY() - lastMouseCoordinates.get().getY();
-            double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
-            double deltaV = deltaY * (scroller.getVmax() - scroller.getVmin()) / extraHeight;
-            double desiredV = (Double.isNaN(scroller.getVvalue()) ? 0:scroller.getVvalue()) - deltaV;
-            scroller.setVvalue(Math.max(0, Math.min(scroller.getVmax(), desiredV)));
-        }
+                double deltaY = event.getY() - lastMouseCoordinates.get().getY();
+                double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
+                double deltaV = deltaY * (scroller.getVmax() - scroller.getVmin()) / extraHeight;
+                double desiredV = (Double.isNaN(scroller.getVvalue()) ? 0:scroller.getVvalue()) - deltaV;
+                scroller.setVvalue(Math.max(0, Math.min(scroller.getVmax(), desiredV)));
+            }
         });
 
         return scroller;
