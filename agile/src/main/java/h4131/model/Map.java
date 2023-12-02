@@ -48,20 +48,52 @@ public class Map {
         
     }
 
+    private Segment findSegment (long idOrigin,long idDestination){
+        Segment res = null;
+        Collection<Segment>  segs = new ArrayList<>();
+        if( (segs = adjacency.get(idOrigin))!=null){
+            for(Segment s : segs){
+                if(s.getDestination().getId() == idDestination){
+                    res = s;
+                    continue;
+                }
+            }
+        }
+        return res;
+    }
+
     public Graph getGraphFromPoints(/*LinkedList<DeliveryPoint> deliveryPoints*/) {
 
         //TEST
         List<Intersection> allinter =  new ArrayList<Intersection>(intersections.values());
         List<Intersection> dest = allinter.subList(0, 3);
         HashMap<Intersection,InterInfo> result = Dijkstra(warehouse, dest);
-        for(Entry<Intersection,InterInfo> entry : result.entrySet()){
-            if(dest.contains(entry.getKey())){
-                System.out.println(entry.getKey().getId() + " [distance : " + entry.getValue().distance + ", pred : " + entry.getValue().pred + "]\n");
+        for (Intersection i : dest){
+            LinkedList<Segment> path = new LinkedList<Segment>();
+            getPath(warehouse, i, result,path);
+            System.out.println("chemin vers " + i.getLatitude() + " , " + i.getLongitude());
+            int count =0;
+            for(Segment street : path){
+            count ++;
+            if(count==path.size())
+                System.out.println(street.getName());
+            else   
+                System.out.print( street.getName()+ "->");
             }
         }
         
         return null;
 
+    }
+
+    private void getPath(Intersection start, Intersection finish, HashMap<Intersection,InterInfo> map, LinkedList<Segment> path){
+        
+        if (start.getId() != finish.getId()){
+            getPath(start, map.get(finish).pred, map, path);
+            path.add(findSegment(map.get(finish).pred.getId(), finish.getId()));
+        }
+        
+        
     }
 
     private HashMap<Intersection,InterInfo> Dijkstra(Intersection i0,List<Intersection> destinations){
