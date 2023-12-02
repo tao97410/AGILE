@@ -54,7 +54,6 @@ public class Map {
         List<Intersection> allinter =  new ArrayList<Intersection>(intersections.values());
         List<Intersection> dest = allinter.subList(0, 3);
         HashMap<Intersection,InterInfo> result = Dijkstra(warehouse, dest);
-        System.out.println("fin");
         for(Entry<Intersection,InterInfo> entry : result.entrySet()){
             if(dest.contains(entry.getKey())){
                 System.out.println(entry.getKey().getId() + " [distance : " + entry.getValue().distance + ", pred : " + entry.getValue().pred + "]\n");
@@ -68,12 +67,13 @@ public class Map {
     private HashMap<Intersection,InterInfo> Dijkstra(Intersection i0,List<Intersection> destinations){
         PriorityQueue<InterCompare> q = new PriorityQueue<>();
         HashMap<Intersection,InterInfo> m = new HashMap<>();
+        int fin = destinations.size();
         m.put(i0, new InterInfo(0, null,true));
         q.add(new InterCompare(0, i0));
         while (!q.isEmpty()) {
             Intersection i = q.poll().intersection;
             if(!m.get(i).isGrey)continue;
-            if(destinations.isEmpty()) return m;
+            if(fin==0) return m;
             if(adjacency.get(i.getId()) != null){
                 for(Segment seg : adjacency.get(i.getId())){
                     Intersection iDest = getIntersectionById(seg.getDestination().getId());
@@ -85,7 +85,7 @@ public class Map {
                 }
             }
             m.get(i).isGrey=false;
-            if(destinations.contains(i)) destinations.remove(i);
+            if(destinations.contains(i)) fin--;
         }
         System.out.println("pas de solution\n");
         return null;
