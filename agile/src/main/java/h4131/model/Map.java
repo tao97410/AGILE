@@ -1,5 +1,6 @@
 package h4131.model;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,13 +48,24 @@ public class Map {
         
     }
 
-    public Graph getGraphFromPoints(LinkedList<DeliveryPoint> deliveryPoints) {
+    public Graph getGraphFromPoints(/*LinkedList<DeliveryPoint> deliveryPoints*/) {
+
+        //TEST
+        List<Intersection> allinter =  new ArrayList<Intersection>(intersections.values());
+        List<Intersection> dest = allinter.subList(0, 3);
+        HashMap<Intersection,InterInfo> result = Dijkstra(warehouse, dest);
+        System.out.println("fin");
+        for(Entry<Intersection,InterInfo> entry : result.entrySet()){
+            if(dest.contains(entry.getKey())){
+                System.out.println(entry.getKey().getId() + " [distance : " + entry.getValue().distance + ", pred : " + entry.getValue().pred + "]\n");
+            }
+        }
         
         return null;
 
     }
 
-    private HashMap<Intersection,InterInfo> Dijkstra(Intersection i0,ArrayList<Intersection> destinations){
+    private HashMap<Intersection,InterInfo> Dijkstra(Intersection i0,List<Intersection> destinations){
         PriorityQueue<InterCompare> q = new PriorityQueue<>();
         HashMap<Intersection,InterInfo> m = new HashMap<>();
         m.put(i0, new InterInfo(0, null,true));
@@ -62,17 +74,20 @@ public class Map {
             Intersection i = q.poll().intersection;
             if(!m.get(i).isGrey)continue;
             if(destinations.isEmpty()) return m;
-            for(Segment seg : adjacency.get(i.getId())){
-                Intersection iDest = getIntersectionById(seg.getDestination().getId());
-                double newCost = m.get(i).distance + seg.getLength();
-                if(m.get(iDest)==null || newCost < m.get(iDest).distance){
-                    m.put(iDest, new InterInfo(newCost, i, true));
-                    q.add(new InterCompare(newCost, iDest));
+            if(adjacency.get(i.getId()) != null){
+                for(Segment seg : adjacency.get(i.getId())){
+                    Intersection iDest = getIntersectionById(seg.getDestination().getId());
+                    double newCost = m.get(i).distance + seg.getLength();
+                    if(m.get(iDest)==null || newCost < m.get(iDest).distance){
+                        m.put(iDest, new InterInfo(newCost, i, true));
+                        q.add(new InterCompare(newCost, iDest));
+                    }
                 }
             }
             m.get(i).isGrey=false;
             if(destinations.contains(i)) destinations.remove(i);
         }
+        System.out.println("pas de solution\n");
         return null;
     } 
 

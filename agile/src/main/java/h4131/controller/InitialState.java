@@ -46,6 +46,7 @@ public class InitialState implements State{
         Map loadedMap = new Map(null);
         try {
             XMLdeserializer.loadMap(loadedMap);
+            loadedMap.getGraphFromPoints();
             w.drawMapAndGlobalTour(loadedMap, null);
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
