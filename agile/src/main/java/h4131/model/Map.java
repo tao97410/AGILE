@@ -3,9 +3,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Map.Entry;
 
 import h4131.calculus.Graph;
+import h4131.calculus.InterCompare;
+import h4131.calculus.InterInfo;
 
 public class Map {
     private HashMap<Long,Intersection> intersections;
@@ -49,6 +52,29 @@ public class Map {
         return null;
 
     }
+
+    private HashMap<Intersection,InterInfo> Dijkstra(Intersection i0,ArrayList<Intersection> destinations){
+        PriorityQueue<InterCompare> q = new PriorityQueue<>();
+        HashMap<Intersection,InterInfo> m = new HashMap<>();
+        m.put(i0, new InterInfo(0, null,true));
+        q.add(new InterCompare(0, i0));
+        while (!q.isEmpty()) {
+            Intersection i = q.poll().intersection;
+            if(!m.get(i).isGrey)continue;
+            if(destinations.isEmpty()) return m;
+            for(Segment seg : adjacency.get(i.getId())){
+                Intersection iDest = getIntersectionById(seg.getDestination().getId());
+                double newCost = m.get(i).distance + seg.getLength();
+                if(m.get(iDest)==null || newCost < m.get(iDest).distance){
+                    m.put(iDest, new InterInfo(newCost, i, true));
+                    q.add(new InterCompare(newCost, iDest));
+                }
+            }
+            m.get(i).isGrey=false;
+            if(destinations.contains(i)) destinations.remove(i);
+        }
+        return null;
+    } 
 
     public String toString(){
         StringBuilder result = new StringBuilder();
