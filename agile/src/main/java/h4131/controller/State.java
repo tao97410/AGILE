@@ -1,5 +1,7 @@
 package h4131.controller;
 
+import h4131.model.TimeWindow;
+import h4131.view.IntersectionCircle;
 import h4131.view.WindowBuilder;
 
 public interface State {
@@ -24,4 +26,18 @@ public interface State {
 	 * @param fileName which is the name of the xml map file
 	 */
 	public default void loadMap(Controller c, WindowBuilder w, String fileName){};
+
+	/**
+	 * Method called by the controller after a click on an intersection
+	 * @param c the controller
+	 * @param w the window
+	 * @param intersectionId which is the id of the clicked intersection
+	 */
+	public default void openMenuIntersection(Controller c, WindowBuilder w, IntersectionCircle intersectionId){};
+
+	public default void addDeliveryPoint(Controller c, WindowBuilder w, Long idIntersection, TimeWindow tw, int courier){};
+
+    public default void cancelDeliveryPoint(Controller c, WindowBuilder w, Long idIntersection){};
+
 }
+

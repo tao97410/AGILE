@@ -1,6 +1,7 @@
 package h4131.view;
 
 import h4131.controller.Controller;
+import h4131.model.TimeWindow;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -14,8 +15,13 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -28,15 +34,53 @@ public class DisplayMapSceneController {
     private Controller controller;
 
     @FXML
+    private StackPane container;
+    
+    @FXML
+    private TextArea idIntersection;
+    
+    @FXML
+    private Button cancelButton;
+
+    @FXML
     private VBox layout;
 
     @FXML
     private ChoiceBox<String> mapChoiceBox;
+    
+    @FXML
+    private TextField numberOfCourierField;
+
+    @FXML
+    private ChoiceBox<TimeWindow> timeWindowChoice;
+
+    @FXML
+    private ChoiceBox<Integer> courierChoice;
+
+    @FXML
+    private Button validationButton;
+
+    @FXML
+    private Group validationGroup;
 
     @FXML
     private void initialize(){
         mapChoiceBox.setValue("Select a map...");
         mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
+        numberOfCourierField.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
+            if (!event.getCharacter().matches("\\d")) {
+                event.consume(); // Consume non-numeric input
+            }
+        });
+        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE, TimeWindow.NINE_TEN, TimeWindow.TEN_ELEVEN, TimeWindow.ELEVEN_TWELVE);
+        timeWindowChoice.setValue(TimeWindow.EIGHT_NINE);
+    }
+
+    @FXML
+    void onNumberOfCouriersChanged(KeyEvent event) {        
+        if(!numberOfCourierField.getText().equals("")){
+            this.controller.setNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
+        }
     }
 
     @FXML
@@ -52,8 +96,44 @@ public class DisplayMapSceneController {
         controller.loadGlobalTour();
     }
 
+    @FXML
+    void validateInformation(ActionEvent event) {
+        this.validationGroup.setVisible(false);
+        controller.addDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)), this.timeWindowChoice.getValue(), this.courierChoice.getValue());
+    }
+    
+    @FXML
+    void cancelIntersection(ActionEvent event) {
+        this.validationGroup.setVisible(false);
+        controller.cancelDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)));
+    }
+
+    public TextArea getWhichIntersection(){
+        return this.idIntersection;
+    }
+    
+    public ChoiceBox<TimeWindow> getTimeWindowChoice(){
+        return this.timeWindowChoice;
+    }
+
+    public ChoiceBox<Integer> getCourierChoice(){
+        return this.courierChoice;
+    }
+
+    public Button getValidateButton(){
+        return this.validationButton;
+    }
+
+    public Group getValidationGroup(){
+        return this.validationGroup;
+    }
+
     public void setChoiceBoxValue(String value){
         mapChoiceBox.setValue(value);
+    }
+
+    public void setNumberOfCourierFieldValue(String value){
+        numberOfCourierField.setText(value);
     }
     /**
 	 * Method called by the windowBuilder to set the controller when creating homeScene
@@ -83,9 +163,8 @@ public class DisplayMapSceneController {
                 intersectionClicked.setStroke(null);
             }else{
                 intersectionClicked.setStroke(Color.RED);
+                this.controller.leftClick(intersectionClicked);
             }
-            
-            //controller.leftclick(intersectionClicked.getIntersectionId());
         }
 	} 
 

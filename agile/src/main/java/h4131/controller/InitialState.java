@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
+import h4131.view.IntersectionCircle;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
@@ -62,4 +63,5 @@ public class InitialState implements State{
             //Do nothing
         } 
     }
+
 }

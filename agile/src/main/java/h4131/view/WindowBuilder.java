@@ -9,17 +9,23 @@ import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.Segment;
+import h4131.model.TimeWindow;
 import h4131.model.Tour;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -31,7 +37,9 @@ public class WindowBuilder {
     private Stage stage;
     private Parent root;
     private Controller controller;
+    private DisplayMapSceneController displayMapSceneController;
     private Pane shapesPane;
+    private VBox layout;
     private double longMin;
     private double longMax;
     private double latMin;
@@ -42,6 +50,8 @@ public class WindowBuilder {
     public WindowBuilder(Controller controller, Stage primaryStage, Map firstMap){
         this.controller = controller;
         this.stage = primaryStage;
+
+        this.controller.setNumberOfCourier(3);
 
         drawMap(firstMap);
 
@@ -82,8 +92,9 @@ public class WindowBuilder {
             // load fxml
             FXMLLoader displayMapSceneLoader = new FXMLLoader(getClass().getResource("/h4131/displayMapScene.fxml"));
             this.root = displayMapSceneLoader.load();
-            DisplayMapSceneController displayMapSceneController = displayMapSceneLoader.getController();
+            displayMapSceneController = displayMapSceneLoader.getController();
             displayMapSceneController.setController(controller);
+            displayMapSceneController.setNumberOfCourierFieldValue(""+controller.getNumberOfCourier());
             
             shapesPane = new Pane();
             shapesPane.setPrefHeight(screenHeight);
@@ -141,7 +152,7 @@ public class WindowBuilder {
 
             Group group = new Group(shapesPane);
             Parent zoomPane = displayMapSceneController.createZoomPane(group);
-            VBox layout = displayMapSceneController.getLayout();
+            layout = displayMapSceneController.getLayout();
             layout.getChildren().setAll(zoomPane);
             VBox.setVgrow(zoomPane, Priority.ALWAYS);
             layout.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
@@ -179,6 +190,36 @@ public class WindowBuilder {
         }
     }
 
+    public void openMenuIntersection(Map map, int numberOfCourier, IntersectionCircle intersectionId){        
+        ChoiceBox<Integer> courierChoiceBox = displayMapSceneController.getCourierChoice();
+        courierChoiceBox.getItems().clear();
+        for(int i = 1; i<=numberOfCourier; i++){
+            courierChoiceBox.getItems().add(i);            
+        }
+        courierChoiceBox.setValue(1);
+        TextArea whichIntersection = displayMapSceneController.getWhichIntersection();
+        whichIntersection.setText("Intersection : " + intersectionId.getIntersectionId());
+        Group validationGroup = displayMapSceneController.getValidationGroup();
+        validationGroup.setVisible(true);
+        validationGroup.setDisable(false);
+        disableBackground(true);
+    }
+
+    public void disableBackground(boolean bool){
+        layout.setDisable(bool);
+        shapesPane.setDisable(bool);
+    }
+
+    public void unSetIntersection(Long id){
+        for(Node node : shapesPane.getChildren()){
+            if (node instanceof IntersectionCircle) {
+                IntersectionCircle circle = (IntersectionCircle) node;
+                if (circle.getIntersectionId().equals(id)) {
+                    circle.setStroke(Color.TRANSPARENT);
+                }
+            }
+        }
+    }
     
 
     private void addCircle(Pane pane, double x, double y, double radius, Long intersectionId, DisplayMapSceneController sceneController) {
