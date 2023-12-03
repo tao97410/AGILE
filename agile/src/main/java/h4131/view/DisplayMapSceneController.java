@@ -14,6 +14,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
@@ -34,17 +35,28 @@ public class DisplayMapSceneController {
     private ChoiceBox<String> mapChoiceBox;
 
     @FXML
+    private Button loadMapButton;
+
+    @FXML
     private void initialize(){
         mapChoiceBox.setValue("Select a map...");
         mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
+        loadMapButton.setDisable(true);
+
+        // Add a ChangeListener to the ChoiceBox to detect selection changes
+        mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                // Enables load map button if a correct value is selected
+                loadMapButton.setDisable(newValue.equals("Select a map..."));
+            }
+        });
     }
 
     @FXML
     void doLoadMap(ActionEvent event) {
-        if(!mapChoiceBox.getValue().equals("Select a map...")){
-            String fileName = mapChoiceBox.getValue() + ".xml";
-            controller.loadMap(fileName);
-        }       
+        String fileName = mapChoiceBox.getValue() + ".xml";
+        controller.loadMap(fileName);       
     }
 
     @FXML
