@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Map.Entry;
 
+import h4131.calculus.Arc;
 import h4131.calculus.Graph;
 import h4131.calculus.InterCompare;
 import h4131.calculus.InterInfo;
@@ -14,9 +15,9 @@ import h4131.calculus.InterInfo;
 public class Map {
     private HashMap<Long,Intersection> intersections;
     private HashMap<Long,List<Segment>> adjacency;
-    private Intersection warehouse;
+    private DeliveryPoint warehouse;
 
-    public Map(Intersection aWarehouse){
+    public Map(DeliveryPoint aWarehouse){
         this.warehouse = aWarehouse;
         this.intersections = new HashMap<>();
         this.adjacency = new HashMap<>();
@@ -62,70 +63,138 @@ public class Map {
         return res;
     }
 
-    public Graph getGraphFromPoints(/*LinkedList<DeliveryPoint> deliveryPoints*/) {
+    public Graph getGraphFromPoints(LinkedList<DeliveryPoint> d) {
 
-        //TEST
-        List<Intersection> allinter =  new ArrayList<Intersection>(intersections.values());
-        List<Intersection> dest = allinter.subList(0, 3);
-        HashMap<Intersection,InterInfo> result = Dijkstra(warehouse, dest);
-        for (Intersection i : dest){
-            LinkedList<Segment> path = new LinkedList<Segment>();
-            getPath(warehouse, i, result,path);
-            System.out.println("chemin vers " + i.getLatitude() + " , " + i.getLongitude());
-            int count =0;
-            for(Segment street : path){
-            count ++;
-            if(count==path.size())
-                System.out.println(street.getName());
-            else   
-                System.out.print( street.getName()+ "->");
+
+        // TEST
+        ArrayList<Intersection> allIntersections = new ArrayList<>(intersections.values());
+        LinkedList<DeliveryPoint> deliveryPoints = new LinkedList<>();
+        System.out.println("Warehouse - " + warehouse.toString());
+        DeliveryPoint point1 = new DeliveryPoint(allIntersections.get(1), TimeWindow.EIGHT_NINE);
+        deliveryPoints.add(point1);
+        System.out.println(point1.toString());
+        DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(51), TimeWindow.EIGHT_NINE);
+        deliveryPoints.add(point2);
+        System.out.println(point2.toString());
+        DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(11), TimeWindow.NINE_TEN);
+        deliveryPoints.add(point3);
+        System.out.println(point3.toString());
+        DeliveryPoint point4 = new DeliveryPoint(allIntersections.get(15), TimeWindow.TEN_ELEVEN);
+        deliveryPoints.add(point4);
+        System.out.println(point4.toString());
+        DeliveryPoint point5 = new DeliveryPoint(allIntersections.get(6), TimeWindow.TEN_ELEVEN);
+        deliveryPoints.add(point5);
+        System.out.println(point5.toString());
+        DeliveryPoint point6 = new DeliveryPoint(allIntersections.get(24), TimeWindow.TEN_ELEVEN);
+        deliveryPoints.add(point6);
+        System.out.println(point6.toString());
+        DeliveryPoint point7 = new DeliveryPoint(allIntersections.get(21), TimeWindow.ELEVEN_TWELVE);
+        deliveryPoints.add(point7);
+        System.out.println(point7.toString());
+
+        Graph graph = new Graph();
+        deliveryPoints.addFirst(warehouse);
+
+        for (DeliveryPoint currentPoint : deliveryPoints)
+        {
+            graph.nodes.add(currentPoint);
+            List<Intersection> possibleDestinations = new LinkedList<>();
+
+            // Searching the minimum TimeWindow, STRICTLY GREATER THAN the current TimeWindow
+            // If there isn't any point with a strictly greater TimeWindow, its value will be WAREHOUSE
+            // It's logic, because it means that we will come back to the warehouse after having delivered all points of this window
+            TimeWindow minWindow = TimeWindow.WAREHOUSE;
+            for (DeliveryPoint otherPoint : deliveryPoints) {
+                if (minWindow.compareTo(TimeWindow.WAREHOUSE) == 0) {
+                    if (otherPoint.getTime().compareTo(currentPoint.getTime()) > 0) {
+                        minWindow = otherPoint.getTime();
+                    }
+                } else if (otherPoint.getTime().compareTo(minWindow) < 0 && otherPoint.getTime().compareTo(currentPoint.getTime()) > 0) {
+                    minWindow = otherPoint.getTime();                
+                }
+            }
+
+            // The possible destinations are the ones with the same TimeWindow than the current point
+            // or with the TimeWindow equal to the minWindow calculated before
+            // Indeed, we can't "jump over" a TimeWindow
+            // For example, a 11-12 delivery can't be delivered after a 9-10 delivery if a 10-11 delivery exists
+            for (DeliveryPoint otherPoint : deliveryPoints) {
+                if (otherPoint != currentPoint && (otherPoint.getTime().compareTo(currentPoint.getTime()) == 0 || otherPoint.getTime().compareTo(minWindow) == 0)) {
+                    possibleDestinations.add(otherPoint.getPlace());
+                }
+            }
+            HashMap<Intersection,InterInfo> currentMap = dijkstra(currentPoint.getPlace(), possibleDestinations);
+            for (Intersection currentDestination : possibleDestinations){
+                
+                LinkedList<Segment> currentPath = new LinkedList<Segment>();
+                getPath(currentPoint.getPlace(), currentDestination, currentMap, currentPath);
+
+                Arc newArc = new Arc(currentPoint, getDeliveryPointFromIntersection(deliveryPoints, currentDestination), currentMap.get(currentDestination).distance);
+                newArc.path = currentPath;
+                graph.arcs.add(newArc);
+                
             }
         }
         
-        return null;
+        System.out.println(graph.toString());
+
+        return graph;
 
     }
 
-    private void getPath(Intersection start, Intersection finish, HashMap<Intersection,InterInfo> map, LinkedList<Segment> path){
+    private void getPath(Intersection origin, Intersection destination, HashMap<Intersection,InterInfo> map, LinkedList<Segment> path){
         
-        if (start.getId() != finish.getId()){
-            getPath(start, map.get(finish).pred, map, path);
-            path.add(findSegment(map.get(finish).pred.getId(), finish.getId()));
+        if (origin.getId() != destination.getId()){
+            getPath(origin, map.get(destination).pred, map, path);
+            path.add(findSegment(map.get(destination).pred.getId(), destination.getId()));
+        } 
+    }
+
+    private DeliveryPoint getDeliveryPointFromIntersection(List<DeliveryPoint> deliveries, Intersection intersection) {
+        for (DeliveryPoint d : deliveries) {
+            if (d.getPlace().getId() == intersection.getId()) {
+                return d;
+            }
         }
-        
-        
+        return null;
     }
 
-    private HashMap<Intersection,InterInfo> Dijkstra(Intersection i0,List<Intersection> destinations){
-        PriorityQueue<InterCompare> q = new PriorityQueue<>();
-        HashMap<Intersection,InterInfo> m = new HashMap<>();
-        int fin = destinations.size();
-        m.put(i0, new InterInfo(0, null,true));
-        q.add(new InterCompare(0, i0));
-        while (!q.isEmpty()) {
-            Intersection i = q.poll().intersection;
-            if(!m.get(i).isGrey)continue;
-            if(fin==0) return m;
-            if(adjacency.get(i.getId()) != null){
-                for(Segment seg : adjacency.get(i.getId())){
-                    Intersection iDest = getIntersectionById(seg.getDestination().getId());
-                    double newCost = m.get(i).distance + seg.getLength();
-                    if(m.get(iDest)==null || newCost < m.get(iDest).distance){
-                        m.put(iDest, new InterInfo(newCost, i, true));
-                        q.add(new InterCompare(newCost, iDest));
+    private HashMap<Intersection,InterInfo> dijkstra(Intersection origin, List<Intersection> destinations){
+        
+        PriorityQueue<InterCompare> queue = new PriorityQueue<>();
+        HashMap<Intersection,InterInfo> map = new HashMap<>();
+        int destinationsLeft = destinations.size();
+        map.put(origin, new InterInfo(0, null, true));
+        queue.add(new InterCompare(0, origin));
+        
+        while (!queue.isEmpty()) {
+            Intersection currentInter = queue.poll().intersection;
+            if (!map.get(currentInter).isGrey)
+                continue;
+            if (destinationsLeft == 0) 
+                return map;
+            if (adjacency.get(currentInter.getId()) != null) {
+                for (Segment seg : adjacency.get(currentInter.getId())){
+                    Intersection currentDest = getIntersectionById(seg.getDestination().getId());
+                    double newCost = map.get(currentInter).distance + seg.getLength();
+                    if (map.get(currentDest) == null || newCost < map.get(currentDest).distance){
+                        map.put(currentDest, new InterInfo(newCost, currentInter, true));
+                        queue.add(new InterCompare(newCost, currentDest));
                     }
                 }
             }
-            m.get(i).isGrey=false;
-            if(destinations.contains(i)) fin--;
+            map.get(currentInter).isGrey = false;
+            if (destinations.contains(currentInter))
+                destinationsLeft--;
         }
+        
         System.out.println("pas de solution\n");
         return null;
     } 
 
     public String toString(){
         StringBuilder result = new StringBuilder();
-        result.append("warehouse:  ").append(warehouse.getId()).append("\n");
+        result.append("warehouse:  ").append(warehouse.getPlace().getId()).append("\n");
         int intersectionCount = 0;
         for (Entry<Long, Intersection> entry : intersections.entrySet()) {
             if (intersectionCount >= 10) {
@@ -210,14 +279,14 @@ public class Map {
     /**
      * @return Intersection return the warehouse
      */
-    public Intersection getWarehouse() {
+    public DeliveryPoint getWarehouse() {
         return warehouse;
     }
 
     /**
      * @param warehouse the warehouse to set
      */
-    public void setWarehouse(Intersection warehouse) {
+    public void setWarehouse(DeliveryPoint warehouse) {
         this.warehouse = warehouse;
     }
 

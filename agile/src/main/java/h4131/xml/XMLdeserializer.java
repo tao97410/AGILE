@@ -64,7 +64,8 @@ public class XMLdeserializer {
 		if (!map.hasIntersection(warehouseId))
    			throw new ExceptionXML("Error when reading file: The adress of the warehouse must be an existing intersection");
 		Intersection warehouse = map.getIntersectionById(warehouseId);
-		map.setWarehouse(warehouse);		
+		DeliveryPoint warehousePoint = new DeliveryPoint(warehouse, TimeWindow.WAREHOUSE);
+		map.setWarehouse(warehousePoint);		
     }
 	//////////////////GLOBAL TOUR////////////////////////////
 	public static void loadGlobalTour(GlobalTour gt,Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{

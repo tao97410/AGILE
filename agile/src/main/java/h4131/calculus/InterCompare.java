@@ -7,9 +7,9 @@ public class InterCompare implements Comparable<InterCompare> {
     public double distance;
     public Intersection intersection;
 
-    public InterCompare(double aDistance, Intersection aIntersection) {
+    public InterCompare(double aDistance, Intersection anIntersection) {
         this.distance = aDistance;
-        this.intersection = aIntersection;
+        this.intersection = anIntersection;
     }
 
     @Override

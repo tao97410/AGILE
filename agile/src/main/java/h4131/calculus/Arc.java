@@ -10,10 +10,10 @@ public class Arc {
     
     public DeliveryPoint origin;
     public DeliveryPoint destination;
-    public int distance;
+    public double distance;
     public Collection<Segment> path;
 
-    public Arc(DeliveryPoint aOrigin, DeliveryPoint aDestination, int aDistance) {
+    public Arc(DeliveryPoint aOrigin, DeliveryPoint aDestination, double aDistance) {
         this.origin = aOrigin;
         this.destination = aDestination;
         this.distance = aDistance;

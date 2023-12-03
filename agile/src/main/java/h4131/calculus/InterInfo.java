@@ -8,9 +8,9 @@ public class InterInfo {
     public Intersection pred;
     public boolean isGrey;
 
-    public InterInfo(double adist,Intersection apred, boolean aIsGrey) {
-        this.distance = adist;
-        this.pred = apred;
+    public InterInfo(double aDist, Intersection aPred, boolean aIsGrey) {
+        this.distance = aDist;
+        this.pred = aPred;
         this.isGrey = aIsGrey;
     }
 
