@@ -1,6 +1,9 @@
 package h4131.model;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import h4131.calculus.Graph;
 
 public class Tour {
     private List<Segment> course;
@@ -14,7 +17,25 @@ public class Tour {
     }
 
     
+    public int TSPDynamicProgramming(Graph initialGraph,LinkedList<DeliveryPoint> d, Map map){
+         initialGraph=map.getGraphFromPoints(d);
+         
 
+
+
+
+
+
+
+        return 0;
+
+    }
+
+
+    //Creates the cost function for the TSP
+    private int[][] createCost(){
+
+    }
     /**
      * @return List<Segment> return the course
      */
