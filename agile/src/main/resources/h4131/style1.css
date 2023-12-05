@@ -1,0 +1,33 @@
+.root { 
+    -fx-focus-color: transparent; 
+    -fx-faint-focus-color: transparent;
+}
+
+Button {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+ChoiceBox {
+    -fx-font-size: 18px;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+Button:hover {
+    -fx-text-fill: red;
+    -fx-cursor: hand;
+}
+
+ChoiceBox:hover {
+    -fx-cursor: hand;
+}
+
+ChoiceBox .menu-item:focused { -fx-background-color: red; }
+ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
+
+Pane{
+    -fx-background-color: white;
+}
