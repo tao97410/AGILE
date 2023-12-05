@@ -57,12 +57,12 @@ public class MapTest {
     }
     
     @Nested
-    class GraphTest{
+    class MapGraphTest{
 
         @Mock
         private Collection<DeliveryPoint> mockedDeliveryPoints;
 
-        @Mock
+        
         private Graph result;
 
         @BeforeEach

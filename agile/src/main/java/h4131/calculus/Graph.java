@@ -19,21 +19,33 @@ public class Graph {
         arcs = new ArrayList<>();
     }
 
-    // public String toString() {
-    //     StringBuilder result = new StringBuilder();
-    //     for (Arc a : arcs) {
-    //         result.append("* From (" 
-    //             + a.origin.getPlace().getLatitude() 
-    //             + ", " 
-    //             + a.origin.getPlace().getLongitude() 
-    //             + ") to (" 
-    //             + a.destination.getPlace().getLatitude() 
-    //             + ", " 
-    //             + a.destination.getPlace().getLongitude() 
-    //             + "): " + a.distance + "\n");
-    //     }
-    //     return result.toString();
-    // }
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+          for(DeliveryPoint d : nodes){
+            result.append("Node : (")
+            .append(d.getPlace().getLatitude())
+            .append(" , ")
+            .append(d.getPlace().getLongitude())
+            .append(") at ")
+            .append(d.getTime())
+            .append("\n");
+        }
+
+        for (Arc a : arcs) {
+            result.append("* From (" 
+                + a.origin.getPlace().getLatitude() 
+                + ", " 
+                + a.origin.getPlace().getLongitude() 
+                + ") to (" 
+                + a.destination.getPlace().getLatitude() 
+                + ", " 
+                + a.destination.getPlace().getLongitude() 
+                + "): " + a.distance + "\n");
+        }
+
+        return result.toString();
+    }
 
     @Override
     public boolean equals(Object o){

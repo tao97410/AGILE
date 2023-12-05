@@ -53,7 +53,7 @@ public class DeliveryPoint {
             return false;
         else{
             DeliveryPoint d  = (DeliveryPoint) o;
-            return (place == d.getPlace() && time == d.getTime());
+            return (place.equals(d.getPlace()) && time == d.getTime());
         }
         
     }

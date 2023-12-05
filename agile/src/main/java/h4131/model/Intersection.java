@@ -60,7 +60,7 @@ public class Intersection {
             return false;
         else{
             Intersection i  = (Intersection) o;
-            return (id == i.getId() && latitude == i.getLatitude()&& longitude == i.getLongitude());
+            return (id == i.getId() && latitude == i.getLatitude() && longitude == i.getLongitude());
         }
         
     }

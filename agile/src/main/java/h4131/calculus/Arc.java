@@ -29,7 +29,7 @@ public class Arc {
             res = false;
         else{
             Arc a = (Arc) o;
-            if(origin.equals(a.origin) || destination.equals(a.destination) || distance != a.distance)
+            if(!origin.equals(a.origin) || !destination.equals(a.destination) || distance != a.distance)
                 res = false;
         
         var iterA = this.path.iterator();
