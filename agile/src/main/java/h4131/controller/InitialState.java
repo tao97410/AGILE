@@ -8,6 +8,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import h4131.calculus.CompleteGraph;
+import h4131.calculus.Graph;
+import h4131.calculus.TSP;
+import h4131.calculus.TSP1;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
@@ -46,7 +50,12 @@ public class InitialState implements State{
         Map loadedMap = new Map(null);
         try {
             XMLdeserializer.loadMap(loadedMap);
-            loadedMap.getGraphFromPoints(null);
+            CompleteGraph g = loadedMap.getGraphFromPoints(null);
+            g.computeBestTour();
+            System.out.println(g.nodes);
+            System.out.println(g.arcs);
+            
+           
             w.drawMapAndGlobalTour(loadedMap, null);
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block

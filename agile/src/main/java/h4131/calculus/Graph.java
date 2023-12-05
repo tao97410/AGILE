@@ -1,34 +1,25 @@
 package h4131.calculus;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import h4131.model.DeliveryPoint;
 
-public class Graph {
+public interface Graph {
+	/**
+	 * @return the number of vertices in <code>this</code>
+	 */
+	public abstract int getNbVertices();
 
-    public Collection<DeliveryPoint> nodes;
-    public Collection<Arc> arcs;
+	/**
+	 * @param i 
+	 * @param j 
+	 * @return the cost of arc (i,j) if (i,j) is an arc; -1 otherwise
+	 */
+	public abstract double getCost(int i, int j);
 
-    public Graph() {
-        nodes = new ArrayList<>();
-        arcs = new ArrayList<>();
-    }
-
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (Arc a : arcs) {
-            result.append("* From (" 
-                + a.origin.getPlace().getLatitude() 
-                + ", " 
-                + a.origin.getPlace().getLongitude() 
-                + ") to (" 
-                + a.destination.getPlace().getLatitude() 
-                + ", " 
-                + a.destination.getPlace().getLongitude() 
-                + "): " + a.distance + "\n");
-        }
-        return result.toString();
-    }
+	/**
+	 * @param i 
+	 * @param j 
+	 * @return true if <code>(i,j)</code> is an arc of <code>this</code>
+	 */
+	public abstract boolean isArc(int i, int j);
 
 }
