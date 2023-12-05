@@ -1,10 +1,11 @@
 package h4131.model;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Tour {
-    private List<Segment> course;
-    private List<DeliveryPoint> deliveryPoints;
+    private Collection<Segment> course;
+    private Collection<DeliveryPoint> deliveryPoints;
     private Courier courier;
 
     public Tour(Courier aCourier) {
@@ -18,7 +19,7 @@ public class Tour {
     /**
      * @return List<Segment> return the course
      */
-    public List<Segment> getCourse() {
+    public Collection<Segment> getCourse() {
         return course;
     }
 

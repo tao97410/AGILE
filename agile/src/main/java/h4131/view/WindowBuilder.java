@@ -1,7 +1,7 @@
 package h4131.view;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map.Entry;
 
 import h4131.controller.Controller;
@@ -108,10 +108,10 @@ public class WindowBuilder {
             //drawing the elements :
 
             //drawing lines
-            for (Entry<Long, List<Segment>> entry : map.getAdjacency().entrySet()) {
+            for (Entry<Long, Collection<Segment>> entry : map.getAdjacency().entrySet()) {
                 Long key = entry.getKey();
                 Intersection origine = map.getIntersectionById(key);
-                List<Segment> segments = entry.getValue();
+                Collection<Segment> segments = entry.getValue();
                 double originX = ((origine.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                 double originY = screenHeight - ((origine.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
                 
