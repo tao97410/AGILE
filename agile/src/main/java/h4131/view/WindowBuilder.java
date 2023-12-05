@@ -1,39 +1,42 @@
 package h4131.view;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
 import h4131.controller.Controller;
+import h4131.model.CurrentDeliveryPoint;
+import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.Segment;
-import h4131.model.TimeWindow;
 import h4131.model.Tour;
-
+import h4131.observer.Observable;
+import h4131.observer.Observer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class WindowBuilder {
+public class WindowBuilder implements Observer{
 
     private Stage stage;
     private Parent root;
@@ -45,7 +48,6 @@ public class WindowBuilder {
     private double longMax;
     private double latMin;
     private double latMax;
-    private DisplayMapSceneController displayMapSceneController;
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -211,7 +213,7 @@ public class WindowBuilder {
         }
     }
 
-    public void openMenuIntersection(Map map, int numberOfCourier, IntersectionCircle intersectionId){        
+    public void openMenuIntersection(Map map, int numberOfCourier, Long intersectionId){        
         ChoiceBox<Integer> courierChoiceBox = displayMapSceneController.getCourierChoice();
         courierChoiceBox.getItems().clear();
         for(int i = 1; i<=numberOfCourier; i++){
@@ -219,7 +221,7 @@ public class WindowBuilder {
         }
         courierChoiceBox.setValue(1);
         TextArea whichIntersection = displayMapSceneController.getWhichIntersection();
-        whichIntersection.setText("Intersection : " + intersectionId.getIntersectionId());
+        whichIntersection.setText("Intersection : " + intersectionId);
         Group validationGroup = displayMapSceneController.getValidationGroup();
         validationGroup.setVisible(true);
         validationGroup.setDisable(false);
@@ -272,5 +274,23 @@ public class WindowBuilder {
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
         shapesPane.getChildren().add(line);
+    }
+
+    @Override
+    public void update(Observable observed, Object arg) {
+        displayListDeliveryPoint();
+    }
+
+    private void displayListDeliveryPoint(){
+        CurrentDeliveryPoint currentDeliveryPoint = controller.getCurrentDeliveryPoint();
+        for(LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()){
+            Group listDeliveryPoint = new Group();
+            TitledPane titledPane = new TitledPane("deed", listDeliveryPoint);
+            displayMapSceneController.getTourListGroup().getChildren().add(titledPane);
+            for(DeliveryPoint deliveryPoint : list){
+                Label label = new Label("Intersection " + deliveryPoint.getTime());
+                listDeliveryPoint.getChildren().add(label);
+            }
+        }
     }
 }

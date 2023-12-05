@@ -11,9 +11,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
+<StackPane fx:id="container" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
    <children>
-      <VBox fx:id="layout" />
+      <VBox fx:id="layout" stylesheets="@style.css" />
       <Group layoutX="100.0" StackPane.alignment="TOP_LEFT">
          <children>
             <Button layoutX="20.0" mnemonicParsing="false" onAction="#doLoadTour" prefWidth="200.0" text="Load a tour">
@@ -26,9 +26,8 @@
             <ChoiceBox fx:id="mapChoiceBox" layoutX="20.0" layoutY="100.0" prefWidth="200.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </ChoiceBox>
-            <Button fx:id="loadMapButton" layoutX="20.0" layoutY="175.0" mnemonicParsing="false" onAction="#doLoadMap" prefWidth="200.0" text="Load chosen map">
+               </padding></ChoiceBox>
+            <Button layoutX="20.0" layoutY="150.0" mnemonicParsing="false" onAction="#doLoadMap" prefWidth="200.0" text="Load chosen map">
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
@@ -58,5 +57,6 @@
             <Button fx:id="cancelButton" layoutX="85.0" layoutY="90.0" mnemonicParsing="false" onAction="#cancelIntersection" text="Cancel" />
          </children>
       </Group>
+      <Group fx:id="tourListGroup" StackPane.alignment="TOP_RIGHT" />
    </children>
 </StackPane>

@@ -63,6 +63,9 @@ public class DisplayMapSceneController {
     private Group validationGroup;
 
     @FXML
+    private Group tourListGroup;
+
+    @FXML
     private Button loadMapButton;
 
     @FXML
@@ -81,7 +84,7 @@ public class DisplayMapSceneController {
     @FXML
     void onNumberOfCouriersChanged(KeyEvent event) {        
         if(!numberOfCourierField.getText().equals("")){
-            this.controller.setNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
+            this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
         }
         loadMapButton.setDisable(true);
 
@@ -109,13 +112,17 @@ public class DisplayMapSceneController {
     @FXML
     void validateInformation(ActionEvent event) {
         this.validationGroup.setVisible(false);
-        controller.addDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)), this.timeWindowChoice.getValue(), this.courierChoice.getValue());
+        controller.addDeliveryPoint(this.timeWindowChoice.getValue(), this.courierChoice.getValue());
     }
     
     @FXML
     void cancelIntersection(ActionEvent event) {
         this.validationGroup.setVisible(false);
         controller.cancelDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)));
+    }
+
+    public Group getTourListGroup(){
+        return this.tourListGroup;
     }
 
     public TextArea getWhichIntersection(){
@@ -172,7 +179,7 @@ public class DisplayMapSceneController {
                 intersectionClicked.setStroke(null);
             }else{
                 intersectionClicked.setStroke(Color.RED);
-                this.controller.leftClick(intersectionClicked);
+                this.controller.leftClick(intersectionClicked.getIntersectionId());
             }
         }
 	} 
