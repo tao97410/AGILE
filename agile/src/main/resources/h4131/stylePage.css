@@ -14,7 +14,7 @@ ChoiceBox:hover {
     -fx-cursor: hand;
 } 
 
-#timeWindowChoice, #courierChoice {
+#timeWindowChoice, #courierChoice, #modifyTimeWindowChoice, #modifyCourierChoice {
     -fx-border-color: black;
     -fx-border-width: 3px;
     -fx-border-radius: 3px;
@@ -38,12 +38,12 @@ Button:hover {
     -fx-cursor: hand;
 }
 
-#validationButton {
+#validationButton, #modifyButton {
     -fx-background-color : rgb(50, 140, 50);
     -fx-text-fill : white;
 }
 
-#cancelButton {
+#cancelButton, #deleteButton {
     -fx-text-fill:white;
     -fx-background-color: rgb(255, 56, 56);
 }

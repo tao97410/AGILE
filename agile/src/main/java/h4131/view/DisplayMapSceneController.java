@@ -60,6 +60,24 @@ public class DisplayMapSceneController {
     private Button validationButton;
 
     @FXML
+    private Button deleteButton;
+
+    @FXML
+    private Pane modifyPane;
+
+    @FXML
+    private Label idDeliveryPoint;
+
+    @FXML
+    private ChoiceBox<String> modifyTimeWindowChoice;
+
+    @FXML
+    private ChoiceBox<Integer> modifyCourierChoice;
+
+    @FXML
+    private Button modifyButton;
+
+    @FXML
     private Pane validationPane;
 
     @FXML
@@ -93,6 +111,10 @@ public class DisplayMapSceneController {
             TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
         timeWindowChoice.setValue(TimeWindow.EIGHT_NINE.getRepresentation());
 
+        modifyTimeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(), TimeWindow.NINE_TEN.getRepresentation(),
+            TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
+        modifyTimeWindowChoice.setValue(TimeWindow.EIGHT_NINE.getRepresentation());
+
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
@@ -122,6 +144,20 @@ public class DisplayMapSceneController {
     void cancelIntersection(ActionEvent event) {
         this.validationPane.setVisible(false);
         controller.cancelDeliveryPoint();
+    }
+
+    @FXML
+    void modifyDeliveryPoint(ActionEvent event) {
+        this.modifyPane.setVisible(false);
+        String timeValue = this.modifyTimeWindowChoice.getValue();
+        TimeWindow time = TimeWindow.getTimeWindowByRepresentation(timeValue);
+        controller.changeInfosDeliveryPoint(time, this.modifyCourierChoice.getValue());
+    }
+
+    @FXML
+    void deleteDeliveryPoint(ActionEvent event) {
+        this.modifyPane.setVisible(false);
+        controller.deleteDeliveryPoint();
     }
 
     public VBox getTourListGroup(){
@@ -200,6 +236,7 @@ public class DisplayMapSceneController {
         if (event.getSource() instanceof DeliveryPointLabel) {
             DeliveryPointLabel clickedPoint = (DeliveryPointLabel) event.getSource();
             System.out.println(clickedPoint.getDeliveryPoint().getPlace().getId());
+            this.controller.modifyDeliveryPoint(clickedPoint.getDeliveryPoint(), clickedPoint.getCourier());
         }
     }
 
@@ -392,5 +429,21 @@ public class DisplayMapSceneController {
         } else {
             scroller.setVvalue(scroller.getVmin());
         }
+    }
+
+    public ChoiceBox<Integer> getModifyCourierChoice() {
+        return modifyCourierChoice;
+    }
+
+    public Label getWhichDeliveryPoint() {
+        return idDeliveryPoint;
+    }
+
+    public Pane getModifyPane() {
+        return modifyPane;
+    }
+
+    public ChoiceBox<String> getModifyTimeWindowChoice() {
+        return modifyTimeWindowChoice;
     }
 }

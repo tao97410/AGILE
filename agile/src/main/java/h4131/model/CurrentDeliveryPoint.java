@@ -72,4 +72,16 @@ public class CurrentDeliveryPoint extends Observable{
         notifyObservers();
     }
 
+
+    public void removeNonAssignedDeliveryPoint(DeliveryPoint deliveryPointToRemove) {
+        this.nonAffectedDeliveryPoints.remove(deliveryPointToRemove);
+        notifyObservers();
+    }
+
+
+    public void removeAssignedDeliveryPoint(DeliveryPoint deliveryPointToRemove, int courier) {
+        this.affectedDeliveryPoints.get(courier-1).remove(deliveryPointToRemove);
+        notifyObservers();
+    }
+
 }

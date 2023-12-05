@@ -285,20 +285,20 @@ public class WindowBuilder implements Observer{
         CurrentDeliveryPoint currentDeliveryPoint = controller.getCurrentDeliveryPoint();
         VBox tourListGroup = displayMapSceneController.getTourListGroup();
         tourListGroup.getChildren().clear();
-        int compteur = 1;
+        int courier = 1;
         for(LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()){
             if(!list.isEmpty()){
                 VBox listDeliveryPoint = new VBox();
-                TitledPane titledPane = new TitledPane("Courier : " + compteur, listDeliveryPoint);                
+                TitledPane titledPane = new TitledPane("Courier : " + courier, listDeliveryPoint);                
                 tourListGroup.getChildren().add(titledPane);
                 for(DeliveryPoint deliveryPoint : list){
                     DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
-                        +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint);
+                        +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint, courier);
                     label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
                     listDeliveryPoint.getChildren().add(label);
                 }
             }
-            compteur++;
+            courier++;
         }
         if(!currentDeliveryPoint.getNonAffectedDeliveryPoints().isEmpty()){
             VBox listDeliveryPoint = new VBox();
@@ -306,11 +306,29 @@ public class WindowBuilder implements Observer{
             tourListGroup.getChildren().add(titledPane);
             for(DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()){
                 DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
-                    +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint);
+                    +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint, 0);
                 label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
                 listDeliveryPoint.getChildren().add(label);
             }
         }
         
+    }
+
+    public void openMenuModifyDeliveryPoint(int numberOfCourier, DeliveryPoint deliveryPoint, int currentCourier) {
+        ChoiceBox<Integer> modifyCourierChoiceBox = displayMapSceneController.getModifyCourierChoice();
+        modifyCourierChoiceBox.getItems().clear();
+        for(int i = 1; i<=numberOfCourier; i++){
+            modifyCourierChoiceBox.getItems().add(i);            
+        }
+        modifyCourierChoiceBox.setValue(currentCourier==0 ? 1:currentCourier);
+        ChoiceBox<String>modifyTimeWindowChoice = displayMapSceneController.getModifyTimeWindowChoice();
+        modifyTimeWindowChoice.setValue(deliveryPoint.getTime().getRepresentation());
+        Label whichDeliveryPoint = displayMapSceneController.getWhichDeliveryPoint();
+        whichDeliveryPoint.setText("Delivery point coordinates:\n"+deliveryPoint.getPlace().getLatitude()+"°, "+deliveryPoint.getPlace().getLongitude()+"°");
+        whichDeliveryPoint.setWrapText(true);
+        Pane modifyPane = displayMapSceneController.getModifyPane();
+        modifyPane.setVisible(true);
+        modifyPane.setDisable(false);
+        disableBackground(true);
     }
 }

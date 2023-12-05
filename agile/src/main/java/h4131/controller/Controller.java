@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.CurrentDeliveryPoint;
+import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
@@ -28,6 +29,7 @@ public class Controller {
     // Instances associated with each possible state of the controller
 	protected final InitialState initialState = new InitialState();
 	protected final AddDeliveryPointState addDeliveryPointState = new AddDeliveryPointState();
+	protected final ModifyDeliveryPointState modifyDeliveryPointState = new ModifyDeliveryPointState();
 
 	public int getNumberOfCourier(){
 		return this.numberOfCourier;
@@ -111,8 +113,7 @@ public class Controller {
 	} 
 
 	public void leftClick(Long intersectionId){
-		setCurrentState(addDeliveryPointState);
-		currentState.openMenuIntersection(this, windowBuilder, intersectionId);
+		currentState.leftClick(this, windowBuilder, intersectionId);
 	}
 
 	public void addDeliveryPoint(TimeWindow tw, int courier){
@@ -121,6 +122,18 @@ public class Controller {
 
 	public void cancelDeliveryPoint(){
 		currentState.cancelDeliveryPoint(this, windowBuilder);
+	}
+
+    public void modifyDeliveryPoint(DeliveryPoint deliveryPoint, int courier) {
+		currentState.modifyDeliveryPoint(this, windowBuilder, deliveryPoint, courier);
+    }
+
+	public void deleteDeliveryPoint(){
+		currentState.deleteDeliveryPoint(this, windowBuilder);
+	}
+
+	public void changeInfosDeliveryPoint(TimeWindow time, int courier){
+		currentState.changeInfosDeliveryPoint(this, windowBuilder, time, courier);
 	}
 
 }

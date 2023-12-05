@@ -36,4 +36,15 @@ public class DeliveryPoint {
         this.time = time;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DeliveryPoint that = (DeliveryPoint) o;
+
+        if (place != null ? !place.equals(that.place) : that.place != null) return false;
+        return time == that.time;
+    }
+
 }

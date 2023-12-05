@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
@@ -67,6 +68,22 @@ public class InitialState implements State{
                 c.getCurrentDeliveryPoint().addNewCourier();
             }
         }
+    }
+
+    @Override
+    public void leftClick(Controller c, WindowBuilder windowBuilder, Long intersectionId){
+        Map map = c.getMap();
+        c.addDeliveryPointState.setCurrentIntersection(map.getIntersectionById(intersectionId));
+        c.setCurrentState(c.addDeliveryPointState);
+        windowBuilder.openMenuIntersection(map, c.getNumberOfCourier(), c.addDeliveryPointState.getCurrentIntersection());
+    }
+
+    @Override
+    public void modifyDeliveryPoint(Controller c, WindowBuilder windowBuilder, DeliveryPoint deliveryPoint, int courier){
+        c.modifyDeliveryPointState.setCurrentDeliveryPoint(deliveryPoint);
+        c.modifyDeliveryPointState.setCourier(courier);
+        windowBuilder.openMenuModifyDeliveryPoint(c.getNumberOfCourier(), deliveryPoint, courier);
+        c.setCurrentState(c.modifyDeliveryPointState);
     }
 
 }

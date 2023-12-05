@@ -54,6 +54,19 @@
             <Button fx:id="cancelButton" layoutX="20.0" layoutY="240.0" mnemonicParsing="false" onAction="#cancelIntersection" text="Cancel" />
          </children>
       </Pane>
+      <Pane fx:id="modifyPane" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <Label fx:id="idDeliveryPoint" alignment="CENTER" layoutY="15.0" prefWidth="300.0" text="Intersection 101010101010">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="modifyTimeWindowChoice" layoutX="75.0" layoutY="98.0" prefWidth="150.0" />
+            <ChoiceBox fx:id="modifyCourierChoice" layoutX="75.0" layoutY="150.0" prefWidth="150.0" />
+            <Button fx:id="modifyButton" layoutX="220.0" layoutY="240.0" mnemonicParsing="false" onAction="#modifyDeliveryPoint" prefHeight="40.0" prefWidth="60.0" text="OK" />
+            <Button fx:id="deleteButton" layoutX="20.0" layoutY="240.0" mnemonicParsing="false" onAction="#deleteDeliveryPoint" text="Delete Point" />
+         </children>
+      </Pane>
       <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT"><ScrollPane fx:id="scrollPane" maxHeight="1000.0"><VBox fx:id="tourListGroup" disable="false" visible="true">
                <padding>
                   <Insets right="10.0" />
