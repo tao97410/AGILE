@@ -1,43 +1,37 @@
-/* Styles pour le GridPane (conteneur principal) */
-GridPane {
-    -fx-background-color: rgb(40, 40, 40);
-}
-
-/* Styles pour le Label avec la classe "title" */
-.title {
-    -fx-font-size: 24px; /* Taille de police en pixels, ajustez selon vos besoins */
-    -fx-font-weight: bold; /* Texte en gras */
-    -fx-text-fill: white; /* Couleur du texte en blanc */
-}
-
-/* Styles pour les boutons et les étiquettes */
-Button, RadioButton, Label {
-    -fx-font-size: 16px; /* Taille de police pour les boutons et les étiquettes */
-    -fx-text-fill: white; /* Couleur du texte en noir */
+.root { 
+    -fx-focus-color: transparent; 
+    -fx-faint-focus-color: transparent;
 }
 
 Button {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+ChoiceBox {
+    -fx-font-size: 18px;
     -fx-background-color: white;
     -fx-text-fill: black;
 }
 
 Button:hover {
     -fx-text-fill: red;
+    -fx-cursor: hand;
 }
 
-/* IntersectionCircle:hover {
-    -fx-fill: red;
+ChoiceBox:hover {
     -fx-cursor: hand;
-} */
+}
 
-Pane, VBox, Group, StackPane {
+ChoiceBox .menu-item:focused { -fx-background-color: red; }
+ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
+
+Pane, VBox, SrollPane {
     -fx-background-color: rgb(40, 40, 40);
 }
 
 ScrollPane {
     -fx-cursor: move;
-    /* -fx-cursor: grab;
-    -fx-cursor: -moz-grab;
-    -fx-cursor: -webkit-grab; */
 }
-  

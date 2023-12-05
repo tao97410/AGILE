@@ -1,6 +1,5 @@
 package h4131.model;
 import java.util.Collection;
-import java.util.List;
 
 public class GlobalTour {
     private Collection<Tour> tours;

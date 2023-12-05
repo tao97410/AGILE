@@ -20,7 +20,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -64,6 +63,9 @@ public class DisplayMapSceneController {
     private Group validationGroup;
 
     @FXML
+    private Button loadMapButton;
+
+    @FXML
     private void initialize(){
         mapChoiceBox.setValue("Select a map...");
         mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
@@ -81,14 +83,22 @@ public class DisplayMapSceneController {
         if(!numberOfCourierField.getText().equals("")){
             this.controller.setNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
         }
+        loadMapButton.setDisable(true);
+
+        // Add a ChangeListener to the ChoiceBox to detect selection changes
+        mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                // Enables load map button if a correct value is selected
+                loadMapButton.setDisable(newValue.equals("Select a map..."));
+            }
+        });
     }
 
     @FXML
     void doLoadMap(ActionEvent event) {
-        if(!mapChoiceBox.getValue().equals("Select a map...")){
-            String fileName = mapChoiceBox.getValue() + ".xml";
-            controller.loadMap(fileName);
-        }       
+        String fileName = mapChoiceBox.getValue() + ".xml";
+        controller.loadMap(fileName);       
     }
 
     @FXML
@@ -136,7 +146,7 @@ public class DisplayMapSceneController {
         numberOfCourierField.setText(value);
     }
     /**
-	 * Method called by the windowBuilder to set the controller when creating homeScene
+	 * Method called by the windowBuilder to set the controller when creating the scene
 	 * @param c the global controller of the application
 	 */
     public void setController(Controller c){
@@ -158,7 +168,6 @@ public class DisplayMapSceneController {
 		
         if(event.getSource() instanceof IntersectionCircle){
             IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            System.out.println(intersectionClicked.getIntersectionId());
             if(intersectionClicked.getStroke() == Color.RED){
                 intersectionClicked.setStroke(null);
             }else{
@@ -174,9 +183,9 @@ public class DisplayMapSceneController {
 	public void handleIntersectionEntered(MouseEvent event) {
 		
         if(event.getSource() instanceof IntersectionCircle){
-            IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            intersectionClicked.setFill(Color.RED);
-            intersectionClicked.setCursor(Cursor.HAND);
+            IntersectionCircle intersection = (IntersectionCircle) event.getSource();
+            intersection.setFill(Color.RED);
+            intersection.setCursor(Cursor.HAND);
         }
 	} 
 
@@ -186,12 +195,43 @@ public class DisplayMapSceneController {
 	public void handleIntersectionExited(MouseEvent event) {
 		
         if(event.getSource() instanceof IntersectionCircle){
-            IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            intersectionClicked.setFill(Color.TRANSPARENT);
-            intersectionClicked.setCursor(Cursor.DEFAULT);
+            IntersectionCircle intersection = (IntersectionCircle) event.getSource();
+            intersection.setFill(Color.TRANSPARENT);
+            intersection.setCursor(Cursor.DEFAULT);
         }
 	} 
 
+    /**
+	 * Method called after the cursor entered a segment on the map
+	 */
+	public void handleSegmentEntered(MouseEvent event) {
+
+        if(event.getSource() instanceof SegmentLine){
+            SegmentLine segment = (SegmentLine) event.getSource();
+            segment.setPreviousColor(segment.getStroke());
+            segment.setStroke(Color.RED);
+            segment.setCursor(Cursor.DEFAULT);
+        }
+	} 
+
+    /**
+	 * Method called after the cursor exited an segment on the map
+	 */
+	public void handleSegmentExited(MouseEvent event) {
+		
+        if(event.getSource() instanceof SegmentLine){
+            SegmentLine segment = (SegmentLine) event.getSource();
+            segment.setStroke(segment.getPreviousColor());
+        }
+	} 
+
+    /**
+     * Method called by the WindowBuilder to create the scrollPane 
+     * (with zooming and panning features) that will contains the shapes 
+     * used to draw the map
+     * @param group containing the shapes
+     * @return the scrollPane
+     */
     public Parent createZoomPane(Group group) {
         final double SCALE_DELTA = 1.1;
         final StackPane zoomPane = new StackPane();
@@ -272,7 +312,14 @@ public class DisplayMapSceneController {
         });
 
         return scroller;
-    }    
+    } 
+    
+    /**
+     * Computes the amount of scrolling in each direction in scrollContent coordinate units
+     * @param scrollContent
+     * @param scroller 
+     * @return a point containing the scrolling in X and Y directions
+     */
     private Point2D figureScrollOffset(Node scrollContent, ScrollPane scroller) {
         double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
         double hScrollProportion = ((Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - scroller.getHmin()) / (scroller.getHmax() - scroller.getHmin());
@@ -283,6 +330,13 @@ public class DisplayMapSceneController {
         return new Point2D(scrollXOffset, scrollYOffset);
     }
 
+    /**
+     * method called after a zoom to reposition the previous center in the new center.
+     * @param scrollContent
+     * @param scroller
+     * @param scaleFactor the zooming factor
+     * @param scrollOffset
+     */
     private void repositionScroller(Node scrollContent, ScrollPane scroller, double scaleFactor, Point2D scrollOffset) {
         double scrollXOffset = scrollOffset.getX();
         double scrollYOffset = scrollOffset.getY();

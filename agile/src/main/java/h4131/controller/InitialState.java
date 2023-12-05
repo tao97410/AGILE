@@ -3,7 +3,6 @@ package h4131.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -28,19 +27,17 @@ public class InitialState implements State{
         try {
             w.setFullScreen(false);
             XMLdeserializer.loadGlobalTour(loadedGlobalTour, map);
+            c.setGlobalTour(loadedGlobalTour);
             w.setFullScreen(true);
             w.drawGlobalTour(loadedGlobalTour);
             //controller.setState(...);
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
-            w.alert(e.getMessage());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExceptionXML e) {
-            w.alert(e.getMessage());
+        } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
+            if(!e.getMessage().equals("Problem when opening file")){
+                w.alert(e.getMessage());
+                e.printStackTrace();
+            }
+            w.setFullScreen(true);
+            
         } 
     }
 
@@ -51,16 +48,9 @@ public class InitialState implements State{
             XMLdeserializer.loadMap(fileName, newMap);
             w.drawMap(newMap);
             c.setMap(newMap);
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             w.alert(e.getMessage());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (ExceptionXML e) {
-            //Do nothing
         } 
     }
 
