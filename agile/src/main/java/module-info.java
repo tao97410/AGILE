@@ -13,4 +13,5 @@ module h4131 {
     exports h4131.controller;
     exports h4131.xml;
     exports h4131.model;
+    exports h4131.observer;
 }

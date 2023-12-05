@@ -67,4 +67,9 @@ public class CurrentDeliveryPoint extends Observable{
         notifyObservers();
     }
 
+    public void addNewCourier(){
+        this.affectedDeliveryPoints.add(new LinkedList<DeliveryPoint>());
+        notifyObservers();
+    }
+
 }

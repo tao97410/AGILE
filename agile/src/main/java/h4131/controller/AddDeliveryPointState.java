@@ -1,8 +1,5 @@
 package h4131.controller;
 
-
-import java.util.LinkedList;
-
 import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.CurrentDeliveryPoint;
@@ -18,7 +15,7 @@ public class AddDeliveryPointState implements State {
     public void openMenuIntersection(Controller c, WindowBuilder w, Long intersectionId){
         Map map = c.getMap();
         currentIntersection = map.getIntersectionById(intersectionId);
-        w.openMenuIntersection(map, c.getNumberOfCourier(), intersectionId);
+        w.openMenuIntersection(map, c.getNumberOfCourier(), currentIntersection);
     }
 
     @Override
@@ -31,8 +28,8 @@ public class AddDeliveryPointState implements State {
     }
 
     @Override
-    public void cancelDeliveryPoint(Controller c, WindowBuilder w, Long idIntersection){
-        w.unSetIntersection(idIntersection);
+    public void cancelDeliveryPoint(Controller c, WindowBuilder w){
+        w.unSetIntersection(currentIntersection.getId());
         w.disableBackground(false);
         c.setCurrentState(c.initialState);
     }

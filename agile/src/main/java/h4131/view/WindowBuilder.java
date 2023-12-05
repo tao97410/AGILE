@@ -48,8 +48,6 @@ public class WindowBuilder implements Observer{
     private double latMin;
     private double latMax;
 
-    final private String[] TIMEWINDOW = {"8h-9h","9h-10h","10h-11h","11h-12h" }; 
-
     /**
      * creates a window builder and displays the first scene of the application
      * @param controller
@@ -214,7 +212,7 @@ public class WindowBuilder implements Observer{
         }
     }
 
-    public void openMenuIntersection(Map map, int numberOfCourier, Long intersectionId){        
+    public void openMenuIntersection(Map map, int numberOfCourier, Intersection intersection){        
         ChoiceBox<Integer> courierChoiceBox = displayMapSceneController.getCourierChoice();
         courierChoiceBox.getItems().clear();
         for(int i = 1; i<=numberOfCourier; i++){
@@ -222,7 +220,8 @@ public class WindowBuilder implements Observer{
         }
         courierChoiceBox.setValue(1);
         Label whichIntersection = displayMapSceneController.getWhichIntersection();
-        whichIntersection.setText("Intersection : " + intersectionId);
+        whichIntersection.setText("Intersection coordinates:\n"+intersection.getLatitude()+"°, "+intersection.getLongitude()+"°");
+        whichIntersection.setWrapText(true);
         Pane validationPane = displayMapSceneController.getvalidationPane();
         validationPane.setVisible(true);
         validationPane.setDisable(false);
@@ -293,7 +292,9 @@ public class WindowBuilder implements Observer{
                 TitledPane titledPane = new TitledPane("Courier : " + compteur, listDeliveryPoint);                
                 tourListGroup.getChildren().add(titledPane);
                 for(DeliveryPoint deliveryPoint : list){
-                    Label label = new Label("Intersection : "+deliveryPoint.getPlace().getLatitude()+"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + TIMEWINDOW[deliveryPoint.getTime().getIndex()]);
+                    DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
+                        +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint);
+                    label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
                     listDeliveryPoint.getChildren().add(label);
                 }
             }
@@ -304,7 +305,9 @@ public class WindowBuilder implements Observer{
             TitledPane titledPane = new TitledPane("Non Affected delivery points ", listDeliveryPoint);                
             tourListGroup.getChildren().add(titledPane);
             for(DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()){
-                Label label = new Label("Intersection : "+deliveryPoint.getPlace().getLatitude()+"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + TIMEWINDOW[deliveryPoint.getTime().getIndex()]);
+                DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
+                    +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint);
+                label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
                 listDeliveryPoint.getChildren().add(label);
             }
         }

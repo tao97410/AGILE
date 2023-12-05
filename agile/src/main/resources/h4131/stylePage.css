@@ -5,16 +5,20 @@
 
 ChoiceBox {
     -fx-font-size: 18px;
-    -fx-background-color: grey;
+    -fx-background-color: white;
     -fx-text-fill: black;
 }
 
-
-
 ChoiceBox:hover {
-    -fx-background-color : rgb(100, 100, 100);
+    -fx-background-color : rgb(181, 181, 181);
     -fx-cursor: hand;
-}   
+} 
+
+#timeWindowChoice, #courierChoice {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 3px;
+}
 
 ChoiceBox .menu-item:focused { -fx-background-color: red; }
 ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
@@ -41,12 +45,7 @@ Button:hover {
 
 #cancelButton {
     -fx-text-fill:white;
-    -fx-background-color: rgb(250,85,85);
-}
-
-#cancelButton {
-    -fx-text-fill: white;
-    -fx-background-color: rgb(250, 85, 85);
+    -fx-background-color: rgb(255, 56, 56);
 }
 
 #tourListGroup{    
@@ -64,4 +63,13 @@ Button:hover {
 
 #scrollPane > .viewport {
     -fx-background-color:transparent;
+}
+
+Label{
+    -fx-alignment: center;
+}
+
+DeliveryPointLabel:hover{
+    -fx-cursor: hand;
+    -fx-text-fill: red;
 }

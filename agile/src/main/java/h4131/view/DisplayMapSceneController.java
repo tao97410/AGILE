@@ -51,7 +51,7 @@ public class DisplayMapSceneController {
     private TextField numberOfCourierField;
 
     @FXML
-    private ChoiceBox<TimeWindow> timeWindowChoice;
+    private ChoiceBox<String> timeWindowChoice;
 
     @FXML
     private ChoiceBox<Integer> courierChoice;
@@ -64,6 +64,7 @@ public class DisplayMapSceneController {
 
     @FXML
     private VBox tourListGroup;
+
     @FXML
     private ScrollPane scrollPane;
 
@@ -81,16 +82,19 @@ public class DisplayMapSceneController {
                 controller.loadMap(fileName);
             }
         });
+
         numberOfCourierField.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
             if (!event.getCharacter().matches("\\d")) {
                 event.consume(); // Consume non-numeric input
             }
         });
-        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE, TimeWindow.NINE_TEN, TimeWindow.TEN_ELEVEN,
-                TimeWindow.ELEVEN_TWELVE);
-        timeWindowChoice.setValue(TimeWindow.EIGHT_NINE);
+
+        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(), TimeWindow.NINE_TEN.getRepresentation(),
+            TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
+        timeWindowChoice.setValue(TimeWindow.EIGHT_NINE.getRepresentation());
+
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
     @FXML
@@ -109,13 +113,15 @@ public class DisplayMapSceneController {
     @FXML
     void validateInformation(ActionEvent event) {
         this.validationPane.setVisible(false);
-        controller.addDeliveryPoint(this.timeWindowChoice.getValue(), this.courierChoice.getValue());
+        String timeValue = this.timeWindowChoice.getValue();
+        TimeWindow time = TimeWindow.getTimeWindowByRepresentation(timeValue);
+        controller.addDeliveryPoint(time, this.courierChoice.getValue());
     }
 
     @FXML
     void cancelIntersection(ActionEvent event) {
         this.validationPane.setVisible(false);
-        controller.cancelDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)));
+        controller.cancelDeliveryPoint();
     }
 
     public VBox getTourListGroup(){
@@ -126,7 +132,7 @@ public class DisplayMapSceneController {
         return this.idIntersection;
     }
 
-    public ChoiceBox<TimeWindow> getTimeWindowChoice() {
+    public ChoiceBox<String> getTimeWindowChoice() {
         return this.timeWindowChoice;
     }
 
@@ -183,6 +189,17 @@ public class DisplayMapSceneController {
                 intersectionClicked.setStroke(Color.RED);
                 this.controller.leftClick(intersectionClicked.getIntersectionId());
             }
+        }
+    }
+
+    /**
+     * Method called after click on an label of a delivery point on the right scroll pane
+     */
+    public void handleDeliveryPointLabelClicked(MouseEvent event) {
+
+        if (event.getSource() instanceof DeliveryPointLabel) {
+            DeliveryPointLabel clickedPoint = (DeliveryPointLabel) event.getSource();
+            System.out.println(clickedPoint.getDeliveryPoint().getPlace().getId());
         }
     }
 

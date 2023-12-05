@@ -43,9 +43,9 @@
       </Group>
       <Pane fx:id="validationPane" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" visible="false" StackPane.alignment="CENTER">
          <children>
-            <Label fx:id="idIntersection" alignment="CENTER" layoutX="60.0" layoutY="27.0" prefHeight="31.0" prefWidth="181.0" text="Intersection 101010101010">
+            <Label fx:id="idIntersection" alignment="CENTER" layoutY="15.0" prefWidth="300.0" text="Intersection 101010101010">
                <font>
-                  <Font name="System Bold" size="13.0" />
+                  <Font name="System Bold" size="16.0" />
                </font>
             </Label>
             <ChoiceBox fx:id="timeWindowChoice" layoutX="75.0" layoutY="98.0" prefWidth="150.0" />
@@ -54,7 +54,7 @@
             <Button fx:id="cancelButton" layoutX="20.0" layoutY="240.0" mnemonicParsing="false" onAction="#cancelIntersection" text="Cancel" />
          </children>
       </Pane>
-      <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT"><ScrollPane fx:id="scrollPane" maxHeight="1010.0"><VBox fx:id="tourListGroup" disable="false" visible="true">
+      <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT"><ScrollPane fx:id="scrollPane" maxHeight="1000.0"><VBox fx:id="tourListGroup" disable="false" visible="true">
                <padding>
                   <Insets right="10.0" />
                </padding></VBox></ScrollPane>

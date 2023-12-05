@@ -119,8 +119,8 @@ public class Controller {
 		currentState.addDeliveryPoint(this, windowBuilder, tw, courier);
 	}
 
-	public void cancelDeliveryPoint(Long idIntersection){
-		currentState.cancelDeliveryPoint(this, windowBuilder, idIntersection);
+	public void cancelDeliveryPoint(){
+		currentState.cancelDeliveryPoint(this, windowBuilder);
 	}
 
 }
