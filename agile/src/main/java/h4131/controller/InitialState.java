@@ -21,7 +21,7 @@ public class InitialState implements State{
     @Override
     public void loadGlobalTour(Controller c, WindowBuilder w){
         
-        Map loadedMap = new Map(null);
+        Map loadedMap = new Map();
         Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
@@ -44,7 +44,7 @@ public class InitialState implements State{
 
     @Override
     public void createTour(Controller c, WindowBuilder w){
-        Map loadedMap = new Map(null);
+        Map loadedMap = new Map();
         try {
             XMLdeserializer.loadMap(loadedMap);
             loadedMap.getGraphFromPoints(null);

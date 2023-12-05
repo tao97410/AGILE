@@ -17,8 +17,7 @@ public class Map {
     private HashMap<Long,Collection<Segment>> adjacency;
     private DeliveryPoint warehouse;
 
-    public Map(DeliveryPoint aWarehouse){
-        this.warehouse = aWarehouse;
+    public Map(){
         this.intersections = new HashMap<>();
         this.adjacency = new HashMap<>();
     }
