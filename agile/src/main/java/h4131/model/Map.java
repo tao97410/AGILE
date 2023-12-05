@@ -18,7 +18,7 @@ public class Map {
     private DeliveryPoint warehouse;
 
     public Map(){
-        this.intersections = new HashMap<>();
+                this.intersections = new HashMap<>();
         this.adjacency = new HashMap<>();
     }
 
