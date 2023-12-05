@@ -15,7 +15,7 @@
 <StackPane stylesheets="@style1.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
    <children>
       <VBox fx:id="layout" stylesheets="@style.css" />
-      <Group layoutX="100.0" StackPane.alignment="TOP_LEFT">
+      <Group layoutX="100.0" visible="true" disable="false" StackPane.alignment="TOP_LEFT">
          <children>
             <Button layoutX="20.0" mnemonicParsing="false" onAction="#doLoadTour" prefWidth="200.0" text="Load a tour">
                <padding>
@@ -40,17 +40,17 @@
             <Insets left="20.0" top="20.0" />
          </StackPane.margin>
       </Group>
-      <Pane fx:id="validationPane" disable="true" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" visible="false" StackPane.alignment="CENTER">
+      <Pane fx:id="validationPane" visible="false" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" StackPane.alignment="CENTER">
          <children>
-            <Label fx:id="idIntersection" layoutX="60.0" layoutY="6.0" prefHeight="31.0" prefWidth="181.0" text="Intersection 101010101010">
+            <Label fx:id="idIntersection" alignment="CENTER" layoutX="60.0" layoutY="27.0" prefHeight="31.0" prefWidth="181.0" text="Intersection 101010101010">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <ChoiceBox fx:id="timeWindowChoice" layoutX="69.0" layoutY="131.0" prefWidth="150.0" />
-            <ChoiceBox fx:id="courierChoice" layoutX="75.0" layoutY="181.0" prefWidth="150.0" />
-            <Button fx:id="validationButton" layoutX="194.0" layoutY="241.0" mnemonicParsing="false" onAction="#validateInformation" text="OK" />
-            <Button fx:id="cancelButton" layoutX="29.0" layoutY="241.0" mnemonicParsing="false" onAction="#cancelIntersection" text="Cancel" />
+            <ChoiceBox fx:id="timeWindowChoice" layoutX="75.0" layoutY="98.0" prefWidth="150.0" />
+            <ChoiceBox fx:id="courierChoice" layoutX="75.0" layoutY="150.0" prefWidth="150.0" />
+            <Button fx:id="validationButton" layoutX="220.0" layoutY="240.0" mnemonicParsing="false" onAction="#validateInformation" prefHeight="40.0" prefWidth="60.0" text="OK" />
+            <Button fx:id="cancelButton" layoutX="20.0" layoutY="240.0" mnemonicParsing="false" onAction="#cancelIntersection" text="Cancel" />
          </children>
       </Pane>
    </children>

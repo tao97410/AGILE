@@ -3,31 +3,48 @@
     -fx-faint-focus-color: transparent;
 }
 
-Button {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-background-color: white;
-    -fx-text-fill: black;
-}
-
 ChoiceBox {
     -fx-font-size: 18px;
-    -fx-background-color: white;
+    -fx-background-color: grey;
     -fx-text-fill: black;
 }
 
-Button:hover {
-    -fx-text-fill: red;
-    -fx-cursor: hand;
-}
+
 
 ChoiceBox:hover {
+    -fx-background-color : rgb(100, 100, 100);
     -fx-cursor: hand;
-}
+}   
 
 ChoiceBox .menu-item:focused { -fx-background-color: red; }
 ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
 
 Pane{
     -fx-background-color: white;
+}
+
+/* ------- Button styles ------- */
+
+Button {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+Button:hover {
+    -fx-cursor: hand;
+}
+
+#validationButton {
+    -fx-background-color : rgb(50, 140, 50);
+    -fx-text-fill : white;
+}
+
+#cancelButton {
+    -fx-text-fill:white;
+    -fx-background-color: rgb(250,85,85);
+}
+
+#cancelButton {
+    -fx-text-fill: white;
+    -fx-background-color: rgb(250, 85, 85);
 }
