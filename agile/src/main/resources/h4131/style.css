@@ -28,7 +28,7 @@ ChoiceBox:hover {
 ChoiceBox .menu-item:focused { -fx-background-color: red; }
 ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
 
-Pane, VBox, SrollPane {
+Pane, VBox, Group, StackPane {
     -fx-background-color: rgb(40, 40, 40);
 }
 

@@ -17,13 +17,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -36,7 +37,7 @@ public class DisplayMapSceneController {
     private StackPane container;
     
     @FXML
-    private TextArea idIntersection;
+    private Label idIntersection;
     
     @FXML
     private Button cancelButton;
@@ -60,15 +61,22 @@ public class DisplayMapSceneController {
     private Button validationButton;
 
     @FXML
-    private Group validationGroup;
-
-    @FXML
-    private Button loadMapButton;
+    private Pane validationPane;
 
     @FXML
     private void initialize(){
         mapChoiceBox.setValue("Select a map...");
         mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
+
+        // Add a ChangeListener to the ChoiceBox to detect selection changes
+        mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                
+                String fileName = mapChoiceBox.getValue() + ".xml";
+                controller.loadMap(fileName);
+            }
+        });
         numberOfCourierField.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
             if (!event.getCharacter().matches("\\d")) {
                 event.consume(); // Consume non-numeric input
@@ -83,22 +91,7 @@ public class DisplayMapSceneController {
         if(!numberOfCourierField.getText().equals("")){
             this.controller.setNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
         }
-        loadMapButton.setDisable(true);
-
-        // Add a ChangeListener to the ChoiceBox to detect selection changes
-        mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                // Enables load map button if a correct value is selected
-                loadMapButton.setDisable(newValue.equals("Select a map..."));
-            }
-        });
-    }
-
-    @FXML
-    void doLoadMap(ActionEvent event) {
-        String fileName = mapChoiceBox.getValue() + ".xml";
-        controller.loadMap(fileName);       
+        
     }
 
     @FXML
@@ -108,17 +101,17 @@ public class DisplayMapSceneController {
 
     @FXML
     void validateInformation(ActionEvent event) {
-        this.validationGroup.setVisible(false);
+        this.validationPane.setVisible(false);
         controller.addDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)), this.timeWindowChoice.getValue(), this.courierChoice.getValue());
     }
     
     @FXML
     void cancelIntersection(ActionEvent event) {
-        this.validationGroup.setVisible(false);
+        this.validationPane.setVisible(false);
         controller.cancelDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)));
     }
 
-    public TextArea getWhichIntersection(){
+    public Label getWhichIntersection(){
         return this.idIntersection;
     }
     
@@ -134,8 +127,8 @@ public class DisplayMapSceneController {
         return this.validationButton;
     }
 
-    public Group getValidationGroup(){
-        return this.validationGroup;
+    public Pane getvalidationPane(){
+        return this.validationPane;
     }
 
     public void setChoiceBoxValue(String value){

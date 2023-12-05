@@ -9,7 +9,6 @@ import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.Segment;
-import h4131.model.TimeWindow;
 import h4131.model.Tour;
 
 import javafx.fxml.FXMLLoader;
@@ -18,15 +17,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -45,7 +42,6 @@ public class WindowBuilder {
     private double longMax;
     private double latMin;
     private double latMax;
-    private DisplayMapSceneController displayMapSceneController;
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -218,11 +214,11 @@ public class WindowBuilder {
             courierChoiceBox.getItems().add(i);            
         }
         courierChoiceBox.setValue(1);
-        TextArea whichIntersection = displayMapSceneController.getWhichIntersection();
+        Label whichIntersection = displayMapSceneController.getWhichIntersection();
         whichIntersection.setText("Intersection : " + intersectionId.getIntersectionId());
-        Group validationGroup = displayMapSceneController.getValidationGroup();
-        validationGroup.setVisible(true);
-        validationGroup.setDisable(false);
+        Pane validationPane = displayMapSceneController.getvalidationPane();
+        validationPane.setVisible(true);
+        validationPane.setDisable(false);
         disableBackground(true);
     }
 
