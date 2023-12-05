@@ -23,7 +23,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
@@ -220,11 +219,11 @@ public class WindowBuilder implements Observer{
             courierChoiceBox.getItems().add(i);            
         }
         courierChoiceBox.setValue(1);
-        TextArea whichIntersection = displayMapSceneController.getWhichIntersection();
+        Label whichIntersection = displayMapSceneController.getWhichIntersection();
         whichIntersection.setText("Intersection : " + intersectionId);
-        Group validationGroup = displayMapSceneController.getValidationGroup();
-        validationGroup.setVisible(true);
-        validationGroup.setDisable(false);
+        Pane validationPane = displayMapSceneController.getvalidationPane();
+        validationPane.setVisible(true);
+        validationPane.setDisable(false);
         disableBackground(true);
     }
 

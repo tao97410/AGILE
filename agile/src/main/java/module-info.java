@@ -1,6 +1,6 @@
 module h4131 {
     requires transitive javafx.graphics;
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires javafx.fxml;
     requires java.xml;
 

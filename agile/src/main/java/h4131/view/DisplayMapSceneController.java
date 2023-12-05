@@ -17,27 +17,27 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-
 public class DisplayMapSceneController {
-    
+
     private Controller controller;
 
     @FXML
     private StackPane container;
-    
+
     @FXML
-    private TextArea idIntersection;
-    
+    private Label idIntersection;
+
     @FXML
     private Button cancelButton;
 
@@ -46,7 +46,7 @@ public class DisplayMapSceneController {
 
     @FXML
     private ChoiceBox<String> mapChoiceBox;
-    
+
     @FXML
     private TextField numberOfCourierField;
 
@@ -60,24 +60,32 @@ public class DisplayMapSceneController {
     private Button validationButton;
 
     @FXML
-    private Group validationGroup;
+    private Pane validationPane;
 
     @FXML
     private Group tourListGroup;
 
     @FXML
-    private Button loadMapButton;
-
-    @FXML
-    private void initialize(){
+    private void initialize() {
         mapChoiceBox.setValue("Select a map...");
         mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
+
+        // Add a ChangeListener to the ChoiceBox to detect selection changes
+        mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                // load the chosen map
+                String fileName = mapChoiceBox.getValue() + ".xml";
+                controller.loadMap(fileName);
+            }
+        });
         numberOfCourierField.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
             if (!event.getCharacter().matches("\\d")) {
                 event.consume(); // Consume non-numeric input
             }
         });
-        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE, TimeWindow.NINE_TEN, TimeWindow.TEN_ELEVEN, TimeWindow.ELEVEN_TWELVE);
+        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE, TimeWindow.NINE_TEN, TimeWindow.TEN_ELEVEN,
+                TimeWindow.ELEVEN_TWELVE);
         timeWindowChoice.setValue(TimeWindow.EIGHT_NINE);
     }
 
@@ -86,22 +94,7 @@ public class DisplayMapSceneController {
         if(!numberOfCourierField.getText().equals("")){
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
         }
-        loadMapButton.setDisable(true);
 
-        // Add a ChangeListener to the ChoiceBox to detect selection changes
-        mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                // Enables load map button if a correct value is selected
-                loadMapButton.setDisable(newValue.equals("Select a map..."));
-            }
-        });
-    }
-
-    @FXML
-    void doLoadMap(ActionEvent event) {
-        String fileName = mapChoiceBox.getValue() + ".xml";
-        controller.loadMap(fileName);       
     }
 
     @FXML
@@ -111,13 +104,13 @@ public class DisplayMapSceneController {
 
     @FXML
     void validateInformation(ActionEvent event) {
-        this.validationGroup.setVisible(false);
+        this.validationPane.setVisible(false);
         controller.addDeliveryPoint(this.timeWindowChoice.getValue(), this.courierChoice.getValue());
     }
-    
+
     @FXML
     void cancelIntersection(ActionEvent event) {
-        this.validationGroup.setVisible(false);
+        this.validationPane.setVisible(false);
         controller.cancelDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)));
     }
 
@@ -125,117 +118,123 @@ public class DisplayMapSceneController {
         return this.tourListGroup;
     }
 
-    public TextArea getWhichIntersection(){
+    public Label getWhichIntersection(){
         return this.idIntersection;
     }
-    
-    public ChoiceBox<TimeWindow> getTimeWindowChoice(){
+
+    public ChoiceBox<TimeWindow> getTimeWindowChoice() {
         return this.timeWindowChoice;
     }
 
-    public ChoiceBox<Integer> getCourierChoice(){
+    public ChoiceBox<Integer> getCourierChoice() {
         return this.courierChoice;
     }
 
-    public Button getValidateButton(){
+    public Button getValidateButton() {
         return this.validationButton;
     }
 
-    public Group getValidationGroup(){
-        return this.validationGroup;
+    public Pane getvalidationPane() {
+        return this.validationPane;
     }
 
-    public void setChoiceBoxValue(String value){
+    public void setChoiceBoxValue(String value) {
         mapChoiceBox.setValue(value);
     }
 
-    public void setNumberOfCourierFieldValue(String value){
+    public void setNumberOfCourierFieldValue(String value) {
         numberOfCourierField.setText(value);
     }
+
     /**
-	 * Method called by the windowBuilder to set the controller when creating the scene
-	 * @param c the global controller of the application
-	 */
-    public void setController(Controller c){
+     * Method called by the windowBuilder to set the controller when creating the
+     * scene
+     * 
+     * @param c the global controller of the application
+     */
+    public void setController(Controller c) {
         this.controller = c;
     }
 
     /**
-	 * Method called by the windowBuilder to get the VBox map layout when drawing map
-	 * @return the attribute VBox layout
-	 */
-    public VBox getLayout(){
+     * Method called by the windowBuilder to get the VBox map layout when drawing
+     * map
+     * 
+     * @return the attribute VBox layout
+     */
+    public VBox getLayout() {
         return layout;
     }
 
     /**
-	 * Method called after click on an intersection on the map
-	 */
-	public void handleIntersectionClicked(MouseEvent event) {
-		
-        if(event.getSource() instanceof IntersectionCircle){
+     * Method called after click on an intersection on the map
+     */
+    public void handleIntersectionClicked(MouseEvent event) {
+
+        if (event.getSource() instanceof IntersectionCircle) {
             IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            if(intersectionClicked.getStroke() == Color.RED){
+            if (intersectionClicked.getStroke() == Color.RED) {
                 intersectionClicked.setStroke(null);
-            }else{
+            } else {
                 intersectionClicked.setStroke(Color.RED);
                 this.controller.leftClick(intersectionClicked.getIntersectionId());
             }
         }
-	} 
+    }
 
     /**
-	 * Method called after the cursor entered an intersection on the map
-	 */
-	public void handleIntersectionEntered(MouseEvent event) {
-		
-        if(event.getSource() instanceof IntersectionCircle){
+     * Method called after the cursor entered an intersection on the map
+     */
+    public void handleIntersectionEntered(MouseEvent event) {
+
+        if (event.getSource() instanceof IntersectionCircle) {
             IntersectionCircle intersection = (IntersectionCircle) event.getSource();
             intersection.setFill(Color.RED);
             intersection.setCursor(Cursor.HAND);
         }
-	} 
+    }
 
     /**
-	 * Method called after the cursor exited an intersection on the map
-	 */
-	public void handleIntersectionExited(MouseEvent event) {
-		
-        if(event.getSource() instanceof IntersectionCircle){
+     * Method called after the cursor exited an intersection on the map
+     */
+    public void handleIntersectionExited(MouseEvent event) {
+
+        if (event.getSource() instanceof IntersectionCircle) {
             IntersectionCircle intersection = (IntersectionCircle) event.getSource();
             intersection.setFill(Color.TRANSPARENT);
             intersection.setCursor(Cursor.DEFAULT);
         }
-	} 
+    }
 
     /**
-	 * Method called after the cursor entered a segment on the map
-	 */
-	public void handleSegmentEntered(MouseEvent event) {
+     * Method called after the cursor entered a segment on the map
+     */
+    public void handleSegmentEntered(MouseEvent event) {
 
-        if(event.getSource() instanceof SegmentLine){
+        if (event.getSource() instanceof SegmentLine) {
             SegmentLine segment = (SegmentLine) event.getSource();
             segment.setPreviousColor(segment.getStroke());
             segment.setStroke(Color.RED);
             segment.setCursor(Cursor.DEFAULT);
         }
-	} 
+    }
 
     /**
-	 * Method called after the cursor exited an segment on the map
-	 */
-	public void handleSegmentExited(MouseEvent event) {
-		
-        if(event.getSource() instanceof SegmentLine){
+     * Method called after the cursor exited an segment on the map
+     */
+    public void handleSegmentExited(MouseEvent event) {
+
+        if (event.getSource() instanceof SegmentLine) {
             SegmentLine segment = (SegmentLine) event.getSource();
             segment.setStroke(segment.getPreviousColor());
         }
-	} 
+    }
 
     /**
-     * Method called by the WindowBuilder to create the scrollPane 
-     * (with zooming and panning features) that will contains the shapes 
+     * Method called by the WindowBuilder to create the scrollPane
+     * (with zooming and panning features) that will contains the shapes
      * used to draw the map
+     * 
      * @param group containing the shapes
      * @return the scrollPane
      */
@@ -284,7 +283,6 @@ public class DisplayMapSceneController {
 
                 group.setScaleX(newScaleX);
                 group.setScaleY(newScaleY);
-                
 
                 // move viewport so that old center remains in the center after the
                 // scaling
@@ -305,43 +303,51 @@ public class DisplayMapSceneController {
             @Override
             public void handle(MouseEvent event) {
                 double deltaX = event.getX() - lastMouseCoordinates.get().getX();
-                double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
+                double extraWidth = scrollContent.getLayoutBounds().getWidth()
+                        - scroller.getViewportBounds().getWidth();
                 double deltaH = deltaX * (scroller.getHmax() - scroller.getHmin()) / extraWidth;
-                double desiredH = (Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - deltaH;
+                double desiredH = (Double.isNaN(scroller.getHvalue()) ? 0 : scroller.getHvalue()) - deltaH;
                 scroller.setHvalue(Math.max(0, Math.min(scroller.getHmax(), desiredH)));
 
                 double deltaY = event.getY() - lastMouseCoordinates.get().getY();
-                double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
+                double extraHeight = scrollContent.getLayoutBounds().getHeight()
+                        - scroller.getViewportBounds().getHeight();
                 double deltaV = deltaY * (scroller.getVmax() - scroller.getVmin()) / extraHeight;
-                double desiredV = (Double.isNaN(scroller.getVvalue()) ? 0:scroller.getVvalue()) - deltaV;
+                double desiredV = (Double.isNaN(scroller.getVvalue()) ? 0 : scroller.getVvalue()) - deltaV;
                 scroller.setVvalue(Math.max(0, Math.min(scroller.getVmax(), desiredV)));
             }
         });
 
         return scroller;
-    } 
-    
+    }
+
     /**
-     * Computes the amount of scrolling in each direction in scrollContent coordinate units
+     * Computes the amount of scrolling in each direction in scrollContent
+     * coordinate units
+     * 
      * @param scrollContent
-     * @param scroller 
+     * @param scroller
      * @return a point containing the scrolling in X and Y directions
      */
     private Point2D figureScrollOffset(Node scrollContent, ScrollPane scroller) {
         double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
-        double hScrollProportion = ((Double.isNaN(scroller.getHvalue()) ? 0:scroller.getHvalue()) - scroller.getHmin()) / (scroller.getHmax() - scroller.getHmin());
+        double hScrollProportion = ((Double.isNaN(scroller.getHvalue()) ? 0 : scroller.getHvalue())
+                - scroller.getHmin()) / (scroller.getHmax() - scroller.getHmin());
         double scrollXOffset = hScrollProportion * Math.max(0, extraWidth);
         double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
-        double vScrollProportion = ((Double.isNaN(scroller.getVvalue()) ? 0:scroller.getVvalue()) - scroller.getVmin()) / (scroller.getVmax() - scroller.getVmin());
+        double vScrollProportion = ((Double.isNaN(scroller.getVvalue()) ? 0 : scroller.getVvalue())
+                - scroller.getVmin()) / (scroller.getVmax() - scroller.getVmin());
         double scrollYOffset = vScrollProportion * Math.max(0, extraHeight);
         return new Point2D(scrollXOffset, scrollYOffset);
     }
 
     /**
-     * method called after a zoom to reposition the previous center in the new center.
+     * method called after a zoom to reposition the previous center in the new
+     * center.
+     * 
      * @param scrollContent
      * @param scroller
-     * @param scaleFactor the zooming factor
+     * @param scaleFactor   the zooming factor
      * @param scrollOffset
      */
     private void repositionScroller(Node scrollContent, ScrollPane scroller, double scaleFactor, Point2D scrollOffset) {
@@ -349,17 +355,19 @@ public class DisplayMapSceneController {
         double scrollYOffset = scrollOffset.getY();
         double extraWidth = scrollContent.getLayoutBounds().getWidth() - scroller.getViewportBounds().getWidth();
         if (extraWidth > 0) {
-            double halfWidth = scroller.getViewportBounds().getWidth() / 2 ;
-            double newScrollXOffset = (scaleFactor - 1) *  halfWidth + scaleFactor * scrollXOffset;
-            scroller.setHvalue(scroller.getHmin() + newScrollXOffset * (scroller.getHmax() - scroller.getHmin()) / extraWidth);
+            double halfWidth = scroller.getViewportBounds().getWidth() / 2;
+            double newScrollXOffset = (scaleFactor - 1) * halfWidth + scaleFactor * scrollXOffset;
+            scroller.setHvalue(
+                    scroller.getHmin() + newScrollXOffset * (scroller.getHmax() - scroller.getHmin()) / extraWidth);
         } else {
             scroller.setHvalue(scroller.getHmin());
         }
         double extraHeight = scrollContent.getLayoutBounds().getHeight() - scroller.getViewportBounds().getHeight();
         if (extraHeight > 0) {
-            double halfHeight = scroller.getViewportBounds().getHeight() / 2 ;
+            double halfHeight = scroller.getViewportBounds().getHeight() / 2;
             double newScrollYOffset = (scaleFactor - 1) * halfHeight + scaleFactor * scrollYOffset;
-            scroller.setVvalue(scroller.getVmin() + newScrollYOffset * (scroller.getVmax() - scroller.getVmin()) / extraHeight);
+            scroller.setVvalue(
+                    scroller.getVmin() + newScrollYOffset * (scroller.getVmax() - scroller.getVmin()) / extraHeight);
         } else {
             scroller.setVvalue(scroller.getVmin());
         }
