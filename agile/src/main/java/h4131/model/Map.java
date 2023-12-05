@@ -14,7 +14,7 @@ import h4131.calculus.InterInfo;
 
 public class Map {
     private HashMap<Long,Intersection> intersections;
-    private HashMap<Long,List<Segment>> adjacency;
+    private HashMap<Long,Collection<Segment>> adjacency;
     private DeliveryPoint warehouse;
 
     public Map(DeliveryPoint aWarehouse){
@@ -38,11 +38,11 @@ public class Map {
     public void addSegment(Segment seg) {
         if (adjacency.containsKey(seg.getOrigin().getId())){
             // If the origin exists, add the segment to the existing list
-            List<Segment> segmentList = adjacency.get(seg.getOrigin().getId());
+            Collection<Segment> segmentList = adjacency.get(seg.getOrigin().getId());
             segmentList.add(seg);
         } else {
             // If the origin doesn't exist, create a new list with the segment and put it in the hashmap
-            List<Segment> newSegmentList = new ArrayList<>();
+            Collection<Segment> newSegmentList = new ArrayList<>();
             newSegmentList.add(seg);
             adjacency.put(seg.getOrigin().getId(), newSegmentList);
         }
@@ -63,42 +63,42 @@ public class Map {
         return res;
     }
 
-    public Graph getGraphFromPoints(LinkedList<DeliveryPoint> d) {
+    public Graph getGraphFromPoints(Collection<DeliveryPoint> d) {
 
 
         // TEST
-        ArrayList<Intersection> allIntersections = new ArrayList<>(intersections.values());
-        LinkedList<DeliveryPoint> deliveryPoints = new LinkedList<>();
-        System.out.println("Warehouse - " + warehouse.toString());
-        DeliveryPoint point1 = new DeliveryPoint(allIntersections.get(1), TimeWindow.EIGHT_NINE);
-        deliveryPoints.add(point1);
-        System.out.println(point1.toString());
-        DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(51), TimeWindow.EIGHT_NINE);
-        deliveryPoints.add(point2);
-        System.out.println(point2.toString());
-        DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(11), TimeWindow.NINE_TEN);
-        deliveryPoints.add(point3);
-        System.out.println(point3.toString());
-        DeliveryPoint point4 = new DeliveryPoint(allIntersections.get(15), TimeWindow.TEN_ELEVEN);
-        deliveryPoints.add(point4);
-        System.out.println(point4.toString());
-        DeliveryPoint point5 = new DeliveryPoint(allIntersections.get(6), TimeWindow.TEN_ELEVEN);
-        deliveryPoints.add(point5);
-        System.out.println(point5.toString());
-        DeliveryPoint point6 = new DeliveryPoint(allIntersections.get(24), TimeWindow.TEN_ELEVEN);
-        deliveryPoints.add(point6);
-        System.out.println(point6.toString());
-        DeliveryPoint point7 = new DeliveryPoint(allIntersections.get(21), TimeWindow.ELEVEN_TWELVE);
-        deliveryPoints.add(point7);
-        System.out.println(point7.toString());
+        Collection<Intersection> allIntersections = new ArrayList<>(intersections.values());
+        Collection<DeliveryPoint> deliveryPoints = new LinkedList<>();
+        // System.out.println("Warehouse - " + warehouse.toString());
+        // DeliveryPoint point1 = new DeliveryPoint(allIntersections., TimeWindow.EIGHT_NINE);
+        // deliveryPoints.add(point1);
+        // System.out.println(point1.toString());
+        // DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(51), TimeWindow.EIGHT_NINE);
+        // deliveryPoints.add(point2);
+        // System.out.println(point2.toString());
+        // DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(11), TimeWindow.NINE_TEN);
+        // deliveryPoints.add(point3);
+        // System.out.println(point3.toString());
+        // DeliveryPoint point4 = new DeliveryPoint(allIntersections.get(15), TimeWindow.TEN_ELEVEN);
+        // deliveryPoints.add(point4);
+        // System.out.println(point4.toString());
+        // DeliveryPoint point5 = new DeliveryPoint(allIntersections.get(6), TimeWindow.TEN_ELEVEN);
+        // deliveryPoints.add(point5);
+        // System.out.println(point5.toString());
+        // DeliveryPoint point6 = new DeliveryPoint(allIntersections.get(24), TimeWindow.TEN_ELEVEN);
+        // deliveryPoints.add(point6);
+        // System.out.println(point6.toString());
+        // DeliveryPoint point7 = new DeliveryPoint(allIntersections.get(21), TimeWindow.ELEVEN_TWELVE);
+        // deliveryPoints.add(point7);
+        // System.out.println(point7.toString());
 
         Graph graph = new Graph();
-        deliveryPoints.addFirst(warehouse);
+        deliveryPoints.add(warehouse);
 
         for (DeliveryPoint currentPoint : deliveryPoints)
         {
             graph.nodes.add(currentPoint);
-            List<Intersection> possibleDestinations = new LinkedList<>();
+            Collection<Intersection> possibleDestinations = new LinkedList<>();
 
             // Searching the minimum TimeWindow, STRICTLY GREATER THAN the current TimeWindow
             // If there isn't any point with a strictly greater TimeWindow, its value will be WAREHOUSE
@@ -126,7 +126,7 @@ public class Map {
             HashMap<Intersection,InterInfo> currentMap = dijkstra(currentPoint.getPlace(), possibleDestinations);
             for (Intersection currentDestination : possibleDestinations){
                 
-                LinkedList<Segment> currentPath = new LinkedList<Segment>();
+                Collection<Segment> currentPath = new LinkedList<Segment>();
                 getPath(currentPoint.getPlace(), currentDestination, currentMap, currentPath);
 
                 Arc newArc = new Arc(currentPoint, getDeliveryPointFromIntersection(deliveryPoints, currentDestination), currentMap.get(currentDestination).distance);
@@ -142,7 +142,7 @@ public class Map {
 
     }
 
-    private void getPath(Intersection origin, Intersection destination, HashMap<Intersection,InterInfo> map, LinkedList<Segment> path){
+    private void getPath(Intersection origin, Intersection destination, HashMap<Intersection,InterInfo> map, Collection<Segment> path){
         
         if (origin.getId() != destination.getId()){
             getPath(origin, map.get(destination).pred, map, path);
@@ -150,7 +150,7 @@ public class Map {
         } 
     }
 
-    private DeliveryPoint getDeliveryPointFromIntersection(List<DeliveryPoint> deliveries, Intersection intersection) {
+    private DeliveryPoint getDeliveryPointFromIntersection(Collection<DeliveryPoint> deliveries, Intersection intersection) {
         for (DeliveryPoint d : deliveries) {
             if (d.getPlace().getId() == intersection.getId()) {
                 return d;
@@ -159,7 +159,7 @@ public class Map {
         return null;
     }
 
-    private HashMap<Intersection,InterInfo> dijkstra(Intersection origin, List<Intersection> destinations){
+    private HashMap<Intersection,InterInfo> dijkstra(Intersection origin, Collection<Intersection> destinations){
         
         PriorityQueue<InterCompare> queue = new PriorityQueue<>();
         HashMap<Intersection,InterInfo> map = new HashMap<>();
@@ -214,13 +214,13 @@ public class Map {
 
         // Iterate through the first ten adjacency entries
         int adjacencyCount = 0;
-        for (Entry<Long, List<Segment>> entry : adjacency.entrySet()) {
+        for (Entry<Long, Collection<Segment>> entry : adjacency.entrySet()) {
             if (adjacencyCount >= 10) {
                 break;
             }
 
             Long key = entry.getKey();
-            List<Segment> segmentList = entry.getValue();
+            Collection<Segment> segmentList = entry.getValue();
 
             result.append(key).append(": ");
 
@@ -244,7 +244,7 @@ public class Map {
          
     
 
-    public List<Segment> getDestinationsById(long id){
+    public Collection<Segment> getDestinationsById(long id){
         return this.adjacency.get(id);
     }
 
@@ -265,14 +265,14 @@ public class Map {
     /**
      * @return HashMap<long,List<Segment>> return the adjacency
      */
-    public HashMap<Long,List<Segment>> getAdjacency() {
+    public HashMap<Long,Collection<Segment>> getAdjacency() {
         return adjacency;
     }
 
     /**
      * @param adjacency the adjacency to set
      */
-    public void setAdjacency(HashMap<Long,List<Segment>> adjacency) {
+    public void setAdjacency(HashMap<Long,Collection<Segment>> adjacency) {
         this.adjacency = adjacency;
     }
 

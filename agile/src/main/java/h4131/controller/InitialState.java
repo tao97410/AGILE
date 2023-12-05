@@ -2,6 +2,7 @@ package h4131.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +22,7 @@ public class InitialState implements State{
     public void loadGlobalTour(Controller c, WindowBuilder w){
         
         Map loadedMap = new Map(null);
-        List<Tour> course = new ArrayList<>();
+        Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
             XMLdeserializer.loadMap(loadedMap);
