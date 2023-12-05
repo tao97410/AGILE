@@ -38,7 +38,7 @@ public class Controller {
 	}
 
 	public void changeNumberOfCourier(int aNumber){
-		currentState.setNumberOfCourier(this, aNumber);
+		currentState.setNumberOfCourier(this, windowBuilder, aNumber);
 	}
 
 	public Map getMap(){

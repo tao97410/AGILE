@@ -48,3 +48,20 @@ Button:hover {
     -fx-text-fill: white;
     -fx-background-color: rgb(250, 85, 85);
 }
+
+#tourListGroup{    
+    -fx-margin:50px;
+    -fx-spacing:10px
+} 
+
+#groupScrollable{
+    -fx-padding:10 50 0 0;
+}
+
+#scrollPane{
+    -fx-background-color:transparent;
+}
+
+#scrollPane > .viewport {
+    -fx-background-color:transparent;
+}

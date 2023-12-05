@@ -38,7 +38,7 @@ public interface State {
 
     public default void cancelDeliveryPoint(Controller c, WindowBuilder w, Long idIntersection){};
 
-	public default void setNumberOfCourier(Controller c, int numberOfCourier){};
+	public default void setNumberOfCourier(Controller c, WindowBuilder w,int numberOfCourier){};
 
 }
 

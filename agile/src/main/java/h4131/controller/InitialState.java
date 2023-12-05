@@ -56,13 +56,13 @@ public class InitialState implements State{
     }
 
     @Override
-    public void setNumberOfCourier(Controller c, int numberOfCourier){
+    public void setNumberOfCourier(Controller c, WindowBuilder w, int numberOfCourier){
         c.setNumberOfCourier(numberOfCourier);
         int size = c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size();
         if(size>numberOfCourier){
-            for(int i = size; i>=numberOfCourier; i--){
-                c.getCurrentDeliveryPoint().getNonAffectedDeliveryPoints().addAll(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().get(i));
-                c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().removeLast();
+            for(int i = size-1; i>=numberOfCourier; i--){
+                c.getCurrentDeliveryPoint().addAllNonAffectedDeliveryPoints(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().get(i));
+                c.getCurrentDeliveryPoint().removeLastCourier();
             }
         }else{
             for(int i = size; i<numberOfCourier; i++){

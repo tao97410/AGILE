@@ -63,7 +63,9 @@ public class DisplayMapSceneController {
     private Pane validationPane;
 
     @FXML
-    private Group tourListGroup;
+    private VBox tourListGroup;
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private void initialize() {
@@ -87,6 +89,8 @@ public class DisplayMapSceneController {
         timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE, TimeWindow.NINE_TEN, TimeWindow.TEN_ELEVEN,
                 TimeWindow.ELEVEN_TWELVE);
         timeWindowChoice.setValue(TimeWindow.EIGHT_NINE);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
     }
 
     @FXML
@@ -114,7 +118,7 @@ public class DisplayMapSceneController {
         controller.cancelDeliveryPoint(Long.parseLong(this.idIntersection.getText().substring(15)));
     }
 
-    public Group getTourListGroup(){
+    public VBox getTourListGroup(){
         return this.tourListGroup;
     }
 

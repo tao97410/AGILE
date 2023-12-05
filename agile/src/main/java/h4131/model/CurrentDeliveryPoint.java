@@ -57,4 +57,14 @@ public class CurrentDeliveryPoint extends Observable{
         notifyObservers();
     }
 
+    public void addAllNonAffectedDeliveryPoints(LinkedList<DeliveryPoint> deliveryPoints){
+        this.nonAffectedDeliveryPoints.addAll(deliveryPoints);
+        notifyObservers();
+    }
+
+    public void removeLastCourier(){
+        this.affectedDeliveryPoints.removeLast();
+        notifyObservers();
+    }
+
 }

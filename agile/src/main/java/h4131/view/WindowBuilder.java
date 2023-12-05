@@ -48,6 +48,8 @@ public class WindowBuilder implements Observer{
     private double latMin;
     private double latMax;
 
+    final private String[] TIMEWINDOW = {"8h-9h","9h-10h","10h-11h","11h-12h" }; 
+
     /**
      * creates a window builder and displays the first scene of the application
      * @param controller
@@ -280,16 +282,32 @@ public class WindowBuilder implements Observer{
         displayListDeliveryPoint();
     }
 
-    private void displayListDeliveryPoint(){
+    public void displayListDeliveryPoint(){
         CurrentDeliveryPoint currentDeliveryPoint = controller.getCurrentDeliveryPoint();
+        VBox tourListGroup = displayMapSceneController.getTourListGroup();
+        tourListGroup.getChildren().clear();
+        int compteur = 1;
         for(LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()){
-            Group listDeliveryPoint = new Group();
-            TitledPane titledPane = new TitledPane("deed", listDeliveryPoint);
-            displayMapSceneController.getTourListGroup().getChildren().add(titledPane);
-            for(DeliveryPoint deliveryPoint : list){
-                Label label = new Label("Intersection " + deliveryPoint.getTime());
+            if(!list.isEmpty()){
+                VBox listDeliveryPoint = new VBox();
+                TitledPane titledPane = new TitledPane("Courier : " + compteur, listDeliveryPoint);                
+                tourListGroup.getChildren().add(titledPane);
+                for(DeliveryPoint deliveryPoint : list){
+                    Label label = new Label("Intersection : "+deliveryPoint.getPlace().getLatitude()+"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + TIMEWINDOW[deliveryPoint.getTime().getIndex()]);
+                    listDeliveryPoint.getChildren().add(label);
+                }
+            }
+            compteur++;
+        }
+        if(!currentDeliveryPoint.getNonAffectedDeliveryPoints().isEmpty()){
+            VBox listDeliveryPoint = new VBox();
+            TitledPane titledPane = new TitledPane("Non Affected delivery points ", listDeliveryPoint);                
+            tourListGroup.getChildren().add(titledPane);
+            for(DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()){
+                Label label = new Label("Intersection : "+deliveryPoint.getPlace().getLatitude()+"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + TIMEWINDOW[deliveryPoint.getTime().getIndex()]);
                 listDeliveryPoint.getChildren().add(label);
             }
         }
+        
     }
 }
