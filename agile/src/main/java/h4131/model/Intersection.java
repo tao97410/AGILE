@@ -53,4 +53,16 @@ public class Intersection {
         this.longitude = longitude;
     }
 
+    @Override
+    public boolean equals(Object o){
+        
+        if(!(o instanceof Intersection))
+            return false;
+        else{
+            Intersection i  = (Intersection) o;
+            return (id == i.getId() && latitude == i.getLatitude()&& longitude == i.getLongitude());
+        }
+        
+    }
+
 }

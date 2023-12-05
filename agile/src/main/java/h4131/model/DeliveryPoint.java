@@ -1,4 +1,6 @@
 package h4131.model;
+
+
 public class DeliveryPoint {
     private Intersection place;
     private TimeWindow time;
@@ -41,6 +43,19 @@ public class DeliveryPoint {
      */
     public void setTime(TimeWindow time) {
         this.time = time;
+    }
+
+
+    @Override
+    public boolean equals(Object o){
+        
+        if(!(o instanceof DeliveryPoint))
+            return false;
+        else{
+            DeliveryPoint d  = (DeliveryPoint) o;
+            return (place == d.getPlace() && time == d.getTime());
+        }
+        
     }
 
 }

@@ -62,14 +62,14 @@ public class Map {
         return res;
     }
 
-    public Graph getGraphFromPoints(Collection<DeliveryPoint> d) {
+    public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPoints) {
 
 
         // TEST
-        Collection<Intersection> allIntersections = new ArrayList<>(intersections.values());
-        Collection<DeliveryPoint> deliveryPoints = new LinkedList<>();
+        // ArrayList<Intersection> allIntersections = new ArrayList<>(intersections.values());
+        // Collection<DeliveryPoint> deliveryPoints = new LinkedList<>();
         // System.out.println("Warehouse - " + warehouse.toString());
-        // DeliveryPoint point1 = new DeliveryPoint(allIntersections., TimeWindow.EIGHT_NINE);
+        // DeliveryPoint point1 = new DeliveryPoint(allIntersections.get(1), TimeWindow.EIGHT_NINE);
         // deliveryPoints.add(point1);
         // System.out.println(point1.toString());
         // DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(51), TimeWindow.EIGHT_NINE);
@@ -98,6 +98,29 @@ public class Map {
         {
             graph.nodes.add(currentPoint);
             Collection<Intersection> possibleDestinations = new LinkedList<>();
+            getPossibleDestinations(currentPoint, deliveryPoints, possibleDestinations);
+            
+            HashMap<Intersection,InterInfo> currentMap = dijkstra(currentPoint.getPlace(), possibleDestinations);
+            for (Intersection currentDestination : possibleDestinations){
+                
+                Collection<Segment> currentPath = new LinkedList<Segment>();
+                getPath(currentPoint.getPlace(), currentDestination, currentMap, currentPath);
+
+                Arc newArc = new Arc(currentPoint, getDeliveryPointFromIntersection(deliveryPoints, currentDestination), currentMap.get(currentDestination).distance);
+                newArc.path = currentPath;
+                graph.arcs.add(newArc);
+                
+            }
+        }
+        
+        System.out.println(graph.toString());
+
+        return graph;
+
+    }
+
+    private void getPossibleDestinations(DeliveryPoint currentPoint, Collection<DeliveryPoint> deliveryPoints,Collection<Intersection> possibleDestinations){
+            
 
             // Searching the minimum TimeWindow, STRICTLY GREATER THAN the current TimeWindow
             // If there isn't any point with a strictly greater TimeWindow, its value will be WAREHOUSE
@@ -122,22 +145,6 @@ public class Map {
                     possibleDestinations.add(otherPoint.getPlace());
                 }
             }
-            HashMap<Intersection,InterInfo> currentMap = dijkstra(currentPoint.getPlace(), possibleDestinations);
-            for (Intersection currentDestination : possibleDestinations){
-                
-                Collection<Segment> currentPath = new LinkedList<Segment>();
-                getPath(currentPoint.getPlace(), currentDestination, currentMap, currentPath);
-
-                Arc newArc = new Arc(currentPoint, getDeliveryPointFromIntersection(deliveryPoints, currentDestination), currentMap.get(currentDestination).distance);
-                newArc.path = currentPath;
-                graph.arcs.add(newArc);
-                
-            }
-        }
-        
-        System.out.println(graph.toString());
-
-        return graph;
 
     }
 
