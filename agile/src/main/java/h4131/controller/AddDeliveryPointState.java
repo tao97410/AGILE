@@ -22,7 +22,7 @@ public class AddDeliveryPointState implements State {
     public void addDeliveryPoint(Controller c, WindowBuilder w, TimeWindow tw, int courier){
         System.out.println(courier);
         CurrentDeliveryPoint deliveryPoints = c.getCurrentDeliveryPoint();
-        deliveryPoints.addAffectedDeliveryPoint(courier-1, new DeliveryPoint(currentIntersection, tw));
+        deliveryPoints.addAffectedDeliveryPoint(courier, new DeliveryPoint(currentIntersection, tw));
         w.disableBackground(false);
         c.setCurrentState(c.initialState);
     }

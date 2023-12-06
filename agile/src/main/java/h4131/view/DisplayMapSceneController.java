@@ -32,57 +32,49 @@ public class DisplayMapSceneController {
 
     private Controller controller;
 
+    //Main containers
     @FXML
     private StackPane container;
-
-    @FXML
-    private Label idIntersection;
-
-    @FXML
-    private Button cancelButton;
-
     @FXML
     private VBox layout;
 
+    //Main menu controls
     @FXML
     private ChoiceBox<String> mapChoiceBox;
-
     @FXML
     private TextField numberOfCourierField;
 
+    //Delivery point validation menu
+    @FXML
+    private Pane validationPane;
     @FXML
     private ChoiceBox<String> timeWindowChoice;
-
     @FXML
     private ChoiceBox<Integer> courierChoice;
-
     @FXML
     private Button validationButton;
+    @FXML
+    private Label idIntersection;
+    @FXML
+    private Button cancelButton;
 
+    //Delivery point modification menu
     @FXML
     private Button deleteButton;
-
     @FXML
     private Pane modifyPane;
-
     @FXML
     private Label idDeliveryPoint;
-
     @FXML
     private ChoiceBox<String> modifyTimeWindowChoice;
-
     @FXML
     private ChoiceBox<Integer> modifyCourierChoice;
-
     @FXML
     private Button modifyButton;
 
-    @FXML
-    private Pane validationPane;
-
+    //List of delivery points by courier
     @FXML
     private VBox tourListGroup;
-
     @FXML
     private ScrollPane scrollPane;
 
@@ -124,7 +116,6 @@ public class DisplayMapSceneController {
         if(!numberOfCourierField.getText().equals("")){
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
         }
-
     }
 
     @FXML
@@ -192,24 +183,28 @@ public class DisplayMapSceneController {
         numberOfCourierField.setText(value);
     }
 
-    /**
-     * Method called by the windowBuilder to set the controller when creating the
-     * scene
-     * 
-     * @param c the global controller of the application
-     */
     public void setController(Controller c) {
         this.controller = c;
     }
 
-    /**
-     * Method called by the windowBuilder to get the VBox map layout when drawing
-     * map
-     * 
-     * @return the attribute VBox layout
-     */
     public VBox getLayout() {
         return layout;
+    }
+
+    public ChoiceBox<Integer> getModifyCourierChoice() {
+        return modifyCourierChoice;
+    }
+
+    public Label getWhichDeliveryPoint() {
+        return idDeliveryPoint;
+    }
+
+    public Pane getModifyPane() {
+        return modifyPane;
+    }
+
+    public ChoiceBox<String> getModifyTimeWindowChoice() {
+        return modifyTimeWindowChoice;
     }
 
     /**
@@ -348,7 +343,7 @@ public class DisplayMapSceneController {
             }
         });
 
-        // Panning via drag....
+        // Panning with mouse drag
         final ObjectProperty<Point2D> lastMouseCoordinates = new SimpleObjectProperty<Point2D>();
         scrollContent.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -429,21 +424,5 @@ public class DisplayMapSceneController {
         } else {
             scroller.setVvalue(scroller.getVmin());
         }
-    }
-
-    public ChoiceBox<Integer> getModifyCourierChoice() {
-        return modifyCourierChoice;
-    }
-
-    public Label getWhichDeliveryPoint() {
-        return idDeliveryPoint;
-    }
-
-    public Pane getModifyPane() {
-        return modifyPane;
-    }
-
-    public ChoiceBox<String> getModifyTimeWindowChoice() {
-        return modifyTimeWindowChoice;
     }
 }

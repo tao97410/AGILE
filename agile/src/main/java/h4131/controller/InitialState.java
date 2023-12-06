@@ -75,7 +75,7 @@ public class InitialState implements State{
         Map map = c.getMap();
         c.addDeliveryPointState.setCurrentIntersection(map.getIntersectionById(intersectionId));
         c.setCurrentState(c.addDeliveryPointState);
-        windowBuilder.openMenuIntersection(map, c.getNumberOfCourier(), c.addDeliveryPointState.getCurrentIntersection());
+        windowBuilder.openMenuIntersection(c.getNumberOfCourier(), c.addDeliveryPointState.getCurrentIntersection());
     }
 
     @Override

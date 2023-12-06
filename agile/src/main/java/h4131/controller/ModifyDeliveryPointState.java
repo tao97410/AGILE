@@ -25,6 +25,7 @@ public class ModifyDeliveryPointState implements State{
         return this.courier;
     }
 
+    @Override
     public void deleteDeliveryPoint(Controller controller, WindowBuilder windowBuilder){
         if(this.courier == 0){
             controller.getCurrentDeliveryPoint().removeNonAssignedDeliveryPoint(this.currentDeliveryPoint);
@@ -36,6 +37,7 @@ public class ModifyDeliveryPointState implements State{
         controller.setCurrentState(controller.initialState);
     }
 
+    @Override
     public void changeInfosDeliveryPoint(Controller controller, WindowBuilder windowBuilder, TimeWindow newTime, int newCourier){
         if(this.courier == 0){
             controller.getCurrentDeliveryPoint().removeNonAssignedDeliveryPoint(this.currentDeliveryPoint);
@@ -44,7 +46,7 @@ public class ModifyDeliveryPointState implements State{
             controller.getCurrentDeliveryPoint().removeAssignedDeliveryPoint(this.currentDeliveryPoint, this.courier);
         }
         currentDeliveryPoint.setTime(newTime);
-        controller.getCurrentDeliveryPoint().addAffectedDeliveryPoint(newCourier-1, currentDeliveryPoint);
+        controller.getCurrentDeliveryPoint().addAffectedDeliveryPoint(newCourier, currentDeliveryPoint);
         windowBuilder.disableBackground(false);
         controller.setCurrentState(controller.initialState);
     }

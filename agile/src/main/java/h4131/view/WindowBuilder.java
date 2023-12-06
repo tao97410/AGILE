@@ -74,6 +74,11 @@ public class WindowBuilder implements Observer{
         stage.show();    
     }
 
+    @Override
+    public void update(Observable observed, Object arg) {
+        displayListDeliveryPoint();
+    }
+
     /**
      * creates a pop-up error message
      * @param message the message to display
@@ -212,7 +217,12 @@ public class WindowBuilder implements Observer{
         }
     }
 
-    public void openMenuIntersection(Map map, int numberOfCourier, Intersection intersection){        
+    /**
+     * method called by controller to display the menu when clicking on an intersection
+     * @param numberOfCourier to offer the user the choice of courier number
+     * @param intersection the selected intersection
+     */
+    public void openMenuIntersection(int numberOfCourier, Intersection intersection){        
         ChoiceBox<Integer> courierChoiceBox = displayMapSceneController.getCourierChoice();
         courierChoiceBox.getItems().clear();
         for(int i = 1; i<=numberOfCourier; i++){
@@ -228,11 +238,20 @@ public class WindowBuilder implements Observer{
         disableBackground(true);
     }
 
+    /**
+     * methode called to disable background and prevent any click
+     * @param bool
+     */
     public void disableBackground(boolean bool){
         layout.setDisable(bool);
         shapesPane.setDisable(bool);
     }
 
+    /**
+     * method called to delete the circle around an intersection when
+     * not selected anymore
+     * @param id
+     */
     public void unSetIntersection(Long id){
         for(Node node : shapesPane.getChildren()){
             if (node instanceof IntersectionCircle) {
@@ -244,7 +263,13 @@ public class WindowBuilder implements Observer{
         }
     }
     
-
+    /**
+     * used to draw a circle on the map representing an intersection
+     * @param x coordinate of the intersection
+     * @param y coordinate of the intersection
+     * @param radius of the circle
+     * @param intersectionId of the represented intersection
+     */
     private void addCircle(double x, double y, double radius, Long intersectionId) {
         IntersectionCircle circle = new IntersectionCircle(x, y, radius, Color.TRANSPARENT, intersectionId);
         circle.setOnMouseClicked(displayMapSceneController::handleIntersectionClicked);
@@ -253,6 +278,14 @@ public class WindowBuilder implements Observer{
         shapesPane.getChildren().add(circle);
     }
 
+    /**
+     * used to draw a line on the map representing a segment
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @param segment
+     */
     private void addLine(double startX, double startY, double endX, double endY, Segment segment) {
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(Color.WHITE);
@@ -266,6 +299,15 @@ public class WindowBuilder implements Observer{
         shapesPane.getChildren().add(line);
     }
 
+    /**
+     * used to draw a line on the map representing a segment of a tour
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @param color
+     * @param segment
+     */
     private void addLineTour(double startX, double startY, double endX, double endY, int color, Segment segment) {
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
@@ -275,12 +317,10 @@ public class WindowBuilder implements Observer{
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
         shapesPane.getChildren().add(line);
     }
-
-    @Override
-    public void update(Observable observed, Object arg) {
-        displayListDeliveryPoint();
-    }
-
+ 
+    /**
+     * called by update() to display the lists of delivery point by courier on the right of the screen
+     */
     public void displayListDeliveryPoint(){
         CurrentDeliveryPoint currentDeliveryPoint = controller.getCurrentDeliveryPoint();
         VBox tourListGroup = displayMapSceneController.getTourListGroup();
@@ -314,6 +354,12 @@ public class WindowBuilder implements Observer{
         
     }
 
+    /**
+     * called by controller to open the menu allowing the user to modify a delivery point
+     * @param numberOfCourier to propose the choice of courier number
+     * @param deliveryPoint the delivery point to modify
+     * @param currentCourier the current courier affected to the delivery point
+     */
     public void openMenuModifyDeliveryPoint(int numberOfCourier, DeliveryPoint deliveryPoint, int currentCourier) {
         ChoiceBox<Integer> modifyCourierChoiceBox = displayMapSceneController.getModifyCourierChoice();
         modifyCourierChoiceBox.getItems().clear();
