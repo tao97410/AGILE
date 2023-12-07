@@ -18,9 +18,15 @@ import h4131.model.GlobalTour;
 
 
 public class CompleteGraph implements Graph{
-	private static final double MAX_COST = 10000;
+	public void setNodes(Collection<DeliveryPoint> nodes) {
+        this.nodes = nodes;
+    }
+    private static final double MAX_COST = 10000;
 	private static final double MIN_COST = 100;
     public Collection<DeliveryPoint> nodes;
+    public void setCost(double[][] cost) {
+        this.cost = cost;
+    }
     public Collection<Arc> arcs;
     private double [][] cost;
     private double [][] timeWindow;
