@@ -11,7 +11,10 @@ public class Tour {
     private List<Segment> course;
     private List<DeliveryPoint> deliveryPoints;
     private Courier courier;
-
+    public Tour(){
+        this.course = new ArrayList<>();
+        this.deliveryPoints = new ArrayList<>();
+    }
     public Tour(Courier aCourier) {
         this.courier = aCourier;
         this.course = new ArrayList<>();
@@ -52,6 +55,9 @@ public class Tour {
 
     public void addDeliveryPoint(DeliveryPoint point){
         this.deliveryPoints.add(point);
+    }
+    public void setDeliveryPoints(List<DeliveryPoint> deliveryPoints){
+        this.deliveryPoints=deliveryPoints;
     }
 
 }

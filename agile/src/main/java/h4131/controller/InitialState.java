@@ -12,12 +12,18 @@ import h4131.calculus.CompleteGraph;
 import h4131.calculus.Graph;
 import h4131.calculus.TSP;
 import h4131.calculus.TSP1;
+import h4131.calculus.Arc;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
+import h4131.model.Courier;
+import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
+
+
+
 
 public class InitialState implements State{
     
@@ -51,12 +57,16 @@ public class InitialState implements State{
         try {
             XMLdeserializer.loadMap(loadedMap);
             CompleteGraph g = loadedMap.getGraphFromPoints(null);
-            g.computeBestTour();
+            GlobalTour globalTour=new GlobalTour();
+            g.computeBestTour(globalTour);
             System.out.println(g.nodes);
-            System.out.println(g.arcs);
+            for(Arc a:g.arcs){
+                System.out.println(a.origin);
+                System.out.println(a.destination);
+            }
             
            
-            w.drawMapAndGlobalTour(loadedMap, null);
+            w.drawMapAndGlobalTour(loadedMap, globalTour);
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

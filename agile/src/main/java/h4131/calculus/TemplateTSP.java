@@ -1,4 +1,6 @@
 package h4131.calculus;
+import h4131.model.TimeWindow;
+import javafx.scene.effect.Light.Spot;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +24,7 @@ public abstract class TemplateTSP implements TSP {
 		Collection<Integer> visited = new ArrayList<Integer>(g.getNbVertices());
 		visited.add(0); // The first visited vertex is 0
 		bestSolCost = Double.MAX_VALUE;
-		branchAndBound(0, unvisited, visited, 0);
+		branchAndBound(0, unvisited, visited, 0,g.timeBegining,0,1,0);
 	}
 	
 	public Integer[] getSolution(){
@@ -61,25 +63,68 @@ public abstract class TemplateTSP implements TSP {
 	 * @param currentCost the cost of the path corresponding to <code>visited</code>
 	 */	
 	private void branchAndBound(int currentVertex, Collection<Integer> unvisited, 
-			Collection<Integer> visited, double currentCost){
+			Collection<Integer> visited, double currentCost,double time,int nbSommetVisited,int plageHoraire,int nbPlageHoraire){
+		int maxNbSommetVisited=0;
+		int newNbPlageHoraire=nbPlageHoraire+1;
 		if (System.currentTimeMillis() - startTime > timeLimit) return;
 	    if (unvisited.size() == 0){ 
 	    	if (g.isArc(currentVertex,0)){ 
-	    		if (currentCost+g.getCost(currentVertex,0) < bestSolCost){ 
-	    			visited.toArray(bestSol);
-	    			bestSolCost = currentCost+g.getCost(currentVertex,0);
-	    		}
+	    		visited.toArray(bestSol);
+	    		bestSolCost = currentCost+g.getCost(currentVertex,0);
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
 	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);
 	        while (it.hasNext()){
+				
 	        	Integer nextVertex = it.next();
-	        	visited.add(nextVertex);
-	            unvisited.remove(nextVertex);
-	            branchAndBound(nextVertex, unvisited, visited, 
-	            		currentCost+g.getCost(currentVertex, nextVertex));
-	            visited.remove(nextVertex);
-	            unvisited.add(nextVertex);
+				
+				
+				if(g.getNbPlageHoraire(plageHoraire-1)!=nbPlageHoraire && g.getWindow(nextVertex).ordinal()!=plageHoraire){
+					System.out.println(plageHoraire);
+					continue;
+				}
+				
+				else if(g.getNbPlageHoraire(plageHoraire-1)==nbPlageHoraire){
+					newNbPlageHoraire=0;
+				}
+				System.out.println(g.getNbPlageHoraire(plageHoraire-1));
+				System.out.println(nbPlageHoraire);
+				System.out.println(g.getWindow(nextVertex));
+				System.out.println(plageHoraire);
+				if(g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
+					
+					if(nbSommetVisited>=maxNbSommetVisited){
+						if(nbSommetVisited==maxNbSommetVisited){
+							if(currentCost+g.getCost(currentVertex,nextVertex)<bestSolCost){
+								visited.toArray(bestSol);
+								bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
+							}
+						}
+						else{
+							
+
+							visited.toArray(bestSol);
+							bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
+							
+						}
+					}
+					//verifier le bestSol
+				}
+				else{
+					double newTime;
+					if(time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0<g.getWindow(0,nextVertex)){
+						newTime=g.getWindow(0,nextVertex)+5.0/60.0;
+					}
+					else{
+						newTime=time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0;
+					}
+					visited.add(nextVertex);
+					unvisited.remove(nextVertex);
+					branchAndBound(nextVertex, unvisited, visited, 
+							currentCost+g.getCost(currentVertex, nextVertex),newTime,nbSommetVisited++,g.getWindow(nextVertex).ordinal(),newNbPlageHoraire);
+					visited.remove(nextVertex);
+					unvisited.add(nextVertex);
+				}
 	        }	    
 	    }
 	}

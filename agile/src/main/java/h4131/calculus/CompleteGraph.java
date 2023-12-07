@@ -1,11 +1,21 @@
 package h4131.calculus;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
+import javax.security.auth.login.CredentialException;
+
+import h4131.model.Courier;
 import h4131.model.DeliveryPoint;
+import h4131.model.Segment;
+import h4131.model.TimeWindow;
+import h4131.model.Tour;
+import h4131.model.GlobalTour;
+
 
 public class CompleteGraph implements Graph{
 	private static final double MAX_COST = 10000;
@@ -13,13 +23,18 @@ public class CompleteGraph implements Graph{
     public Collection<DeliveryPoint> nodes;
     public Collection<Arc> arcs;
     double [][] cost;
+    double [][] timeWindow;
+    int [] nbPlageHoraire;
+    TimeWindow [] listeWindow;
     int nbNodes;
+    double timeBegining=8.0;
 
     public CompleteGraph() {
         nodes = new ArrayList<>();
         arcs = new ArrayList<>();
+        
     }
-
+    
     public String toString() {
         StringBuilder result = new StringBuilder();
         for (Arc a : arcs) {
@@ -45,11 +60,14 @@ public class CompleteGraph implements Graph{
 
     //After having computed the best tour, we have a tab of the indexes of the nodes 
     // Then we have to associate each index to the corresponding DeliveryPoint 
-    public Collection<DeliveryPoint> tabToCollection(Integer [] tab){
+    private Collection<DeliveryPoint> tabToCollection(Integer [] tab){
         Collection<DeliveryPoint> bestTour= new LinkedList<>();
         int indexDelivery;
         for(Integer indexTab:tab){
             indexDelivery=0;
+            if(indexTab==null){
+                break;
+            }
             for(DeliveryPoint d:nodes){
                 if(indexDelivery==indexTab){
                     bestTour.add(d);
@@ -61,26 +79,48 @@ public class CompleteGraph implements Graph{
         }
 
         return bestTour;
-
-
     }
+
+
+
     private Collection<Arc> findArc(Collection<DeliveryPoint> delivery){
         Collection<Arc> arcsResult=new LinkedList<Arc>();
         Iterator<DeliveryPoint> d= delivery.iterator();
+        DeliveryPoint actual=d.next();
+        DeliveryPoint suivant;
         while(d.hasNext()){
-            DeliveryPoint suivant=(DeliveryPoint)d.next();
+            suivant=(DeliveryPoint)d.next();
             for(Arc a :arcs){
-                if(a.origin==d && a.destination==suivant){
+                if(actual==a.origin && a.destination==suivant){
                     arcsResult.add(a);
                 }
             }
+            actual=suivant;
         }
         return arcsResult;
+    }
+    private List<Segment> buildCourse(){
+        List<Segment> course=new LinkedList<Segment>();
+        for(Arc a:this.arcs){
+            for(Segment s:a.path){
+                course.add(s);
+
+            }
+
+        }
+        return course;
+    }
+    private List<DeliveryPoint> buildListeDelivery(){
+        List<DeliveryPoint> listeDelivery=new ArrayList<DeliveryPoint>();
+        for(DeliveryPoint d:this.nodes){
+            listeDelivery.add(d);
+        }
+        return listeDelivery;
     }
     
 
 
-    public void computeBestTour(){
+    public void computeBestTour(GlobalTour globalTour){
         TSP1 tsp=new TSP1();
         this.initialiseCompleteGraph();
         System.out.println("Graphs with "+this.nbNodes+" vertices:");
@@ -90,6 +130,10 @@ public class CompleteGraph implements Graph{
                 +(System.currentTimeMillis() - startTime)+"ms : ");
         this.nodes=tabToCollection(tsp.getSolution());
         this.arcs=findArc(this.nodes);
+        Tour tour=new Tour();
+        tour.setCourse(this.buildCourse());
+        tour.setDeliveryPoints(this.buildListeDelivery());
+        globalTour.addTour(tour);
 
     }
 
@@ -97,7 +141,9 @@ public class CompleteGraph implements Graph{
     private void initialiseCompleteGraph(){
         nbNodes=nodes.size();
         createCost();
-
+        createTimeWindow();
+        createNbPlageHoraire();
+        createWindow();
     }
 
     //Creates the cost function
@@ -127,6 +173,52 @@ public class CompleteGraph implements Graph{
             nodePos++;
         }
     }
+    public void createTimeWindow(){
+        int i=0;
+        double resTimeWindow[][]=new double[nbNodes][2];
+        for(DeliveryPoint node:nodes){
+            resTimeWindow[i][0]=(double)(node.getTime().ordinal())+7.0;
+            resTimeWindow[i][1]=(double)(node.getTime().ordinal())+8.0;
+            i++;
+
+
+        }
+        this.timeWindow=resTimeWindow;
+    }
+    public void createNbPlageHoraire(){
+        nbPlageHoraire=new int[nbNodes];
+        Arrays.fill(nbPlageHoraire,0);
+        Iterator<DeliveryPoint> d=nodes.iterator();
+        d.next();
+        DeliveryPoint actual;
+        DeliveryPoint previous=nodes.toArray(new DeliveryPoint[1])[0];
+        int plageHoraire=-1;
+        while(d.hasNext()){
+            actual=(DeliveryPoint)d.next();
+            if(actual.getTime()==previous.getTime()){
+                nbPlageHoraire[plageHoraire]+=1;
+
+            }
+            else{
+                plageHoraire++;
+                nbPlageHoraire[plageHoraire]+=1;
+            }
+            previous=actual;
+
+            
+        }
+    
+    }
+    public void createWindow(){
+        listeWindow=new TimeWindow[nbNodes];
+        int i=0;
+        for(DeliveryPoint d : nodes){
+            listeWindow[i]=d.getTime();
+            i++;
+        }
+    }
+
+
 
 	@Override
 	public double getCost(int i, int j) {
@@ -135,12 +227,32 @@ public class CompleteGraph implements Graph{
 		return cost[i][j];
 	}
 
+    @Override
+    public double getWindow(int firstOrLast,Integer i){
+        return timeWindow[i][firstOrLast];
+    }
+
 	@Override
 	public boolean isArc(int i, int j) {
         if (i<0 || i>=nodes.size() || j<0 || j>=nodes.size())
 			return false;
 		return i != j;
 	}
+    @Override
+    public double timeTravel(int i, int j){
+        return cost[i][j]/15000.0;
+    }
+
+    @Override
+    public int getNbPlageHoraire(int plageHoraire){
+        return nbPlageHoraire[plageHoraire];
+    }
+    @Override
+    public TimeWindow getWindow(Integer deliveryPoint){
+        return listeWindow[deliveryPoint];
+    }
+    
+    
 
 
 
