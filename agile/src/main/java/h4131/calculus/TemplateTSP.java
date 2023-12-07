@@ -12,6 +12,7 @@ public abstract class TemplateTSP implements TSP {
 	private double bestSolCost;
 	private int timeLimit;
 	private long startTime;
+	private int indexDeliveryErreur=-1;
 	
 	
 	public void searchSolution(int timeLimit, CompleteGraph g){
@@ -75,21 +76,17 @@ public abstract class TemplateTSP implements TSP {
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
 	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);
-			System.out.println("Voici les suivant de  : ");
-			System.out.println(g.getWindow(currentVertex));
-			System.out.println(plageHoraire);
-			System.out.println(nbPlageHoraire);
-			System.out.println(g.getNbPlageHoraire(plageHoraire-1));
+			
 
-			System.out.println("->");
+			
 	        while (it.hasNext()){
 				
 	        	Integer nextVertex = it.next();
 				
-				System.out.println(g.getWindow(nextVertex));
+				
 				
 				if(g.getNbPlageHoraire(plageHoraire-1)!=nbPlageHoraire && g.getWindow(nextVertex).ordinal()!=plageHoraire){
-					System.out.println("mort");
+					
 					continue;
 				}
 				
@@ -104,6 +101,7 @@ public abstract class TemplateTSP implements TSP {
 							if(currentCost+g.getCost(currentVertex,nextVertex)<bestSolCost){
 								visited.toArray(bestSol);
 								bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
+								indexDeliveryErreur=nextVertex;
 							}
 						}
 						else{
@@ -111,6 +109,7 @@ public abstract class TemplateTSP implements TSP {
 
 							visited.toArray(bestSol);
 							bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
+							indexDeliveryErreur=nextVertex;
 							
 						}
 					}
@@ -134,5 +133,9 @@ public abstract class TemplateTSP implements TSP {
 	        }	    
 	    }
 	}
+	public int getIndexDeliveryErreur(){
+		return indexDeliveryErreur;
+	}
+	
 
 }

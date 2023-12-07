@@ -32,4 +32,6 @@ public interface Graph {
 	public abstract TimeWindow getWindow(Integer deliveryPoint);
 
 	public abstract TimeWindow getTimeBegining();
+
+	public abstract DeliveryPoint getDeliveryErreur();
 }

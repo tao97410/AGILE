@@ -29,6 +29,7 @@ public class CompleteGraph implements Graph{
     private int nbNodes;
     private TimeWindow timeBegining;
     private DeliveryPoint wareHouse;
+    private DeliveryPoint deliveryErreur;
 
     public CompleteGraph() {
         nodes = new ArrayList<>();
@@ -109,6 +110,12 @@ public class CompleteGraph implements Graph{
 
         return arcsResult;
     }
+    public DeliveryPoint findDeliveryErreur(int indexDeliveryErreur){
+        if(indexDeliveryErreur==-1){
+            return null;
+        }
+        return nodes.toArray(new DeliveryPoint[nbNodes])[indexDeliveryErreur];
+    }
     private List<Segment> buildCourse(){
         List<Segment> course=new LinkedList<Segment>();
         for(Arc a:this.arcs){
@@ -136,6 +143,7 @@ public class CompleteGraph implements Graph{
         System.out.println("Graphs with "+this.nbNodes+" vertices:");
         long startTime = System.currentTimeMillis();
         tsp.searchSolution(20000, this);
+        deliveryErreur=findDeliveryErreur(tsp.getIndexDeliveryErreur());
         System.out.println("Solution of cost "+tsp.getSolutionCost()+" found in "
                 +(System.currentTimeMillis() - startTime)+"ms : ");
         this.nodes=tabToCollection(tsp.getSolution());
@@ -282,7 +290,12 @@ public class CompleteGraph implements Graph{
     public TimeWindow getTimeBegining(){
         return timeBegining;
     }
+    @Override
+    public DeliveryPoint getDeliveryErreur(){
+        return deliveryErreur;
+    }
     
+
     
 
 

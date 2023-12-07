@@ -59,11 +59,9 @@ public class InitialState implements State{
             CompleteGraph g = loadedMap.getGraphFromPoints(null);
             GlobalTour globalTour=new GlobalTour();
             g.computeBestTour(globalTour);
-            System.out.println(g.nodes);
-            for(Arc a:g.arcs){
-                System.out.println(a.origin);
-                System.out.println(a.destination);
-            }
+            System.out.println("Voici le delivery qui coince : ");
+            System.out.println(g.getDeliveryErreur());
+
             
            
             w.drawMapAndGlobalTour(loadedMap, globalTour);

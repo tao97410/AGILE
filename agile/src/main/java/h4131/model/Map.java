@@ -76,10 +76,10 @@ public class Map {
         DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(2), TimeWindow.EIGHT_NINE);
         deliveryPoints.add(point2);
         System.out.println(point2.toString());
-        DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(3), TimeWindow.NINE_TEN);
+        DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(3), TimeWindow.EIGHT_NINE);
         deliveryPoints.add(point3);
         System.out.println(point3.toString());
-        DeliveryPoint point4 = new DeliveryPoint(allIntersections.get(4), TimeWindow.TEN_ELEVEN);
+        DeliveryPoint point4 = new DeliveryPoint(allIntersections.get(4), TimeWindow.EIGHT_NINE);
         deliveryPoints.add(point4);
         System.out.println(point4.toString());
         DeliveryPoint point5 = new DeliveryPoint(allIntersections.get(5), TimeWindow.TEN_ELEVEN);
