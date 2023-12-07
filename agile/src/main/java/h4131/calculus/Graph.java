@@ -6,8 +6,6 @@ import java.util.Collection;
 
 
 import h4131.model.DeliveryPoint;
-import h4131.model.Intersection;
-import h4131.model.Segment;
 
 public class Graph {
 

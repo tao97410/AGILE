@@ -12,7 +12,7 @@ public class GlobalTourTest {
     
     @Test
     void testAddIntersection() {
-        mockedGlobalTour = new GlobalTour(null);
+        mockedGlobalTour = new GlobalTour();
         Tour tourInstance = new Tour(1);
         mockedGlobalTour.addTour(tourInstance);
         assertTrue(mockedGlobalTour.getTours().contains(tourInstance));

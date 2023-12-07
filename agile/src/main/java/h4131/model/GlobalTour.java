@@ -10,6 +10,10 @@ public class GlobalTour {
         this.tours = new LinkedList<Tour>(someTours);
     }
 
+     public GlobalTour(){
+        this.tours = new LinkedList<Tour>();
+    }
+
     /**
      * @return List<Tour> return the tours
      */

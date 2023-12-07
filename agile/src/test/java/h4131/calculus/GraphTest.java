@@ -2,15 +2,11 @@ package h4131.calculus;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.LinkedList;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import h4131.model.DeliveryPoint;
 import h4131.model.Intersection;
-import h4131.model.Map;
 import h4131.model.Segment;
 import h4131.model.TimeWindow;
 
@@ -42,7 +38,6 @@ public class GraphTest {
 
 
         Segment mockedSegment1 = new Segment(mockedinterWarehouse, mockedinterFirst, 5, "alban");
-        Segment mockedSegment2 = new Segment(mockedinterFirst, mockedinterSecond, 8, "clement");
         Segment mockedSegment3 = new Segment(mockedinterFirst, mockedinterCheckpoint, 2, "florian");
         Segment mockedSegment4 = new Segment(mockedinterCheckpoint, mockedinterSecond, 3, "antoine");//shorter path by taking the "checkpoint"
         Segment mockedSegment5 = new Segment(mockedinterSecond, mockedinterWarehouse, 5, "tao");

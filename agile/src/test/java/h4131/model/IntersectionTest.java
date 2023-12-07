@@ -3,7 +3,7 @@ package h4131.model;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+
 
 public class IntersectionTest {
 
