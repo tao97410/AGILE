@@ -13,6 +13,7 @@ public abstract class TemplateTSP implements TSP {
 	private int timeLimit;
 	private long startTime;
 	
+	
 	public void searchSolution(int timeLimit, CompleteGraph g){
 		if (timeLimit <= 0) return;
 		startTime = System.currentTimeMillis();	
@@ -24,7 +25,7 @@ public abstract class TemplateTSP implements TSP {
 		Collection<Integer> visited = new ArrayList<Integer>(g.getNbVertices());
 		visited.add(0); // The first visited vertex is 0
 		bestSolCost = Double.MAX_VALUE;
-		branchAndBound(0, unvisited, visited, 0,g.timeBegining,0,1,0);
+		branchAndBound(0, unvisited, visited, 0,g.getTimeBegining().ordinal()+7.0,0,g.getTimeBegining().ordinal(),0);
 	}
 	
 	public Integer[] getSolution(){
@@ -74,23 +75,28 @@ public abstract class TemplateTSP implements TSP {
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
 	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);
+			System.out.println("Voici les suivant de  : ");
+			System.out.println(g.getWindow(currentVertex));
+			System.out.println(plageHoraire);
+			System.out.println(nbPlageHoraire);
+			System.out.println(g.getNbPlageHoraire(plageHoraire-1));
+
+			System.out.println("->");
 	        while (it.hasNext()){
 				
 	        	Integer nextVertex = it.next();
 				
+				System.out.println(g.getWindow(nextVertex));
 				
 				if(g.getNbPlageHoraire(plageHoraire-1)!=nbPlageHoraire && g.getWindow(nextVertex).ordinal()!=plageHoraire){
-					System.out.println(plageHoraire);
+					System.out.println("mort");
 					continue;
 				}
 				
 				else if(g.getNbPlageHoraire(plageHoraire-1)==nbPlageHoraire){
-					newNbPlageHoraire=0;
+					newNbPlageHoraire=1;
 				}
-				System.out.println(g.getNbPlageHoraire(plageHoraire-1));
-				System.out.println(nbPlageHoraire);
-				System.out.println(g.getWindow(nextVertex));
-				System.out.println(plageHoraire);
+				
 				if(g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
 					
 					if(nbSommetVisited>=maxNbSommetVisited){

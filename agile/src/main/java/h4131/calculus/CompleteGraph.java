@@ -22,12 +22,13 @@ public class CompleteGraph implements Graph{
 	private static final double MIN_COST = 100;
     public Collection<DeliveryPoint> nodes;
     public Collection<Arc> arcs;
-    double [][] cost;
-    double [][] timeWindow;
-    int [] nbPlageHoraire;
-    TimeWindow [] listeWindow;
-    int nbNodes;
-    double timeBegining=8.0;
+    private double [][] cost;
+    private double [][] timeWindow;
+    private int [] nbPlageHoraire;
+    private TimeWindow [] listeWindow;
+    private int nbNodes;
+    private TimeWindow timeBegining;
+    private DeliveryPoint wareHouse;
 
     public CompleteGraph() {
         nodes = new ArrayList<>();
@@ -87,16 +88,25 @@ public class CompleteGraph implements Graph{
         Collection<Arc> arcsResult=new LinkedList<Arc>();
         Iterator<DeliveryPoint> d= delivery.iterator();
         DeliveryPoint actual=d.next();
-        DeliveryPoint suivant;
+        DeliveryPoint suivant=actual;
         while(d.hasNext()){
             suivant=(DeliveryPoint)d.next();
             for(Arc a :arcs){
                 if(actual==a.origin && a.destination==suivant){
                     arcsResult.add(a);
                 }
+                
+                    
+                
             }
             actual=suivant;
         }
+        for(Arc a : arcs){
+            if(a.origin==suivant && a.destination==wareHouse){
+                arcsResult.add(a);
+            }
+        }
+
         return arcsResult;
     }
     private List<Segment> buildCourse(){
@@ -141,9 +151,11 @@ public class CompleteGraph implements Graph{
     private void initialiseCompleteGraph(){
         nbNodes=nodes.size();
         createCost();
+        createWareHouse();
         createTimeWindow();
         createNbPlageHoraire();
         createWindow();
+        createWindowBegining();
     }
 
     //Creates the cost function
@@ -173,7 +185,22 @@ public class CompleteGraph implements Graph{
             nodePos++;
         }
     }
-    public void createTimeWindow(){
+    private void createWareHouse(){
+        wareHouse=nodes.toArray(new DeliveryPoint[1])[0];
+    }
+    private void createWindowBegining(){
+        TimeWindow min=TimeWindow.ELEVEN_TWELVE;
+        for(DeliveryPoint d:nodes){
+            if(d!=wareHouse && d.getTime().compareTo(min)<0){
+                min=d.getTime();
+            }
+
+        }
+        timeBegining=min;
+
+    }
+
+    private void createTimeWindow(){
         int i=0;
         double resTimeWindow[][]=new double[nbNodes][2];
         for(DeliveryPoint node:nodes){
@@ -185,7 +212,7 @@ public class CompleteGraph implements Graph{
         }
         this.timeWindow=resTimeWindow;
     }
-    public void createNbPlageHoraire(){
+    private void createNbPlageHoraire(){
         nbPlageHoraire=new int[nbNodes];
         Arrays.fill(nbPlageHoraire,0);
         Iterator<DeliveryPoint> d=nodes.iterator();
@@ -209,7 +236,7 @@ public class CompleteGraph implements Graph{
         }
     
     }
-    public void createWindow(){
+    private void createWindow(){
         listeWindow=new TimeWindow[nbNodes];
         int i=0;
         for(DeliveryPoint d : nodes){
@@ -250,6 +277,10 @@ public class CompleteGraph implements Graph{
     @Override
     public TimeWindow getWindow(Integer deliveryPoint){
         return listeWindow[deliveryPoint];
+    }
+    @Override
+    public TimeWindow getTimeBegining(){
+        return timeBegining;
     }
     
     
