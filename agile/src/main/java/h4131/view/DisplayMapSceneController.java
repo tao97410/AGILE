@@ -174,11 +174,6 @@ public class DisplayMapSceneController {
         controller.saveGlobalTour();
     }
 
-    @FXML
-    void doSaveGlobalTour(ActionEvent event) {
-        controller.saveGlobalTour();
-    }
-
     public VBox getTourListGroup() {
         return this.tourListGroup;
     }
