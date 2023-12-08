@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import h4131.controller.Controller;
@@ -17,6 +18,7 @@ import h4131.model.Tour;
 import h4131.observer.Observable;
 import h4131.observer.Observer;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -28,10 +30,13 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -193,6 +198,11 @@ public class WindowBuilder implements Observer{
             Rectangle warehouse = new Rectangle(xWarehouse-5, yWarehouse-5, 10, 10);
             warehouse.setFill(Color.CORNFLOWERBLUE);
             shapesPane.getChildren().add(warehouse);
+            Tooltip tooltip = new Tooltip("Warehouse");
+            tooltip.setShowDelay(Duration.millis(200));
+            tooltip.setHideDelay(Duration.millis(100));
+            tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+            Tooltip.install(warehouse, tooltip);
 
 
             Group group = new Group(shapesPane);
@@ -225,6 +235,7 @@ public class WindowBuilder implements Observer{
 
         int color = 0;   
 
+        LinkedList<Segment> tours = new LinkedList<Segment>();
         for(Tour tour : globalTour.getTours()){             
             for(Segment segment : tour.getCourse()){
                 double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
@@ -233,8 +244,14 @@ public class WindowBuilder implements Observer{
                 double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
 
                 addLineTour(originX, originY, destX, destY, color, segment);
+                tours.add(segment);
             }
             color++;
+        }
+        for(Segment segment : tours){   
+            if(segment.getLength()>50){
+                drawArrow(segment, 3, 5);
+            }                     
         }
     }
 
@@ -345,12 +362,45 @@ public class WindowBuilder implements Observer{
         line.setStrokeWidth(2.0);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
-        Tooltip tooltip = new Tooltip("Name : "+segment.getName()+"\nLength : "+segment.getLength()+"m");
-        tooltip.setShowDelay(Duration.millis(200));
-        tooltip.setHideDelay(Duration.millis(100));
-        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
-        Tooltip.install(line, tooltip);
+        line.setMouseTransparent(true);
         shapesPane.getChildren().add(line);
+    }
+
+    private void drawArrow(Segment segment, double width, double length){
+        Screen screen = Screen.getPrimary();
+        double screenHeight = screen.getVisualBounds().getHeight();
+        double screenWidth = screen.getVisualBounds().getWidth();
+        double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+        double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+        double originY = screenHeight - ((segment.getOrigin().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+        double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+
+        double slope = (destY-originY)/(destX-originX);
+        
+        double norm = Math.sqrt(slope*slope + 1);
+
+        double middleX = 0.55*(destX-originX) + originX;
+        double middleY = 0.55*(destY-originY) + originY; 
+        double arrowHeadX = (destX-originX) > 0 ? middleX + length *(-1/norm) : middleX + length *(1/norm);
+        double arrowHeadY = (destY-originY) > 0 ? middleY + (length * (-slope/norm)) : middleY + (length * (slope/norm))  ; 
+
+        double leftX = middleX + width/2 * slope/norm;
+        double leftY = middleY + width/2 * (-1)/norm;
+        double rightX = middleX - (width/2 * slope/norm);
+        double rightY = middleY - (width/2 * (-1)/norm);
+
+        Polygon arrow = new Polygon();
+        arrow.getPoints().addAll(
+            middleX, middleY,
+            leftX, leftY,
+            arrowHeadX, arrowHeadY,
+            rightX, rightY
+        );       
+        arrow.setFill(Color.WHITE);
+        shapesPane.getChildren().add(arrow);
+
+
+   
     }
  
     /**
@@ -364,7 +414,14 @@ public class WindowBuilder implements Observer{
         for(LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()){
             if(!list.isEmpty()){
                 VBox listDeliveryPoint = new VBox();
-                TitledPane titledPane = new TitledPane("Courier : " + courier, listDeliveryPoint);                
+                TitledPane titledPane = new TitledPane();
+                Rectangle rectangle = new Rectangle(17.5, 17.5, colors[(courier-1)%colors.length]);
+                rectangle.setStroke(Color.BLACK);
+                Label title = new Label("Courier : " + courier);
+                HBox titleContent = new HBox(12);
+                titleContent.getChildren().addAll(rectangle,title);
+                titledPane.setGraphic(titleContent);
+                titledPane.setContent(listDeliveryPoint);                
                 tourListGroup.getChildren().add(titledPane);
                 for(DeliveryPoint deliveryPoint : list){
                     DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
@@ -377,7 +434,9 @@ public class WindowBuilder implements Observer{
         }
         if(!currentDeliveryPoint.getNonAffectedDeliveryPoints().isEmpty()){
             VBox listDeliveryPoint = new VBox();
-            TitledPane titledPane = new TitledPane("Non Affected delivery points ", listDeliveryPoint);                
+            TitledPane titledPane = new TitledPane("Non Affected delivery points ", listDeliveryPoint); 
+
+            titledPane.setStyle("-fx-background-color: #FF0000");           
             tourListGroup.getChildren().add(titledPane);
             for(DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()){
                 DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
@@ -425,7 +484,7 @@ public class WindowBuilder implements Observer{
                     Intersection intersection = deliveryPoint.getPlace();
                     double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                     double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                    addCircle(intersectionX, intersectionY, 2, intersection.getId(), colors[courier-1]);                    
+                    addCircle(intersectionX, intersectionY, 2, intersection.getId(), colors[(courier-1)%colors.length]);                    
                 }
             }
             courier++;

@@ -14,6 +14,7 @@ import h4131.calculus.TemplateGraph;
 import h4131.calculus.TSP;
 import h4131.calculus.TSP1;
 import h4131.calculus.Arc;
+import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
@@ -35,12 +36,12 @@ public class InitialState implements State{
         Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
+            c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.setFullScreen(false);
             XMLdeserializer.loadGlobalTour(loadedGlobalTour, map);
             c.setGlobalTour(loadedGlobalTour);
             w.setFullScreen(true);
             w.drawGlobalTour(loadedGlobalTour);
-            //controller.setState(...);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             if(!e.getMessage().equals("Problem when opening file")){
                 w.alert(e.getMessage());
@@ -56,6 +57,7 @@ public class InitialState implements State{
         Map newMap = new Map();
         try {
             XMLdeserializer.loadMap(fileName, newMap);
+            c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.drawMap(newMap);
             c.setMap(newMap);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
@@ -97,22 +99,27 @@ public class InitialState implements State{
     }
 
     @Override
-    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
-        c.setGlobalTour(new GlobalTour());
-        int courier = 0;
-        for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
-            courier ++;
-            if(!listDeliveryPoints.isEmpty()){
-                Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
-                graph.computeBestTour(c.getGlobalTour());    
-                if(graph.getDeliveryErreur()!=null){
-                windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
-            }
-            }
-            
+    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){        
+        try{
+            c.setGlobalTour(new GlobalTour());
+            int courier = 0;
+            for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
+                courier ++;
+                if(!listDeliveryPoints.isEmpty()){
+                    Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
+                    graph.computeBestTour(c.getGlobalTour());    
+                    if(graph.getDeliveryErreur()!=null){
+                        windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
+                    }
+                }
+                else{
+                    c.getGlobalTour().addTour(new Tour());
+                }
+            }                
+            windowBuilder.drawGlobalTour(c.getGlobalTour());
+        }catch(NullPointerException e){
+            windowBuilder.alert("No path found. Check that every intersections are accessibles in both ways.");
         }
-        
-        windowBuilder.drawGlobalTour(c.getGlobalTour());
     }
 
     @Override
