@@ -37,9 +37,15 @@
             <Text fill="WHITE" layoutX="20.0" layoutY="219.0" text="Number of courier(s) : ">
                <font>
                   <Font name="System Bold" size="16.0" />
-               </font>
-            </Text>
-            <TextField fx:id="numberOfCourierField" layoutX="193.0" layoutY="202.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
+               </font></Text>
+            <TextField fx:id="numberOfCourierField" layoutX="190.0" layoutY="235.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
+            <Button layoutX="20.0" layoutY="275.0" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefWidth="200.0" text="Compute a global tour">
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font></Button>
          </Pane>
          <StackPane.margin>
             <Insets left="20.0" top="20.0" />

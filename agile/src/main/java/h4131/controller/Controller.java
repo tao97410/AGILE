@@ -49,6 +49,8 @@ public class Controller {
 		currentDeliveryPoint.addObserver(windowBuilder);
     }
 
+	public Controller(){}
+
     /**
 	 * Change the current state of the controller
 	 * @param state the new current state
@@ -158,5 +160,12 @@ public class Controller {
 	public void changeInfosDeliveryPoint(TimeWindow time, int courier){
 		currentState.changeInfosDeliveryPoint(this, windowBuilder, time, courier);
 	}
+
+	/**
+	 * Method called after a click on "compute gloabl tour" button
+	 */
+    public void computeGlobalTour() {
+		currentState.computeGlobalTour(this, windowBuilder);
+    }
 
 }

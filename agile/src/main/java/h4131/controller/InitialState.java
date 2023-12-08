@@ -86,4 +86,9 @@ public class InitialState implements State{
         c.setCurrentState(c.modifyDeliveryPointState);
     }
 
+    @Override
+    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
+        System.out.println("calculé !!");
+    }
+
 }

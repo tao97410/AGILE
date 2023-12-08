@@ -48,6 +48,8 @@ public class WindowBuilder implements Observer {
     private double latMin;
     private double latMax;
 
+    private final Color[] colors = { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE };
+
     /**
      * creates a window builder and displays the first scene of the application
      * 
@@ -122,7 +124,7 @@ public class WindowBuilder implements Observer {
             this.root = displayMapSceneLoader.load();
             displayMapSceneController = displayMapSceneLoader.getController();
             displayMapSceneController.setController(controller);
-            displayMapSceneController.setNumberOfCourierFieldValue("" + controller.getNumberOfCourier());
+            displayMapSceneController.setNumberOfCourierFieldValue(String.valueOf(controller.getNumberOfCourier()));
 
             shapesPane = new Pane();
             shapesPane.setPrefHeight(screenHeight);
@@ -331,9 +333,8 @@ public class WindowBuilder implements Observer {
      * @param segment
      */
     private void addLineTour(double startX, double startY, double endX, double endY, int color, Segment segment) {
-        Color[] colors = { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE };
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
-        line.setStroke(colors[(color % 6)]);
+        line.setStroke(colors[(color % colors.length)]);
         line.setStrokeWidth(2.0);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
