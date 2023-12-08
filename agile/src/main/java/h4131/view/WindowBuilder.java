@@ -35,7 +35,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class WindowBuilder implements Observer{
+public class WindowBuilder implements Observer {
 
     private Stage stage;
     private Parent root;
@@ -50,11 +50,12 @@ public class WindowBuilder implements Observer{
 
     /**
      * creates a window builder and displays the first scene of the application
+     * 
      * @param controller
      * @param primaryStage
      * @param firstMap
      */
-    public WindowBuilder(Controller controller, Stage primaryStage, Map firstMap){
+    public WindowBuilder(Controller controller, Stage primaryStage, Map firstMap) {
         this.controller = controller;
         this.stage = primaryStage;
 
@@ -70,8 +71,8 @@ public class WindowBuilder implements Observer{
         stage.setFullScreenExitHint("Press ESC to escape full screen mode");
         stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
-        
-        stage.show();    
+
+        stage.show();
     }
 
     @Override
@@ -81,6 +82,7 @@ public class WindowBuilder implements Observer{
 
     /**
      * creates a pop-up error message
+     * 
      * @param message the message to display
      */
     public void alert(String message) {
@@ -96,17 +98,19 @@ public class WindowBuilder implements Observer{
 
     /**
      * set the window fullscreen or not
+     * 
      * @param bool true or false
      */
-    public void setFullScreen(boolean bool){
+    public void setFullScreen(boolean bool) {
         stage.setFullScreen(bool);
     }
 
     /**
-     * Method called to draw the map using shapes 
+     * Method called to draw the map using shapes
+     * 
      * @param map the map to draw
      */
-    public void drawMap(Map map){
+    public void drawMap(Map map) {
         // Get screen dimensions
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -118,13 +122,14 @@ public class WindowBuilder implements Observer{
             this.root = displayMapSceneLoader.load();
             displayMapSceneController = displayMapSceneLoader.getController();
             displayMapSceneController.setController(controller);
-            displayMapSceneController.setNumberOfCourierFieldValue(""+controller.getNumberOfCourier());
-            
+            displayMapSceneController.setNumberOfCourierFieldValue("" + controller.getNumberOfCourier());
+
             shapesPane = new Pane();
             shapesPane.setPrefHeight(screenHeight);
-            shapesPane.setPrefWidth(screenWidth); 
-            
-            //Determine max and min lat and long of intersections to convert to screen coordinates
+            shapesPane.setPrefWidth(screenWidth);
+
+            // Determine max and min lat and long of intersections to convert to screen
+            // coordinates
             longMax = 0;
             longMin = 1000;
             latMax = 0;
@@ -134,43 +139,48 @@ public class WindowBuilder implements Observer{
                 Intersection intersection = entry.getValue();
                 double latitude = intersection.getLatitude();
                 double longitude = intersection.getLongitude();
-                if(longitude > longMax ){
+                if (longitude > longMax) {
                     longMax = longitude;
                 }
-                if(longitude < longMin ){
+                if (longitude < longMin) {
                     longMin = longitude;
                 }
-                if(latitude > latMax ){
+                if (latitude > latMax) {
                     latMax = latitude;
                 }
-                if(latitude < latMin ){
+                if (latitude < latMin) {
                     latMin = latitude;
                 }
             }
 
-            //drawing the elements :
+            // drawing the elements :
 
-            //drawing lines
+            // drawing lines
             for (Entry<Long, List<Segment>> entry : map.getAdjacency().entrySet()) {
                 Long key = entry.getKey();
                 Intersection origine = map.getIntersectionById(key);
                 List<Segment> segments = entry.getValue();
-                double originX = ((origine.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+                double originX = ((origine.getLongitude() - longMin) / (longMax - longMin)) * screenHeight
+                        + (screenWidth - screenHeight) / 2;
                 double originY = screenHeight - ((origine.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                
-                for(Segment segment : segments){
-                    double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
-                    double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+
+                for (Segment segment : segments) {
+                    double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin))
+                            * screenHeight + (screenWidth - screenHeight) / 2;
+                    double destY = screenHeight
+                            - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
 
                     addLine(originX, originY, destX, destY, segment);
-                }  
+                }
             }
 
-            //drawing intersections
+            // drawing intersections
             for (Entry<Long, Intersection> entry : map.getIntersections().entrySet()) {
                 Intersection intersection = entry.getValue();
-                double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
-                double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight
+                        + (screenWidth - screenHeight) / 2;
+                double intersectionY = screenHeight
+                        - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
                 addCircle(intersectionX, intersectionY, 2, intersection.getId());
             }
 
@@ -184,7 +194,6 @@ public class WindowBuilder implements Observer{
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setFullScreen(true);
-            
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -193,23 +202,28 @@ public class WindowBuilder implements Observer{
 
     /**
      * Method called to draw a glabal tour
+     * 
      * @param the Global Tour to display
      */
-    public void drawGlobalTour(GlobalTour globalTour){
+    public void drawGlobalTour(GlobalTour globalTour) {
 
         // Get screen dimensions
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
         double screenWidth = screen.getVisualBounds().getWidth();
 
-        int color = 0;   
+        int color = 0;
 
-        for(Tour tour : globalTour.getTours()){             
-            for(Segment segment : tour.getCourse()){
-                double destY = screenHeight - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
-                double originY = screenHeight - ((segment.getOrigin().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+        for (Tour tour : globalTour.getTours()) {
+            for (Segment segment : tour.getCourse()) {
+                double destY = screenHeight
+                        - ((segment.getDestination().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                double destX = ((segment.getDestination().getLongitude() - longMin) / (longMax - longMin))
+                        * screenHeight + (screenWidth - screenHeight) / 2;
+                double originY = screenHeight
+                        - ((segment.getOrigin().getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight
+                        + (screenWidth - screenHeight) / 2;
 
                 addLineTour(originX, originY, destX, destY, color, segment);
             }
@@ -218,19 +232,22 @@ public class WindowBuilder implements Observer{
     }
 
     /**
-     * method called by controller to display the menu when clicking on an intersection
+     * method called by controller to display the menu when clicking on an
+     * intersection
+     * 
      * @param numberOfCourier to offer the user the choice of courier number
-     * @param intersection the selected intersection
+     * @param intersection    the selected intersection
      */
-    public void openMenuIntersection(int numberOfCourier, Intersection intersection){        
+    public void openMenuIntersection(int numberOfCourier, Intersection intersection) {
         ChoiceBox<Integer> courierChoiceBox = displayMapSceneController.getCourierChoice();
         courierChoiceBox.getItems().clear();
-        for(int i = 1; i<=numberOfCourier; i++){
-            courierChoiceBox.getItems().add(i);            
+        for (int i = 1; i <= numberOfCourier; i++) {
+            courierChoiceBox.getItems().add(i);
         }
         courierChoiceBox.setValue(1);
         Label whichIntersection = displayMapSceneController.getWhichIntersection();
-        whichIntersection.setText("Intersection coordinates:\n"+intersection.getLatitude()+"°, "+intersection.getLongitude()+"°");
+        whichIntersection.setText(
+                "Intersection coordinates:\n" + intersection.getLatitude() + "°, " + intersection.getLongitude() + "°");
         whichIntersection.setWrapText(true);
         Pane validationPane = displayMapSceneController.getvalidationPane();
         validationPane.setVisible(true);
@@ -240,9 +257,10 @@ public class WindowBuilder implements Observer{
 
     /**
      * methode called to disable background and prevent any click
+     * 
      * @param bool
      */
-    public void disableBackground(boolean bool){
+    public void disableBackground(boolean bool) {
         layout.setDisable(bool);
         shapesPane.setDisable(bool);
     }
@@ -250,10 +268,11 @@ public class WindowBuilder implements Observer{
     /**
      * method called to delete the circle around an intersection when
      * not selected anymore
+     * 
      * @param id
      */
-    public void unSetIntersection(Long id){
-        for(Node node : shapesPane.getChildren()){
+    public void unSetIntersection(Long id) {
+        for (Node node : shapesPane.getChildren()) {
             if (node instanceof IntersectionCircle) {
                 IntersectionCircle circle = (IntersectionCircle) node;
                 if (circle.getIntersectionId().equals(id)) {
@@ -262,12 +281,13 @@ public class WindowBuilder implements Observer{
             }
         }
     }
-    
+
     /**
      * used to draw a circle on the map representing an intersection
-     * @param x coordinate of the intersection
-     * @param y coordinate of the intersection
-     * @param radius of the circle
+     * 
+     * @param x              coordinate of the intersection
+     * @param y              coordinate of the intersection
+     * @param radius         of the circle
      * @param intersectionId of the represented intersection
      */
     private void addCircle(double x, double y, double radius, Long intersectionId) {
@@ -280,6 +300,7 @@ public class WindowBuilder implements Observer{
 
     /**
      * used to draw a line on the map representing a segment
+     * 
      * @param startX
      * @param startY
      * @param endX
@@ -291,7 +312,7 @@ public class WindowBuilder implements Observer{
         line.setStroke(Color.WHITE);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
-        Tooltip tooltip = new Tooltip("Name : "+segment.getName()+"\nLength : "+segment.getLength()+"m");
+        Tooltip tooltip = new Tooltip("Name : " + segment.getName() + "\nLength : " + segment.getLength() + "m");
         tooltip.setShowDelay(Duration.millis(200));
         tooltip.setHideDelay(Duration.millis(100));
         tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
@@ -301,6 +322,7 @@ public class WindowBuilder implements Observer{
 
     /**
      * used to draw a line on the map representing a segment of a tour
+     * 
      * @param startX
      * @param startY
      * @param endX
@@ -309,68 +331,78 @@ public class WindowBuilder implements Observer{
      * @param segment
      */
     private void addLineTour(double startX, double startY, double endX, double endY, int color, Segment segment) {
-        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
+        Color[] colors = { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE };
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
-        line.setStroke(colors[(color%6)]);
+        line.setStroke(colors[(color % 6)]);
         line.setStrokeWidth(2.0);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
         shapesPane.getChildren().add(line);
     }
- 
+
     /**
-     * called by update() to display the lists of delivery point by courier on the right of the screen
+     * called by update() to display the lists of delivery point by courier on the
+     * right of the screen
      */
-    public void displayListDeliveryPoint(){
+    public void displayListDeliveryPoint() {
         CurrentDeliveryPoint currentDeliveryPoint = controller.getCurrentDeliveryPoint();
         VBox tourListGroup = displayMapSceneController.getTourListGroup();
         tourListGroup.getChildren().clear();
         int courier = 1;
-        for(LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()){
-            if(!list.isEmpty()){
+        for (LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()) {
+            if (!list.isEmpty()) {
                 VBox listDeliveryPoint = new VBox();
-                TitledPane titledPane = new TitledPane("Courier : " + courier, listDeliveryPoint);                
+                TitledPane titledPane = new TitledPane("Courier : " + courier, listDeliveryPoint);
                 tourListGroup.getChildren().add(titledPane);
-                for(DeliveryPoint deliveryPoint : list){
-                    DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
-                        +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint, courier);
+                for (DeliveryPoint deliveryPoint : list) {
+                    DeliveryPointLabel label = new DeliveryPointLabel(
+                            "Intersection : " + deliveryPoint.getPlace().getLatitude()
+                                    + "°," + deliveryPoint.getPlace().getLongitude() + "° | "
+                                    + deliveryPoint.getTime().getRepresentation(),
+                            deliveryPoint, courier);
                     label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
                     listDeliveryPoint.getChildren().add(label);
                 }
             }
             courier++;
         }
-        if(!currentDeliveryPoint.getNonAffectedDeliveryPoints().isEmpty()){
+        if (!currentDeliveryPoint.getNonAffectedDeliveryPoints().isEmpty()) {
             VBox listDeliveryPoint = new VBox();
-            TitledPane titledPane = new TitledPane("Non Affected delivery points ", listDeliveryPoint);                
+            TitledPane titledPane = new TitledPane("Non Affected delivery points ", listDeliveryPoint);
             tourListGroup.getChildren().add(titledPane);
-            for(DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()){
-                DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
-                    +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint, 0);
+            for (DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()) {
+                DeliveryPointLabel label = new DeliveryPointLabel(
+                        "Intersection : " + deliveryPoint.getPlace().getLatitude()
+                                + "°," + deliveryPoint.getPlace().getLongitude() + "° | "
+                                + deliveryPoint.getTime().getRepresentation(),
+                        deliveryPoint, 0);
                 label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
                 listDeliveryPoint.getChildren().add(label);
             }
         }
-        
+
     }
 
     /**
-     * called by controller to open the menu allowing the user to modify a delivery point
+     * called by controller to open the menu allowing the user to modify a delivery
+     * point
+     * 
      * @param numberOfCourier to propose the choice of courier number
-     * @param deliveryPoint the delivery point to modify
-     * @param currentCourier the current courier affected to the delivery point
+     * @param deliveryPoint   the delivery point to modify
+     * @param currentCourier  the current courier affected to the delivery point
      */
     public void openMenuModifyDeliveryPoint(int numberOfCourier, DeliveryPoint deliveryPoint, int currentCourier) {
         ChoiceBox<Integer> modifyCourierChoiceBox = displayMapSceneController.getModifyCourierChoice();
         modifyCourierChoiceBox.getItems().clear();
-        for(int i = 1; i<=numberOfCourier; i++){
-            modifyCourierChoiceBox.getItems().add(i);            
+        for (int i = 1; i <= numberOfCourier; i++) {
+            modifyCourierChoiceBox.getItems().add(i);
         }
-        modifyCourierChoiceBox.setValue(currentCourier==0 ? 1:currentCourier);
-        ChoiceBox<String>modifyTimeWindowChoice = displayMapSceneController.getModifyTimeWindowChoice();
+        modifyCourierChoiceBox.setValue(currentCourier == 0 ? 1 : currentCourier);
+        ChoiceBox<String> modifyTimeWindowChoice = displayMapSceneController.getModifyTimeWindowChoice();
         modifyTimeWindowChoice.setValue(deliveryPoint.getTime().getRepresentation());
         Label whichDeliveryPoint = displayMapSceneController.getWhichDeliveryPoint();
-        whichDeliveryPoint.setText("Delivery point coordinates:\n"+deliveryPoint.getPlace().getLatitude()+"°, "+deliveryPoint.getPlace().getLongitude()+"°");
+        whichDeliveryPoint.setText("Delivery point coordinates:\n" + deliveryPoint.getPlace().getLatitude() + "°, "
+                + deliveryPoint.getPlace().getLongitude() + "°");
         whichDeliveryPoint.setWrapText(true);
         Pane modifyPane = displayMapSceneController.getModifyPane();
         modifyPane.setVisible(true);

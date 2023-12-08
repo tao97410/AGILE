@@ -17,26 +17,30 @@
    <children>
       <VBox fx:id="layout" stylesheets="@styleMap.css" />
       <Group disable="false" layoutX="100.0" visible="true" StackPane.alignment="TOP_LEFT">
-         <children>
-            <Button layoutX="20.0" mnemonicParsing="false" onAction="#doLoadTour" prefWidth="200.0" text="Load a tour">
+         <Pane fx:id="topLeftMenuPane" style="
+                  -fx-background-color: rgba(255, 14, 14, 0.4);
+                  -fx-padding: 10px;
+                  -fx-background-radius: 7px;">
+            <Button layoutX="37.0" layoutY="20.0" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="50.0" prefWidth="165.0" text="Load a tour">
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
                <font>
                   <Font name="System Bold" size="18.0" />
-               </font></Button>
-            <ChoiceBox fx:id="mapChoiceBox" layoutX="20.0" layoutY="100.0" prefWidth="200.0">
+               </font>
+            </Button>
+            <ChoiceBox fx:id="mapChoiceBox" layoutX="37.0" layoutY="90.0" prefHeight="50.0" prefWidth="165.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </ChoiceBox>
-            
-            <Text fill="WHITE" layoutX="20.0" layoutY="250.0" text="Number of courier(s) : ">
+               </padding>  
+            </ChoiceBox>   
+            <Text fill="WHITE" layoutX="20.0" layoutY="219.0" text="Number of courier(s) : ">
                <font>
                   <Font name="System Bold" size="16.0" />
-               </font></Text>
-            <TextField fx:id="numberOfCourierField" layoutX="190.0" layoutY="235.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
-         </children>
+               </font>
+            </Text>
+            <TextField fx:id="numberOfCourierField" layoutX="193.0" layoutY="202.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
+         </Pane>
          <StackPane.margin>
             <Insets left="20.0" top="20.0" />
          </StackPane.margin>

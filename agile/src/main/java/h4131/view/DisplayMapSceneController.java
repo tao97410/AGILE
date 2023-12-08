@@ -32,19 +32,19 @@ public class DisplayMapSceneController {
 
     private Controller controller;
 
-    //Main containers
+    // Main containers
     @FXML
     private StackPane container;
     @FXML
     private VBox layout;
 
-    //Main menu controls
+    // Main menu controls
     @FXML
     private ChoiceBox<String> mapChoiceBox;
     @FXML
     private TextField numberOfCourierField;
 
-    //Delivery point validation menu
+    // Delivery point validation menu
     @FXML
     private Pane validationPane;
     @FXML
@@ -58,7 +58,7 @@ public class DisplayMapSceneController {
     @FXML
     private Button cancelButton;
 
-    //Delivery point modification menu
+    // Delivery point modification menu
     @FXML
     private Button deleteButton;
     @FXML
@@ -72,7 +72,7 @@ public class DisplayMapSceneController {
     @FXML
     private Button modifyButton;
 
-    //List of delivery points by courier
+    // List of delivery points by courier
     @FXML
     private VBox tourListGroup;
     @FXML
@@ -80,7 +80,7 @@ public class DisplayMapSceneController {
 
     @FXML
     private void initialize() {
-        mapChoiceBox.setValue("Select a map...");
+        mapChoiceBox.setValue("Select a map  ");
         mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
 
         // Add a ChangeListener to the ChoiceBox to detect selection changes
@@ -99,12 +99,14 @@ public class DisplayMapSceneController {
             }
         });
 
-        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(), TimeWindow.NINE_TEN.getRepresentation(),
-            TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
+        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(),
+                TimeWindow.NINE_TEN.getRepresentation(),
+                TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
         timeWindowChoice.setValue(TimeWindow.EIGHT_NINE.getRepresentation());
 
-        modifyTimeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(), TimeWindow.NINE_TEN.getRepresentation(),
-            TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
+        modifyTimeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(),
+                TimeWindow.NINE_TEN.getRepresentation(),
+                TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
         modifyTimeWindowChoice.setValue(TimeWindow.EIGHT_NINE.getRepresentation());
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -112,8 +114,8 @@ public class DisplayMapSceneController {
     }
 
     @FXML
-    void onNumberOfCouriersChanged(KeyEvent event) {        
-        if(!numberOfCourierField.getText().equals("")){
+    void onNumberOfCouriersChanged(KeyEvent event) {
+        if (!numberOfCourierField.getText().equals("")) {
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
         }
     }
@@ -151,11 +153,11 @@ public class DisplayMapSceneController {
         controller.deleteDeliveryPoint();
     }
 
-    public VBox getTourListGroup(){
+    public VBox getTourListGroup() {
         return this.tourListGroup;
     }
 
-    public Label getWhichIntersection(){
+    public Label getWhichIntersection() {
         return this.idIntersection;
     }
 
@@ -224,7 +226,8 @@ public class DisplayMapSceneController {
     }
 
     /**
-     * Method called after click on an label of a delivery point on the right scroll pane
+     * Method called after click on an label of a delivery point on the right scroll
+     * pane
      */
     public void handleDeliveryPointLabelClicked(MouseEvent event) {
 
