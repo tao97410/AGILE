@@ -159,4 +159,11 @@ public class Controller {
 		currentState.changeInfosDeliveryPoint(this, windowBuilder, time, courier);
 	}
 
+	/**
+	 * Method called after a click on "compute gloabl tour" button
+	 */
+    public void computeGlobalTour() {
+		currentState.computeGlobalTour(this, windowBuilder);
+    }
+
 }

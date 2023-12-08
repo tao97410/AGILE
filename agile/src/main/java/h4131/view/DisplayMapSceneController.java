@@ -20,6 +20,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -31,6 +32,7 @@ import javafx.scene.layout.VBox;
 public class DisplayMapSceneController {
 
     private Controller controller;
+    private String previousNumberOfCourier = "3";
 
     //Main containers
     @FXML
@@ -97,6 +99,10 @@ public class DisplayMapSceneController {
             if (!event.getCharacter().matches("\\d")) {
                 event.consume(); // Consume non-numeric input
             }
+            if(numberOfCourierField.getText().equals("0")){
+                numberOfCourierField.setText(previousNumberOfCourier);
+            }
+            
         });
 
         timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(), TimeWindow.NINE_TEN.getRepresentation(),
@@ -112,8 +118,9 @@ public class DisplayMapSceneController {
     }
 
     @FXML
-    void onNumberOfCouriersChanged(KeyEvent event) {        
-        if(!numberOfCourierField.getText().equals("")){
+    void onNumberOfCouriersChanged(KeyEvent event){        
+        if(!numberOfCourierField.getText().equals("") && !numberOfCourierField.getText().equals("0") && event.getCode()==KeyCode.ENTER){
+            previousNumberOfCourier = numberOfCourierField.getText();
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
         }
     }
@@ -149,6 +156,11 @@ public class DisplayMapSceneController {
     void deleteDeliveryPoint(ActionEvent event) {
         this.modifyPane.setVisible(false);
         controller.deleteDeliveryPoint();
+    }
+
+    @FXML
+    void doComputeGlobalTour(ActionEvent event){
+        controller.computeGlobalTour();
     }
 
     public VBox getTourListGroup(){

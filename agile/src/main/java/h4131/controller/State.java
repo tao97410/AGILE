@@ -75,7 +75,14 @@ public interface State {
 	 * @param time the new timeWindow
 	 * @param courier the new courier
 	 */
-	public default void changeInfosDeliveryPoint(Controller controller, WindowBuilder windowBuilder, TimeWindow time, int courier){};
+	public default void changeInfosDeliveryPoint(Controller controller, WindowBuilder windowBuilder, TimeWindow time, int courier){}
+
+	/**
+	 * Method called by controller to compute the tour
+	 * @param controller
+	 * @param windowBuilder
+	 */
+	public default void computeGlobalTour(Controller controller, WindowBuilder windowBuilder){}
 
 }
 
