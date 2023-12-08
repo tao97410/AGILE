@@ -1,11 +1,11 @@
 package h4131.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,10 +15,14 @@ public class TourTest {
 
     @Mock
     Tour tourMocked;
-    
-    @Test
-    public void testAddSegment(){
 
+    // @Test
+    // void testAddDeliveryPoint() {
+
+    // }
+
+    @Test
+    void testAddSegment() {
         tourMocked = new Tour(null);
 
         Intersection origine = new Intersection(1, 1, 1);
@@ -31,8 +35,5 @@ public class TourTest {
         tourMocked.addSegment(segment);
 
         assertEquals(tourMocked.getCourse(),result);
-
     }
-
 }
-
