@@ -17,7 +17,7 @@ import h4131.model.Tour;
 import h4131.model.GlobalTour;
 
 
-public class CompleteGraph implements TemplateGraph{
+public class Graph implements TemplateGraph{
 
     private static final double MAX_COST = 10000;
 	private static final double MIN_COST = 100;
@@ -32,15 +32,21 @@ public class CompleteGraph implements TemplateGraph{
     private DeliveryPoint wareHouse;
     private DeliveryPoint deliveryErreur;
 
-    public CompleteGraph() {
+    public Graph() {
         nodes = new ArrayList<>();
         arcs = new ArrayList<>();
         
     }
     
 
-    //After having computed the best tour, we have a tab of the indexes of the nodes 
-    // Then we have to associate each index to the corresponding DeliveryPoint 
+
+    
+    /**
+     * At the end of TSP, we have a tab of indexes that correspond each to a deliveryPoint 
+     * This method transform the tab into a collection of the associated deliveryPoint  
+     * @param tab A tab of integer that represents the indexes of the deliveryPoints
+     * @return A collection of DeliveryPoint
+     */	
     private Collection<DeliveryPoint> tabToCollection(Integer [] tab){
         Collection<DeliveryPoint> bestTour= new LinkedList<>();
         int indexDelivery;
@@ -62,8 +68,11 @@ public class CompleteGraph implements TemplateGraph{
         return bestTour;
     }
 
-
-
+    /** At the end of TSP, we have a collection of DeliveryPoint by which the courier passes 
+     * This method gets the right arcs for each pair of successive points   
+     * @param delivery a collection of deliveryPoint by which the courier has to pass in the right order
+     * @return A collection of Arc
+     */
     private Collection<Arc> findArc(Collection<DeliveryPoint> delivery){
         Collection<Arc> arcsResult=new LinkedList<Arc>();
         Iterator<DeliveryPoint> d= delivery.iterator();
@@ -89,23 +98,36 @@ public class CompleteGraph implements TemplateGraph{
 
         return arcsResult;
     }
+
+    /**
+     * At the end of TSP, we have a tab of indexes that correspond each to a deliveryPoint 
+     * This method transform the tab into a collection of the associated deliveryPoint  
+     * @param indexDeliveryErreur The index of the deliveryPoint that can't be delivered 
+     * @return The concerned DeliveryPoint
+     */	
     public DeliveryPoint findDeliveryErreur(int indexDeliveryErreur){
         if(indexDeliveryErreur==-1){
             return null;
         }
         return nodes.toArray(new DeliveryPoint[nbNodes])[indexDeliveryErreur];
     }
+
+     /**
+     * Creates from all the arcs in the graph a list of all the segments corresponding to the arcs 
+     * @return A list of all the segments in the graph
+     */	
     private List<Segment> buildCourse(){
         List<Segment> course=new LinkedList<Segment>();
         for(Arc a:this.arcs){
             for(Segment s:a.path){
                 course.add(s);
-
             }
 
         }
         return course;
     }
+
+
     private List<DeliveryPoint> buildListeDelivery(){
         List<DeliveryPoint> listeDelivery=new ArrayList<DeliveryPoint>();
         for(DeliveryPoint d:this.nodes){

@@ -3,7 +3,7 @@ package h4131.calculus;
 import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
 
-public interface Graph {
+public interface TemplateGraph {
 	/**
 	 * @return the number of vertices in <code>this</code>
 	 */

@@ -21,7 +21,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @param timeLimit stops the research if the timeLimit is exceeded
 	 * @param g the completeGraph for which we want to search a solution
 	 */	
-	public void searchSolution(int timeLimit, CompleteGraph g){
+	public void searchSolution(int timeLimit, Graph g){
 		if (timeLimit <= 0) return;
 		startTime = System.currentTimeMillis();	
 		this.timeLimit = timeLimit;

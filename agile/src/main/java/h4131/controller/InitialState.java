@@ -8,8 +8,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import h4131.calculus.CompleteGraph;
 import h4131.calculus.Graph;
+import h4131.calculus.TemplateGraph;
 import h4131.calculus.TSP;
 import h4131.calculus.TSP1;
 import h4131.calculus.Arc;
@@ -56,7 +56,7 @@ public class InitialState implements State{
         Map loadedMap = new Map(null);
         try {
             XMLdeserializer.loadMap(loadedMap);
-            CompleteGraph g = loadedMap.getGraphFromPoints(null);
+            Graph g = loadedMap.getGraphFromPoints(null);
             GlobalTour globalTour=new GlobalTour();
             g.computeBestTour(globalTour);
             System.out.println("Voici le delivery qui coince : ");
