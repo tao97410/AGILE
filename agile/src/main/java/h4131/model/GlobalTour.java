@@ -1,5 +1,4 @@
 package h4131.model;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -8,7 +7,7 @@ public class GlobalTour {
     public GlobalTour(){
         this.tours=new ArrayList<>();
     }
-    public GlobalTour(List<Tour> someTours){
+    public GlobalTour(Collection<Tour> someTours){
         this.tours = someTours;
 
     }
