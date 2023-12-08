@@ -17,6 +17,11 @@ public enum TimeWindow {
         return representation;
     }
 
+    /**
+     * Get the enum value corresponding to a representation
+     * @param representation String representation of the time window
+     * @return Corresponding enum value
+     */
     public static TimeWindow getTimeWindowByRepresentation(String representation){
         TimeWindow result;
         switch(representation){

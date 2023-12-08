@@ -57,10 +57,18 @@ public class Tour {
          this.courierId = courierId;
     }
 
+    /**
+     * Adds a segment to a tour
+     * @param segment segment to add
+     */
     public void addSegment(Segment segment){
         this.course.add(segment);
     }
 
+    /**
+     * Adds a delivery point to a tour
+     * @param point Delivery point to consider
+     */
     public void addDeliveryPoint(DeliveryPoint point){
         this.deliveryPoints.add(point);
     }

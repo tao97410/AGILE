@@ -30,6 +30,10 @@ public class GlobalTour {
         this.tours = tours;
     }
     
+    /**
+     * Adds a tour to a global tour
+     * @param tour Tour to add
+     */
     public void addTour (Tour tour){
         tours.add(tour);
     }
