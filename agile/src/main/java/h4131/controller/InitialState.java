@@ -8,8 +8,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import h4131.calculus.CompleteGraph;
 import h4131.calculus.Graph;
+import h4131.calculus.TemplateGraph;
 import h4131.calculus.TSP;
 import h4131.calculus.TSP1;
 import h4131.calculus.Arc;

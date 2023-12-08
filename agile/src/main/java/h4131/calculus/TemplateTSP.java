@@ -8,14 +8,14 @@ import java.util.Iterator;
 
 public abstract class TemplateTSP implements TSP {
 	private Integer[] bestSol;
-	protected Graph g;
+	protected TemplateGraph g;
 	private double bestSolCost;
 	private int timeLimit;
 	private long startTime;
 	private int indexDeliveryErreur=-1;
 	
 	
-	public void searchSolution(int timeLimit, CompleteGraph g){
+	public void searchSolution(int timeLimit, Graph g){
 		if (timeLimit <= 0) return;
 		startTime = System.currentTimeMillis();	
 		this.timeLimit = timeLimit;
@@ -55,7 +55,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @param g
 	 * @return an iterator for visiting all vertices in <code>unvisited</code> which are successors of <code>currentVertex</code>
 	 */
-	protected abstract Iterator<Integer> iterator(Integer currentVertex, Collection<Integer> unvisited, Graph g);
+	protected abstract Iterator<Integer> iterator(Integer currentVertex, Collection<Integer> unvisited, TemplateGraph g);
 	
 	/**
 	 * Template method of a branch and bound algorithm for solving the TSP in <code>g</code>.

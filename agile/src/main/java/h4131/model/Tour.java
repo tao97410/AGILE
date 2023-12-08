@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import h4131.calculus.Arc;
-import h4131.calculus.CompleteGraph;
+import h4131.calculus.Graph;
 
 public class Tour {
     private List<Segment> course;

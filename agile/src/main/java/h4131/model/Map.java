@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 import java.util.Map.Entry;
 
 import h4131.calculus.Arc;
-import h4131.calculus.CompleteGraph;
+import h4131.calculus.Graph;
 import h4131.calculus.InterCompare;
 import h4131.calculus.InterInfo;
 
@@ -63,7 +63,7 @@ public class Map {
         return res;
     }
 
-    public CompleteGraph getGraphFromPoints(LinkedList<DeliveryPoint> d) {
+    public Graph getGraphFromPoints(LinkedList<DeliveryPoint> d) {
 
 
         // TEST
@@ -92,7 +92,7 @@ public class Map {
         deliveryPoints.add(point7);
         System.out.println(point7.toString());
 
-        CompleteGraph graph = new CompleteGraph();
+        Graph graph = new Graph();
         deliveryPoints.addFirst(warehouse);
 
         for (DeliveryPoint currentPoint : deliveryPoints)
