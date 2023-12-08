@@ -32,6 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -49,7 +50,7 @@ public class WindowBuilder implements Observer{
     private double latMin;
     private double latMax;
 
-    private final Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
+    private final Color[] colors = {Color.RED, Color.BLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE, Color.GREEN};
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -79,6 +80,13 @@ public class WindowBuilder implements Observer{
 
     @Override
     public void update(Observable observed, Object arg) {
+        for(Node node : shapesPane.getChildren()){
+            if (node instanceof IntersectionCircle) {
+                IntersectionCircle circle = (IntersectionCircle) node;
+                circle.setFill(Color.TRANSPARENT);
+            }
+        }
+        displayPointsOnMap();
         displayListDeliveryPoint();
     }
 
@@ -174,8 +182,18 @@ public class WindowBuilder implements Observer{
                 Intersection intersection = entry.getValue();
                 double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                 double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                addCircle(intersectionX, intersectionY, 2, intersection.getId());
+                addCircle(intersectionX, intersectionY, 2, intersection.getId(), Color.TRANSPARENT);
             }
+
+            //drawing warehouse
+            double x = map.getWarehouse().getPlace().getLongitude();
+            double xWarehouse = ((x - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+            double y = map.getWarehouse().getPlace().getLatitude();
+            double yWarehouse = screenHeight - ((y - latMin) / (latMax - latMin)) * screenHeight;
+            Rectangle warehouse = new Rectangle(xWarehouse-5, yWarehouse-5, 10, 10);
+            warehouse.setFill(Color.CORNFLOWERBLUE);
+            shapesPane.getChildren().add(warehouse);
+
 
             Group group = new Group(shapesPane);
             Parent zoomPane = displayMapSceneController.createZoomPane(group);
@@ -283,8 +301,8 @@ public class WindowBuilder implements Observer{
      * @param radius of the circle
      * @param intersectionId of the represented intersection
      */
-    private void addCircle(double x, double y, double radius, Long intersectionId) {
-        IntersectionCircle circle = new IntersectionCircle(x, y, radius, Color.TRANSPARENT, intersectionId);
+    private void addCircle(double x, double y, double radius, Long intersectionId, Color color) {
+        IntersectionCircle circle = new IntersectionCircle(x, y, radius, color, intersectionId);
         circle.setOnMouseClicked(displayMapSceneController::handleIntersectionClicked);
         circle.setOnMouseEntered(displayMapSceneController::handleIntersectionEntered);
         circle.setOnMouseExited(displayMapSceneController::handleIntersectionExited);
@@ -393,5 +411,32 @@ public class WindowBuilder implements Observer{
         modifyPane.setVisible(true);
         modifyPane.setDisable(false);
         disableBackground(true);
+    }
+
+    public void displayPointsOnMap(){
+        Screen screen = Screen.getPrimary();
+        double screenHeight = screen.getVisualBounds().getHeight();
+        double screenWidth = screen.getVisualBounds().getWidth();
+        CurrentDeliveryPoint currentDeliveryPoint = controller.getCurrentDeliveryPoint();
+        int courier = 1;
+        for(LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()){
+            if(!list.isEmpty()){
+                for(DeliveryPoint deliveryPoint : list){
+                    Intersection intersection = deliveryPoint.getPlace();
+                    double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+                    double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                    addCircle(intersectionX, intersectionY, 2, intersection.getId(), colors[courier-1]);                    
+                }
+            }
+            courier++;
+        }
+        if(!currentDeliveryPoint.getNonAffectedDeliveryPoints().isEmpty()){
+            for(DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()){
+                Intersection intersection = deliveryPoint.getPlace();
+                double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
+                double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
+                addCircle(intersectionX, intersectionY, 2, intersection.getId(), Color.LIGHTSLATEGRAY);     
+            }
+        }
     }
 }
