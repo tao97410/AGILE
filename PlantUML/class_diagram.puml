@@ -3,16 +3,24 @@
 package xml {
 
     class XMLdeserializer {
-        + XMLdeserializer()
-        + loadGlobalTour(GlobalTour) : void
-        + loadMap(Map) : void
+        - {static} openFile(String) : Element
+        - {static} buildFromDOMXMLMap(Element, Map) : void
+        - {static} buildFromDOMXMLGT(Element, GlobalTour, Map) : void
+        - {static} createIntersection(Element) : Intersection
+        - {static} createSegment(Element, Segment) : Segment
+        - {static} createTour(Element, Map) : Tour
+        - {static} createDeliveryPoint(Element, Map) : DeliveryPoint
+        + {static} loadMap(Map) : void
+        + {static} loadGlobalTour(GlobalTour, Map) : void
     }
 
     class XMLfileOpener {
-        + XMLfileOpener()
-        + open(boolean) : File
+        - {static} instance : XMLfileOpener
+        - XMLfileOpener()
+        - getExtension(File) : String
+        ~ {static} getInstance() : XMLfileOpener
+        + open(boolean, String) : File
         + accept(File) : boolean
-        + getDescription() : String
     }
 
     abstract class FileFilter {
@@ -150,8 +158,6 @@ package view {
     class ButtonListener {}
 
     class Window {}
-    
-    class TextualView {}
 
     class GraphicalView {}
 
@@ -173,22 +179,22 @@ package model {
 
     class Map {
         - intersections : HashMap<long, Intersection>
-        - adjacency : HashMap<long, List<Segment>>
+        - adjacency : HashMap<long, Collection<Segment>>
         - warehouse : Intersection
-        + getDestinationsById(long) : List<Segment>
+        + getDestinationsById(long) : Collection<Segment>
         + getIntersectionById(long) : Intersection
     }
 
     class Tour {
-        - course : List<Segment>
+        - course : Collection<Segment>
         - courier : Courier
-        - deliveryPoints : List<DeliveryPoint>
+        - deliveryPoints : Collection<DeliveryPoint>
         + getTotalLength() : double
         + addSegment(Segment) : void
     }
 
     class GlobalTour {
-        - tours : List<Tour>
+        - tours : Collection<Tour>
     }
 
     class Courier {
@@ -197,6 +203,7 @@ package model {
     }
 
     enum TimeWindow {
+        WAREHOUSE
         EIGHT_NINE
         NINE_TEN
         TEN_ELEVEN
@@ -227,8 +234,6 @@ Controller -right-> ListOfCommands
 Observable -left-> Observer
 GraphicalView .down.|> Observer
 GraphicalView -[hidden]-> Observer
-GraphicalView -[hidden]> TextualView
-TextualView ..|> Observer
 XMLfileOpener --|> FileFilter
 XMLdeserializer --> XMLfileOpener
 XMLserializer --> GlobalTour
@@ -239,10 +244,8 @@ GlobalTour -[hidden]-> Map
 GraphicalView -[hidden]-> GlobalTour
 ButtonListener -[hidden]-> MouseListener
 Window -->  MouseListener
-Window -down-> TextualView
 Window -down-> GraphicalView
 GraphicalView -down-> GlobalTour
-TextualView -> GlobalTour
 MouseListener --> Window
 MouseListener --> GraphicalView
 MouseListener --> Controller

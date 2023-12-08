@@ -2,7 +2,8 @@ package h4131.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -16,7 +17,6 @@ import h4131.calculus.Arc;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
-import h4131.model.Courier;
 import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
@@ -30,8 +30,8 @@ public class InitialState implements State{
     @Override
     public void loadGlobalTour(Controller c, WindowBuilder w){
         
-        Map loadedMap = new Map(null);
-        List<Tour> course = new ArrayList<>();
+        Map loadedMap = new Map();
+        Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
             XMLdeserializer.loadMap(loadedMap);
@@ -53,7 +53,7 @@ public class InitialState implements State{
 
     @Override
     public void createTour(Controller c, WindowBuilder w){
-        Map loadedMap = new Map(null);
+        Map loadedMap = new Map();
         try {
             XMLdeserializer.loadMap(loadedMap);
             
