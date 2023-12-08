@@ -3,8 +3,6 @@ package h4131.view;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import h4131.controller.Controller;
@@ -18,7 +16,6 @@ import h4131.model.Tour;
 import h4131.observer.Observable;
 import h4131.observer.Observer;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -33,7 +30,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -78,9 +74,8 @@ public class WindowBuilder implements Observer{
         stage.setMaximized(true);
         stage.setFullScreenExitHint("Press ESC to escape full screen mode");
         stage.setFullScreen(true);
-        stage.setFullScreenExitHint("");
-        
-        stage.show();    
+        stage.show(); 
+        stage.setFullScreenExitHint("");   
     }
 
     @Override
@@ -89,6 +84,7 @@ public class WindowBuilder implements Observer{
             if (node instanceof IntersectionCircle) {
                 IntersectionCircle circle = (IntersectionCircle) node;
                 circle.setFill(Color.TRANSPARENT);
+                circle.setRadius(2);
             }
         }
         displayPointsOnMap();
@@ -250,7 +246,7 @@ public class WindowBuilder implements Observer{
         }
         for(Segment segment : tours){   
             if(segment.getLength()>50){
-                drawArrow(segment, 3, 5);
+                drawArrow(segment, 5, 5);
             }                     
         }
     }
@@ -259,8 +255,17 @@ public class WindowBuilder implements Observer{
         for(Node node : shapesPane.getChildren()){
             if (node instanceof SegmentLine) {
                 SegmentLine segment = (SegmentLine)node;
-                segment.setStroke(Color.WHITE);
-                segment.setStrokeWidth(1.0);
+                if(segment.getStroke()!=Color.WHITE){
+                    // segment.setStroke(Color.WHITE);
+                    // segment.setStrokeWidth(1.0);
+                    segment.setVisible(false);
+                    segment.setManaged(false);
+                }
+            }
+            else if(node instanceof Polygon){
+                Polygon arrow = (Polygon)node;
+                arrow.setVisible(false);
+                arrow.setManaged(false);
             }
         }
     }
@@ -276,7 +281,7 @@ public class WindowBuilder implements Observer{
         for(int i = 1; i<=numberOfCourier; i++){
             courierChoiceBox.getItems().add(i);            
         }
-        courierChoiceBox.setValue(1);
+        courierChoiceBox.setValue(displayMapSceneController.getPreviousCourierChoice());
         Label whichIntersection = displayMapSceneController.getWhichIntersection();
         whichIntersection.setText("Intersection coordinates:\n"+intersection.getLatitude()+"°, "+intersection.getLongitude()+"°");
         whichIntersection.setWrapText(true);
@@ -318,8 +323,8 @@ public class WindowBuilder implements Observer{
      * @param radius of the circle
      * @param intersectionId of the represented intersection
      */
-    private void addCircle(double x, double y, double radius, Long intersectionId, Color color) {
-        IntersectionCircle circle = new IntersectionCircle(x, y, radius, color, intersectionId);
+    private void addCircle(double x, double y, double radius, Long intersectionId, Color fillColor) {
+        IntersectionCircle circle = new IntersectionCircle(x, y, radius, fillColor, intersectionId);
         circle.setOnMouseClicked(displayMapSceneController::handleIntersectionClicked);
         circle.setOnMouseEntered(displayMapSceneController::handleIntersectionEntered);
         circle.setOnMouseExited(displayMapSceneController::handleIntersectionExited);
@@ -366,6 +371,12 @@ public class WindowBuilder implements Observer{
         shapesPane.getChildren().add(line);
     }
 
+    /**
+     * used to draw an arrow indicating the direction of a segment
+     * @param segment the segment on witch the arrow will be drawn
+     * @param width the width of the arrow
+     * @param length the length of the arrow
+     */
     private void drawArrow(Segment segment, double width, double length){
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -376,13 +387,17 @@ public class WindowBuilder implements Observer{
         double originX = ((segment.getOrigin().getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
 
         double slope = (destY-originY)/(destX-originX);
-        
         double norm = Math.sqrt(slope*slope + 1);
+        double norm2 = Math.sqrt(1/(slope*slope) + 1);
 
         double middleX = 0.55*(destX-originX) + originX;
         double middleY = 0.55*(destY-originY) + originY; 
-        double arrowHeadX = (destX-originX) > 0 ? middleX + length *(-1/norm) : middleX + length *(1/norm);
-        double arrowHeadY = (destY-originY) > 0 ? middleY + (length * (-slope/norm)) : middleY + (length * (slope/norm))  ; 
+
+        double arrowBaseX = middleX - ((destY-originY<0 ? 1:-1)/(slope*norm2))*1.5;
+        double arrowBaseY = middleY - (destY-originY<0 ? 1:-1)*1.5/norm2;
+        
+        double arrowHeadX = arrowBaseX - ((destY-originY<0 ? 1:-1)/(slope*norm2))*length;
+        double arrowHeadY = arrowBaseY - (destY-originY<0 ? 1:-1)*length/norm2;
 
         double leftX = middleX + width/2 * slope/norm;
         double leftY = middleY + width/2 * (-1)/norm;
@@ -391,16 +406,14 @@ public class WindowBuilder implements Observer{
 
         Polygon arrow = new Polygon();
         arrow.getPoints().addAll(
-            middleX, middleY,
+            arrowBaseX, arrowBaseY,
             leftX, leftY,
             arrowHeadX, arrowHeadY,
             rightX, rightY
         );       
         arrow.setFill(Color.WHITE);
+        arrow.setMouseTransparent(true);
         shapesPane.getChildren().add(arrow);
-
-
-   
     }
  
     /**
@@ -484,7 +497,7 @@ public class WindowBuilder implements Observer{
                     Intersection intersection = deliveryPoint.getPlace();
                     double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                     double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                    addCircle(intersectionX, intersectionY, 2, intersection.getId(), colors[(courier-1)%colors.length]);                    
+                    addCircle(intersectionX, intersectionY, 3, intersection.getId(), colors[(courier-1)%colors.length]);                    
                 }
             }
             courier++;
@@ -494,7 +507,7 @@ public class WindowBuilder implements Observer{
                 Intersection intersection = deliveryPoint.getPlace();
                 double intersectionX = ((intersection.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                 double intersectionY = screenHeight - ((intersection.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
-                addCircle(intersectionX, intersectionY, 2, intersection.getId(), Color.LIGHTSLATEGRAY);     
+                addCircle(intersectionX, intersectionY, 3, intersection.getId(), Color.LIGHTSLATEGRAY);     
             }
         }
     }
