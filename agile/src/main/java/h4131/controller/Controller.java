@@ -49,6 +49,8 @@ public class Controller {
 		currentDeliveryPoint.addObserver(windowBuilder);
     }
 
+	public Controller(){}
+
     /**
 	 * Change the current state of the controller
 	 * @param state the new current state

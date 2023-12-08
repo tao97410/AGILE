@@ -20,7 +20,6 @@ public class AddDeliveryPointState implements State {
 
     @Override
     public void addDeliveryPoint(Controller c, WindowBuilder w, TimeWindow tw, int courier){
-        System.out.println(courier);
         CurrentDeliveryPoint deliveryPoints = c.getCurrentDeliveryPoint();
         deliveryPoints.addAffectedDeliveryPoint(courier, new DeliveryPoint(currentIntersection, tw));
         w.disableBackground(false);
