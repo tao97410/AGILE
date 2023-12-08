@@ -1,4 +1,6 @@
 package h4131.model;
+
+
 public class DeliveryPoint {
     private Intersection place;
     private TimeWindow time;
@@ -6,6 +8,13 @@ public class DeliveryPoint {
     public DeliveryPoint(Intersection aPlace, TimeWindow aTime){
         this.place = aPlace;
         this.time = aTime;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Place: (" + place.getLatitude() + ", " + place.getLongitude() + ") "
+            + "\nTime window: " + time + "\n");
+        return result.toString();
     }
 
     /**

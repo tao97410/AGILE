@@ -8,13 +8,21 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import h4131.model.DeliveryPoint;
+import h4131.calculus.Graph;
+import h4131.calculus.TemplateGraph;
+import h4131.calculus.TSP;
+import h4131.calculus.TSP1;
+import h4131.calculus.Arc;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
+import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
+
+
+
 
 public class InitialState implements State{
     
@@ -43,7 +51,7 @@ public class InitialState implements State{
 
     @Override
     public void loadMap(Controller c, WindowBuilder w, String fileName){
-        Map newMap = new Map(null);
+        Map newMap = new Map();
         try {
             XMLdeserializer.loadMap(fileName, newMap);
             w.drawMap(newMap);

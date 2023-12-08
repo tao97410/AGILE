@@ -13,7 +13,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import h4131.model.Courier;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Intersection;
@@ -74,7 +73,8 @@ public class XMLdeserializer {
 		if (!map.hasIntersection(warehouseId))
    			throw new ExceptionXML("Error when reading file: The adress of the warehouse must be an existing intersection");
 		Intersection warehouse = map.getIntersectionById(warehouseId);
-		map.setWarehouse(warehouse);		
+		DeliveryPoint warehousePoint = new DeliveryPoint(warehouse, TimeWindow.WAREHOUSE);
+		map.setWarehouse(warehousePoint);		
     }
 	//////////////////GLOBAL TOUR////////////////////////////
 	public static void loadGlobalTour(GlobalTour gt,Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
@@ -123,9 +123,7 @@ public class XMLdeserializer {
 		if(CourierId<0){
 			throw new ExceptionXML("Error when reading file: The id of the courier must be positive");
 		}
-		String CourierName = "Livreur " + elt.getAttribute("courierId");
-		Courier courier = new Courier(CourierId, CourierName);
-		Tour tour = new Tour(courier);
+		Tour tour = new Tour(CourierId);
 		NodeList routes = elt.getElementsByTagName("route");
 		NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
 		for (int i=0; i<deliverypointList.getLength(); i++ ){
