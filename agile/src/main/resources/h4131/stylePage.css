@@ -27,6 +27,11 @@ ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
     -fx-background-color: white;
 }
 
+#loadTourButton, #computeTourButton {
+    -fx-background-color: linear-gradient(to bottom, rgb(25, 100, 190,1), rgba(30, 135, 250, 1));
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
 /* ------- Button styles ------- */
 
 Button {
@@ -80,4 +85,16 @@ Label{
 DeliveryPointLabel:hover{
     -fx-cursor: hand;
     -fx-text-fill: red;
+}
+
+/* ------- Font styles ------- */
+
+#computeTourButton, #loadTourButton {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#mapChoiceBox {
+     -fx-font-size: 10px;
+    -fx-font-weight: bold;
 }

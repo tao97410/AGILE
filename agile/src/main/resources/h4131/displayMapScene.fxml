@@ -16,32 +16,29 @@
 <StackPane stylesheets="@stylePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
    <children>
       <VBox fx:id="layout" stylesheets="@styleMap.css" />
-      <Group disable="false" layoutX="100.0" visible="true" StackPane.alignment="TOP_LEFT">
-         <Pane fx:id="topLeftMenuPane" style="
-                  -fx-background-color: rgba(255, 14, 14, 0.4);
-                  -fx-padding: 10px;
-                  -fx-background-radius: 7px;">
-            <Button layoutX="37.0" layoutY="20.0" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="50.0" prefWidth="165.0" text="Load a tour">
+      <Group disable="false" layoutX="100.0" StackPane.alignment="TOP_LEFT">
+         <Pane fx:id="topLeftMenuPane" layoutX="-28.0" layoutY="-30.0" style="                   -fx-background-color: rgba(40, 40, 40, 0.96);                   -fx-padding: 10px;                   -fx-background-radius: 7px;">
+            <Button fx:id="loadTourButton" layoutX="45.0" layoutY="26.0" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="5.0" prefWidth="165.0" text="Load a tour">
                <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
                </padding>
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Button>
-            <ChoiceBox fx:id="mapChoiceBox" layoutX="37.0" layoutY="90.0" prefHeight="50.0" prefWidth="165.0">
+            <ChoiceBox fx:id="mapChoiceBox" layoutX="45.0" layoutY="82.0" prefHeight="4.0" prefWidth="165.0">
                <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>  
             </ChoiceBox>   
-            <Text fill="WHITE" layoutX="20.0" layoutY="219.0" text="Number of courier(s) : ">
+            <Text fill="WHITE" layoutX="19.0" layoutY="169.0" text="Number of courier(s) : ">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font></Text>
-            <TextField fx:id="numberOfCourierField" layoutX="190.0" layoutY="235.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
-            <Button layoutX="20.0" layoutY="275.0" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefWidth="200.0" text="Compute a global tour">
+            <TextField fx:id="numberOfCourierField" layoutX="195.0" layoutY="152.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
+            <Button fx:id="computeTourButton" layoutX="44.0" layoutY="223.0" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefHeight="39.0" prefWidth="165.0" text="Compute a global tour">
                <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
                </padding>
                <font>
                   <Font name="System Bold" size="18.0" />
