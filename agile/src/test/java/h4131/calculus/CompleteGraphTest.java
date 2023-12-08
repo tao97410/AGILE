@@ -1,10 +1,17 @@
 package h4131.calculus;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -46,19 +53,53 @@ public class CompleteGraphTest {
 
     @Test
     void testComputeBestTour() {
-        Map loadedMap = new Map(null);
-        try {
-            XMLdeserializer.loadMap(loadedMap);
-        } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        CompleteGraph g=new CompleteGraph();
 
-        CompleteGraph g = loadedMap.getGraphFromPoints(null);
-        GlobalTour globalTour=new GlobalTour();
-        g.computeBestTour(globalTour);
+        DeliveryPoint point1=new DeliveryPoint(new Intersection(10,45.74979, 4.87572), TimeWindow.WAREHOUSE);
+        DeliveryPoint point2=new DeliveryPoint(new Intersection(11,45.76873, 4.8624663), TimeWindow.EIGHT_NINE);
+        g.nodes.add(point1);
+        g.nodes.add(point2);
+        g.setNbNodes(2);
 
-        Tour actualTour=globalTour.getTours().get(0);
+        g.arcs.add(new Arc(point1,point2,3202.5041610000007));
+        g.arcs.add(new Arc(point2,point1,3202.5041610000007));
+
+        g.setTimeBegining(TimeWindow.EIGHT_NINE);
+
+        int[] nbPlageHoraire=new int[2];
+        nbPlageHoraire[0]=1;
+        g.setNbPlageHoraire(nbPlageHoraire);
+
+        TimeWindow[] listeWindow=new TimeWindow[2];
+        listeWindow[0]=TimeWindow.WAREHOUSE;
+        listeWindow[1]=TimeWindow.EIGHT_NINE;
+        g.setListeWindow(listeWindow);
+
+       
+        double[][]cost= new double[2][2];
+        cost[0][1]=3202.5041610000007;
+        cost[1][0]=3202.5041610000007;
+
+        double[][] timeWindow=new double[2][2];
+        timeWindow[0][0]=7.0;
+        timeWindow[0][1]=8.0;
+        timeWindow[1][0]=8.0;
+        timeWindow[1][1]=9.0;
+        g.setTimeWindow(timeWindow);
+
+        g.setCost(cost);
+
+        GlobalTour globalTour= new GlobalTour();
+        GlobalTour globalTourMock=spy(globalTour);
+
+        g.computeBestTour(globalTourMock);
+
+        verify(globalTourMock).addTour(any(Tour.class));
+
+        assertNull(g.getDeliveryErreur());
+        List<Tour> list=globalTourMock.getTours();
+        assertEquals(globalTourMock.getTours().get(0).getDeliveryPoints().get(0),point1);
+        assertEquals(globalTourMock.getTours().get(0).getDeliveryPoints().get(1),point2);
         
 
     }

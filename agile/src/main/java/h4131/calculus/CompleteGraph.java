@@ -18,15 +18,10 @@ import h4131.model.GlobalTour;
 
 
 public class CompleteGraph implements Graph{
-	public void setNodes(Collection<DeliveryPoint> nodes) {
-        this.nodes = nodes;
-    }
+
     private static final double MAX_COST = 10000;
 	private static final double MIN_COST = 100;
     public Collection<DeliveryPoint> nodes;
-    public void setCost(double[][] cost) {
-        this.cost = cost;
-    }
     public Collection<Arc> arcs;
     private double [][] cost;
     private double [][] timeWindow;
@@ -259,8 +254,6 @@ public class CompleteGraph implements Graph{
         }
     }
 
-
-
 	@Override
 	public double getCost(int i, int j) {
 		if (i<0 || i>=nbNodes || j<0 || j>=nbNodes)
@@ -300,6 +293,51 @@ public class CompleteGraph implements Graph{
     public DeliveryPoint getDeliveryErreur(){
         return deliveryErreur;
     }
+
+    public void setCost(double[][] cost) {
+        this.cost = cost;
+    }
+
+    public void setNodes(Collection<DeliveryPoint> nodes) {
+        this.nodes = nodes;
+    }
+
+    public void setNbNodes(int nbNodes) {
+        this.nbNodes = nbNodes;
+    }
+
+    public void setArcs(Collection<Arc> arcs) {
+        this.arcs = arcs;
+    }
+
+    public void setTimeWindow(double[][] timeWindow) {
+        this.timeWindow = timeWindow;
+    }
+
+    public void setNbPlageHoraire(int[] nbPlageHoraire) {
+        this.nbPlageHoraire = nbPlageHoraire;
+    }
+
+    public void setListeWindow(TimeWindow[] listeWindow) {
+        this.listeWindow = listeWindow;
+    }
+
+    public void setTimeBegining(TimeWindow timeBegining) {
+        this.timeBegining = timeBegining;
+    }
+
+    public void setWareHouse(DeliveryPoint wareHouse) {
+        this.wareHouse = wareHouse;
+    }
+
+    public void setDeliveryErreur(DeliveryPoint deliveryErreur) {
+        this.deliveryErreur = deliveryErreur;
+    }
+
+
+    
+
+    
     
 
     

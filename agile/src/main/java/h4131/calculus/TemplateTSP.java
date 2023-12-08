@@ -7,14 +7,15 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public abstract class TemplateTSP implements TSP {
-	private Integer[] bestSol;
+	protected Integer[] bestSol;
 	protected Graph g;
-	private double bestSolCost;
-	private int timeLimit;
-	private long startTime;
-	private int indexDeliveryErreur=-1;
+	protected double bestSolCost;
+	protected int timeLimit;
+	protected long startTime;
+	protected int indexDeliveryErreur;
 	
-	
+
+
 	public void searchSolution(int timeLimit, CompleteGraph g){
 		if (timeLimit <= 0) return;
 		startTime = System.currentTimeMillis();	
@@ -65,7 +66,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @param currentCost the cost of the path corresponding to <code>visited</code>
 	 */	
 	private void branchAndBound(int currentVertex, Collection<Integer> unvisited, 
-			Collection<Integer> visited, double currentCost,double time,int nbSommetVisited,int plageHoraire,int nbPlageHoraire){
+		Collection<Integer> visited, double currentCost,double time,int nbSommetVisited,int plageHoraire,int nbPlageHoraire){
 		int maxNbSommetVisited=0;
 		int newNbPlageHoraire=nbPlageHoraire+1;
 		if (System.currentTimeMillis() - startTime > timeLimit) return;
@@ -75,25 +76,16 @@ public abstract class TemplateTSP implements TSP {
 	    		bestSolCost = currentCost+g.getCost(currentVertex,0);
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
-	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);
-			
-
-			
+	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);	
 	        while (it.hasNext()){
-				
 	        	Integer nextVertex = it.next();
-				
-				
-				
 				if(g.getNbPlageHoraire(plageHoraire-1)!=nbPlageHoraire && g.getWindow(nextVertex).ordinal()!=plageHoraire){
-					
 					continue;
 				}
-				
 				else if(g.getNbPlageHoraire(plageHoraire-1)==nbPlageHoraire){
 					newNbPlageHoraire=1;
 				}
-				
+
 				if(g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
 					
 					if(nbSommetVisited>=maxNbSommetVisited){
@@ -105,12 +97,9 @@ public abstract class TemplateTSP implements TSP {
 							}
 						}
 						else{
-							
-
 							visited.toArray(bestSol);
 							bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
 							indexDeliveryErreur=nextVertex;
-							
 						}
 					}
 					//verifier le bestSol
@@ -133,9 +122,21 @@ public abstract class TemplateTSP implements TSP {
 	        }	    
 	    }
 	}
+	
 	public int getIndexDeliveryErreur(){
 		return indexDeliveryErreur;
 	}
+
+		
+	public void setG(Graph g) {
+		this.g = g;
+	}
+
+	public void setBestSolCost(double bestSolCost) {
+		this.bestSolCost = bestSolCost;
+	}
+
+	
 	
 
 }

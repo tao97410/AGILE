@@ -59,5 +59,8 @@ public class Tour {
     public void setDeliveryPoints(List<DeliveryPoint> deliveryPoints){
         this.deliveryPoints=deliveryPoints;
     }
+    public List<DeliveryPoint> getDeliveryPoints() {
+        return deliveryPoints;
+    }
 
 }
