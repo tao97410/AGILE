@@ -115,4 +115,9 @@ public class InitialState implements State{
         windowBuilder.drawGlobalTour(c.getGlobalTour());
     }
 
+    @Override
+    public void saveGlobalTour(Controller c, WindowBuilder w){
+        System.out.println("save tour");
+    }
+
 }

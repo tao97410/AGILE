@@ -169,4 +169,11 @@ public class Controller {
 		currentState.computeGlobalTour(this, windowBuilder);
     }
 
+	/**
+	 * Method called after a click on "save gloabl tour" button
+	 */
+	public void saveGlobalTour() {
+		currentState.saveGlobalTour(this, windowBuilder);
+	}
+
 }

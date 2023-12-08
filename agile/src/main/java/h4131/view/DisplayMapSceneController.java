@@ -1,6 +1,9 @@
 package h4131.view;
 
+import java.util.LinkedList;
+
 import h4131.controller.Controller;
+import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -163,6 +166,11 @@ public class DisplayMapSceneController {
         controller.computeGlobalTour();
     }
 
+    @FXML
+    void doSaveGlobalTour(ActionEvent event){
+        controller.saveGlobalTour();
+    }
+
     public VBox getTourListGroup(){
         return this.tourListGroup;
     }
@@ -223,13 +231,30 @@ public class DisplayMapSceneController {
      * Method called after click on an intersection on the map
      */
     public void handleIntersectionClicked(MouseEvent event) {
-
         if (event.getSource() instanceof IntersectionCircle) {
             IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
-            if (intersectionClicked.getStroke() == Color.RED) {
-                intersectionClicked.setStroke(null);
-            } else {
-                intersectionClicked.setStroke(Color.RED);
+            boolean isPresent = false;
+            int courier = 1;
+            for(LinkedList<DeliveryPoint> list : controller.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
+                for(DeliveryPoint deliveryPoint : list){
+                    if(deliveryPoint.getPlace().getId()==intersectionClicked.getIntersectionId()){
+                        controller.modifyDeliveryPoint(deliveryPoint, courier);
+                        isPresent = true;
+                        break;
+                    }
+                }
+                courier++;
+            }
+            if(!isPresent){
+                for(DeliveryPoint deliveryPoint : controller.getCurrentDeliveryPoint().getNonAffectedDeliveryPoints()){
+                    if(deliveryPoint.getPlace().getId()==intersectionClicked.getIntersectionId()){
+                        controller.modifyDeliveryPoint(deliveryPoint, 0);
+                        isPresent = true;
+                        break;
+                    }
+                }
+            }            
+            if(!isPresent){
                 this.controller.leftClick(intersectionClicked.getIntersectionId());
             }
         }
@@ -254,7 +279,8 @@ public class DisplayMapSceneController {
 
         if (event.getSource() instanceof IntersectionCircle) {
             IntersectionCircle intersection = (IntersectionCircle) event.getSource();
-            intersection.setFill(Color.RED);
+            intersection.setPreviousColor(intersection.getFill());
+            intersection.setFill(Color.LIGHTSKYBLUE);
             intersection.setCursor(Cursor.HAND);
         }
     }
@@ -266,7 +292,7 @@ public class DisplayMapSceneController {
 
         if (event.getSource() instanceof IntersectionCircle) {
             IntersectionCircle intersection = (IntersectionCircle) event.getSource();
-            intersection.setFill(Color.TRANSPARENT);
+            intersection.setFill(intersection.getPreviousColor());
             intersection.setCursor(Cursor.DEFAULT);
         }
     }
@@ -279,7 +305,7 @@ public class DisplayMapSceneController {
         if (event.getSource() instanceof SegmentLine) {
             SegmentLine segment = (SegmentLine) event.getSource();
             segment.setPreviousColor(segment.getStroke());
-            segment.setStroke(Color.RED);
+            segment.setStroke(Color.LIGHTSKYBLUE);
             segment.setCursor(Cursor.DEFAULT);
         }
     }
