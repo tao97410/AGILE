@@ -64,8 +64,12 @@ public class Tour {
     public void addDeliveryPoint(DeliveryPoint point){
         this.deliveryPoints.add(point);
     }
-    public void setDeliveryPoints(List<DeliveryPoint> deliveryPoints){
+    public void setDeliveryPoints(Collection<DeliveryPoint> deliveryPoints){
         this.deliveryPoints=deliveryPoints;
+    }
+
+    public Collection<DeliveryPoint> getDeliveryPoints(){
+        return this.deliveryPoints;
     }
 
 }

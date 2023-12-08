@@ -3,6 +3,7 @@ package h4131.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -13,6 +14,7 @@ import h4131.calculus.TemplateGraph;
 import h4131.calculus.TSP;
 import h4131.calculus.TSP1;
 import h4131.calculus.Arc;
+import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
@@ -96,7 +98,20 @@ public class InitialState implements State{
 
     @Override
     public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
-        System.out.println("calculé !!");
+        int courier = 0;
+        for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
+            courier ++;
+            if(!listDeliveryPoints.isEmpty()){
+                Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
+                graph.computeBestTour(c.getGlobalTour());    
+                if(graph.getDeliveryErreur()!=null){
+                windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
+            }
+            }
+            
+        }
+        
+        windowBuilder.drawGlobalTour(c.getGlobalTour());
     }
 
 }

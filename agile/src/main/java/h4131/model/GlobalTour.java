@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class GlobalTour {
+
     private Collection<Tour> tours;
+
     public GlobalTour(){
         this.tours=new ArrayList<>();
     }
+    
     public GlobalTour(Collection<Tour> someTours){
         this.tours = someTours;
 

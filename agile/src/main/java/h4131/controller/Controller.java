@@ -37,7 +37,7 @@ public class Controller {
 	 */
     public Controller(Stage primaryStage){
 		try {
-			this.map = new Map(null);
+			this.map = new Map();
 			XMLdeserializer.loadMap("largeMap.xml", this.map);
 		} catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
 			e.printStackTrace();
@@ -45,6 +45,7 @@ public class Controller {
         this.windowBuilder = new WindowBuilder(this, primaryStage, this.map);
         currentState = initialState;
 		numberOfCourier = 3;
+		globalTour = new GlobalTour();
 		currentDeliveryPoint = new CurrentDeliveryPoint();
 		currentDeliveryPoint.addObserver(windowBuilder);
     }

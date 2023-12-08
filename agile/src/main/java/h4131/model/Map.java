@@ -61,13 +61,14 @@ public class Map {
         return res;
     }
 
-    public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPoints) {
+    public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPointsCol) {
 
 
         
 
         Graph graph = new Graph();
-        deliveryPoints.add(warehouse);
+        LinkedList<DeliveryPoint> deliveryPoints = new LinkedList<DeliveryPoint>(deliveryPointsCol);
+        deliveryPoints.addFirst(warehouse);
 
         for (DeliveryPoint currentPoint : deliveryPoints)
         {

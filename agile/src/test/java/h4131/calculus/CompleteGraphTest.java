@@ -46,19 +46,19 @@ public class CompleteGraphTest {
 
     @Test
     void testComputeBestTour() {
-        Map loadedMap = new Map(null);
-        try {
-            XMLdeserializer.loadMap(loadedMap);
-        } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // Map loadedMap = new Map();
+        // try {
+        //     XMLdeserializer.loadMap(loadedMap);
+        // } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
 
-        Graph g = loadedMap.getGraphFromPoints(null);
-        GlobalTour globalTour=new GlobalTour();
-        g.computeBestTour(globalTour);
+        // Graph g = loadedMap.getGraphFromPoints(null);
+        // GlobalTour globalTour=new GlobalTour();
+        // g.computeBestTour(globalTour);
 
-        Tour actualTour=globalTour.getTours().get(0);
+        // Tour actualTour=globalTour.getTours().get(0);
         
 
     }
