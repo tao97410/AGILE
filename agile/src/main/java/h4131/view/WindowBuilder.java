@@ -199,7 +199,7 @@ public class WindowBuilder implements Observer{
      * @param the Global Tour to display
      */
     public void drawGlobalTour(GlobalTour globalTour){
-
+        hideOldTour();
         // Get screen dimensions
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -217,6 +217,16 @@ public class WindowBuilder implements Observer{
                 addLineTour(originX, originY, destX, destY, color, segment);
             }
             color++;
+        }
+    }
+
+    private void hideOldTour() {
+        for(Node node : shapesPane.getChildren()){
+            if (node instanceof SegmentLine) {
+                SegmentLine segment = (SegmentLine)node;
+                segment.setStroke(Color.WHITE);
+                segment.setStrokeWidth(1.0);
+            }
         }
     }
 
@@ -317,6 +327,11 @@ public class WindowBuilder implements Observer{
         line.setStrokeWidth(2.0);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
+        Tooltip tooltip = new Tooltip("Name : "+segment.getName()+"\nLength : "+segment.getLength()+"m");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(line, tooltip);
         shapesPane.getChildren().add(line);
     }
  

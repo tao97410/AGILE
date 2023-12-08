@@ -98,6 +98,7 @@ public class InitialState implements State{
 
     @Override
     public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
+        c.setGlobalTour(new GlobalTour());
         int courier = 0;
         for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
             courier ++;
