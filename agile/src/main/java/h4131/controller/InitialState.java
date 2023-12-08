@@ -56,15 +56,11 @@ public class InitialState implements State{
         Map loadedMap = new Map(null);
         try {
             XMLdeserializer.loadMap(loadedMap);
-            CompleteGraph g = loadedMap.getGraphFromPoints(null);
-            GlobalTour globalTour=new GlobalTour();
-            g.computeBestTour(globalTour);
-            System.out.println("Voici le delivery qui coince : ");
-            System.out.println(g.getDeliveryErreur());
+            
 
             
            
-            w.drawMapAndGlobalTour(loadedMap, globalTour);
+            w.drawMapAndGlobalTour(loadedMap,null);
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
