@@ -1,21 +1,30 @@
 package h4131.view;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
 import h4131.controller.Controller;
+import h4131.model.CurrentDeliveryPoint;
+import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.Segment;
 import h4131.model.Tour;
-
+import h4131.observer.Observable;
+import h4131.observer.Observer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -27,17 +36,20 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class WindowBuilder {
+public class WindowBuilder implements Observer{
 
     private Stage stage;
     private Parent root;
     private Controller controller;
+    private DisplayMapSceneController displayMapSceneController;
     private Pane shapesPane;
+    private VBox layout;
     private double longMin;
     private double longMax;
     private double latMin;
     private double latMax;
-    private DisplayMapSceneController displayMapSceneController;
+
+    private final Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -48,6 +60,8 @@ public class WindowBuilder {
     public WindowBuilder(Controller controller, Stage primaryStage, Map firstMap){
         this.controller = controller;
         this.stage = primaryStage;
+
+        this.controller.setNumberOfCourier(3);
 
         drawMap(firstMap);
 
@@ -61,6 +75,11 @@ public class WindowBuilder {
         stage.setFullScreenExitHint("");
         
         stage.show();    
+    }
+
+    @Override
+    public void update(Observable observed, Object arg) {
+        displayListDeliveryPoint();
     }
 
     /**
@@ -102,6 +121,7 @@ public class WindowBuilder {
             this.root = displayMapSceneLoader.load();
             displayMapSceneController = displayMapSceneLoader.getController();
             displayMapSceneController.setController(controller);
+            displayMapSceneController.setNumberOfCourierFieldValue(String.valueOf(controller.getNumberOfCourier()));
             
             shapesPane = new Pane();
             shapesPane.setPrefHeight(screenHeight);
@@ -134,10 +154,10 @@ public class WindowBuilder {
             //drawing the elements :
 
             //drawing lines
-            for (Entry<Long, List<Segment>> entry : map.getAdjacency().entrySet()) {
+            for (Entry<Long, Collection<Segment>> entry : map.getAdjacency().entrySet()) {
                 Long key = entry.getKey();
                 Intersection origine = map.getIntersectionById(key);
-                List<Segment> segments = entry.getValue();
+                Collection<Segment> segments = entry.getValue();
                 double originX = ((origine.getLongitude() - longMin) / (longMax - longMin)) * screenHeight + (screenWidth-screenHeight)/2;
                 double originY = screenHeight - ((origine.getLatitude() - latMin) / (latMax - latMin)) * screenHeight;
                 
@@ -159,7 +179,7 @@ public class WindowBuilder {
 
             Group group = new Group(shapesPane);
             Parent zoomPane = displayMapSceneController.createZoomPane(group);
-            VBox layout = displayMapSceneController.getLayout();
+            layout = displayMapSceneController.getLayout();
             layout.getChildren().setAll(zoomPane);
             VBox.setVgrow(zoomPane, Priority.ALWAYS);
             layout.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
@@ -200,8 +220,59 @@ public class WindowBuilder {
         }
     }
 
-    
+    /**
+     * method called by controller to display the menu when clicking on an intersection
+     * @param numberOfCourier to offer the user the choice of courier number
+     * @param intersection the selected intersection
+     */
+    public void openMenuIntersection(int numberOfCourier, Intersection intersection){        
+        ChoiceBox<Integer> courierChoiceBox = displayMapSceneController.getCourierChoice();
+        courierChoiceBox.getItems().clear();
+        for(int i = 1; i<=numberOfCourier; i++){
+            courierChoiceBox.getItems().add(i);            
+        }
+        courierChoiceBox.setValue(1);
+        Label whichIntersection = displayMapSceneController.getWhichIntersection();
+        whichIntersection.setText("Intersection coordinates:\n"+intersection.getLatitude()+"°, "+intersection.getLongitude()+"°");
+        whichIntersection.setWrapText(true);
+        Pane validationPane = displayMapSceneController.getvalidationPane();
+        validationPane.setVisible(true);
+        validationPane.setDisable(false);
+        disableBackground(true);
+    }
 
+    /**
+     * methode called to disable background and prevent any click
+     * @param bool
+     */
+    public void disableBackground(boolean bool){
+        layout.setDisable(bool);
+        shapesPane.setDisable(bool);
+    }
+
+    /**
+     * method called to delete the circle around an intersection when
+     * not selected anymore
+     * @param id
+     */
+    public void unSetIntersection(Long id){
+        for(Node node : shapesPane.getChildren()){
+            if (node instanceof IntersectionCircle) {
+                IntersectionCircle circle = (IntersectionCircle) node;
+                if (circle.getIntersectionId().equals(id)) {
+                    circle.setStroke(Color.TRANSPARENT);
+                }
+            }
+        }
+    }
+    
+    /**
+     * used to draw a circle on the map representing an intersection
+     * @param x coordinate of the intersection
+     * @param y coordinate of the intersection
+     * @param radius of the circle
+     * @param intersectionId of the represented intersection
+     */
     private void addCircle(double x, double y, double radius, Long intersectionId) {
         IntersectionCircle circle = new IntersectionCircle(x, y, radius, Color.TRANSPARENT, intersectionId);
         circle.setOnMouseClicked(displayMapSceneController::handleIntersectionClicked);
@@ -210,6 +281,14 @@ public class WindowBuilder {
         shapesPane.getChildren().add(circle);
     }
 
+    /**
+     * used to draw a line on the map representing a segment
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @param segment
+     */
     private void addLine(double startX, double startY, double endX, double endY, Segment segment) {
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(Color.WHITE);
@@ -223,13 +302,81 @@ public class WindowBuilder {
         shapesPane.getChildren().add(line);
     }
 
+    /**
+     * used to draw a line on the map representing a segment of a tour
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @param color
+     * @param segment
+     */
     private void addLineTour(double startX, double startY, double endX, double endY, int color, Segment segment) {
-        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE};
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
-        line.setStroke(colors[(color%6)]);
+        line.setStroke(colors[(color%colors.length)]);
         line.setStrokeWidth(2.0);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
         shapesPane.getChildren().add(line);
+    }
+ 
+    /**
+     * called by update() to display the lists of delivery point by courier on the right of the screen
+     */
+    public void displayListDeliveryPoint(){
+        CurrentDeliveryPoint currentDeliveryPoint = controller.getCurrentDeliveryPoint();
+        VBox tourListGroup = displayMapSceneController.getTourListGroup();
+        tourListGroup.getChildren().clear();
+        int courier = 1;
+        for(LinkedList<DeliveryPoint> list : currentDeliveryPoint.getAffectedDeliveryPoints()){
+            if(!list.isEmpty()){
+                VBox listDeliveryPoint = new VBox();
+                TitledPane titledPane = new TitledPane("Courier : " + courier, listDeliveryPoint);                
+                tourListGroup.getChildren().add(titledPane);
+                for(DeliveryPoint deliveryPoint : list){
+                    DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
+                        +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint, courier);
+                    label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
+                    listDeliveryPoint.getChildren().add(label);
+                }
+            }
+            courier++;
+        }
+        if(!currentDeliveryPoint.getNonAffectedDeliveryPoints().isEmpty()){
+            VBox listDeliveryPoint = new VBox();
+            TitledPane titledPane = new TitledPane("Non Affected delivery points ", listDeliveryPoint);                
+            tourListGroup.getChildren().add(titledPane);
+            for(DeliveryPoint deliveryPoint : currentDeliveryPoint.getNonAffectedDeliveryPoints()){
+                DeliveryPointLabel label = new DeliveryPointLabel("Intersection : "+deliveryPoint.getPlace().getLatitude()
+                    +"°,"+deliveryPoint.getPlace().getLongitude()+"° | " + deliveryPoint.getTime().getRepresentation(), deliveryPoint, 0);
+                label.setOnMouseClicked(displayMapSceneController::handleDeliveryPointLabelClicked);
+                listDeliveryPoint.getChildren().add(label);
+            }
+        }
+        
+    }
+
+    /**
+     * called by controller to open the menu allowing the user to modify a delivery point
+     * @param numberOfCourier to propose the choice of courier number
+     * @param deliveryPoint the delivery point to modify
+     * @param currentCourier the current courier affected to the delivery point
+     */
+    public void openMenuModifyDeliveryPoint(int numberOfCourier, DeliveryPoint deliveryPoint, int currentCourier) {
+        ChoiceBox<Integer> modifyCourierChoiceBox = displayMapSceneController.getModifyCourierChoice();
+        modifyCourierChoiceBox.getItems().clear();
+        for(int i = 1; i<=numberOfCourier; i++){
+            modifyCourierChoiceBox.getItems().add(i);            
+        }
+        modifyCourierChoiceBox.setValue(currentCourier==0 ? 1:currentCourier);
+        ChoiceBox<String>modifyTimeWindowChoice = displayMapSceneController.getModifyTimeWindowChoice();
+        modifyTimeWindowChoice.setValue(deliveryPoint.getTime().getRepresentation());
+        Label whichDeliveryPoint = displayMapSceneController.getWhichDeliveryPoint();
+        whichDeliveryPoint.setText("Delivery point coordinates:\n"+deliveryPoint.getPlace().getLatitude()+"°, "+deliveryPoint.getPlace().getLongitude()+"°");
+        whichDeliveryPoint.setWrapText(true);
+        Pane modifyPane = displayMapSceneController.getModifyPane();
+        modifyPane.setVisible(true);
+        modifyPane.setDisable(false);
+        disableBackground(true);
     }
 }

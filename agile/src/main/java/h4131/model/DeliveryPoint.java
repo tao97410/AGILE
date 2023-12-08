@@ -1,4 +1,6 @@
 package h4131.model;
+
+
 public class DeliveryPoint {
     private Intersection place;
     private TimeWindow time;
@@ -6,6 +8,13 @@ public class DeliveryPoint {
     public DeliveryPoint(Intersection aPlace, TimeWindow aTime){
         this.place = aPlace;
         this.time = aTime;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Place: (" + place.getLatitude() + ", " + place.getLongitude() + ") "
+            + "\nTime window: " + time + "\n");
+        return result.toString();
     }
 
     /**
@@ -34,6 +43,17 @@ public class DeliveryPoint {
      */
     public void setTime(TimeWindow time) {
         this.time = time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DeliveryPoint that = (DeliveryPoint) o;
+
+        if (place != null ? !place.equals(that.place) : that.place != null) return false;
+        return time == that.time;
     }
 
 }

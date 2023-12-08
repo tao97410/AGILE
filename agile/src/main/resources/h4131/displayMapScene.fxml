@@ -4,14 +4,19 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<StackPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
+<StackPane stylesheets="@stylePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
    <children>
-      <VBox fx:id="layout" />
-      <Group layoutX="100.0" StackPane.alignment="TOP_LEFT">
+      <VBox fx:id="layout" stylesheets="@styleMap.css" />
+      <Group disable="false" layoutX="100.0" visible="true" StackPane.alignment="TOP_LEFT">
          <children>
             <Button layoutX="20.0" mnemonicParsing="false" onAction="#doLoadTour" prefWidth="200.0" text="Load a tour">
                <padding>
@@ -25,15 +30,56 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </ChoiceBox>
-            <Button fx:id="loadMapButton" layoutX="20.0" layoutY="175.0" mnemonicParsing="false" onAction="#doLoadMap" prefWidth="200.0" text="Load chosen map">
+            
+            <Text fill="WHITE" layoutX="20.0" layoutY="250.0" text="Number of courier(s) : ">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font></Text>
+            <TextField fx:id="numberOfCourierField" layoutX="190.0" layoutY="235.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
+            <Button layoutX="20.0" layoutY="275.0" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefWidth="200.0" text="Compute a global tour">
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
-            </Button>
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font></Button>
          </children>
          <StackPane.margin>
             <Insets left="20.0" top="20.0" />
          </StackPane.margin>
       </Group>
+      <Pane fx:id="validationPane" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <Label fx:id="idIntersection" alignment="CENTER" layoutY="15.0" prefWidth="300.0" text="Intersection 101010101010">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="timeWindowChoice" layoutX="75.0" layoutY="98.0" prefWidth="150.0" />
+            <ChoiceBox fx:id="courierChoice" layoutX="75.0" layoutY="150.0" prefWidth="150.0" />
+            <Button fx:id="validationButton" layoutX="220.0" layoutY="240.0" mnemonicParsing="false" onAction="#validateInformation" prefHeight="40.0" prefWidth="60.0" text="OK" />
+            <Button fx:id="cancelButton" layoutX="20.0" layoutY="240.0" mnemonicParsing="false" onAction="#cancelIntersection" text="Cancel" />
+         </children>
+      </Pane>
+      <Pane fx:id="modifyPane" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <Label fx:id="idDeliveryPoint" alignment="CENTER" layoutY="15.0" prefWidth="300.0" text="Intersection 101010101010">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="modifyTimeWindowChoice" layoutX="75.0" layoutY="98.0" prefWidth="150.0" />
+            <ChoiceBox fx:id="modifyCourierChoice" layoutX="75.0" layoutY="150.0" prefWidth="150.0" />
+            <Button fx:id="modifyButton" layoutX="220.0" layoutY="240.0" mnemonicParsing="false" onAction="#modifyDeliveryPoint" prefHeight="40.0" prefWidth="60.0" text="OK" />
+            <Button fx:id="deleteButton" layoutX="20.0" layoutY="240.0" mnemonicParsing="false" onAction="#deleteDeliveryPoint" text="Delete Point" />
+         </children>
+      </Pane>
+      <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT"><ScrollPane fx:id="scrollPane" maxHeight="1000.0"><VBox fx:id="tourListGroup" disable="false" visible="true">
+               <padding>
+                  <Insets right="10.0" />
+               </padding></VBox></ScrollPane>
+         <StackPane.margin>
+            <Insets right="20.0" top="10.0" />
+         </StackPane.margin></Group>
    </children>
 </StackPane>
