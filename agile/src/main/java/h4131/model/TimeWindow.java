@@ -1,6 +1,7 @@
 package h4131.model;
 
 public enum TimeWindow {
+    WAREHOUSE("warehouse"),
     EIGHT_NINE("8h-9h"),
     NINE_TEN("9h-10h"),
     TEN_ELEVEN("10h-11h"),

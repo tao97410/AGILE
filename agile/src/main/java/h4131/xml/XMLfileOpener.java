@@ -9,6 +9,7 @@ public class XMLfileOpener {// Singleton
 	private static XMLfileOpener instance = null;
 
 	private XMLfileOpener(){}
+	
 	protected static XMLfileOpener getInstance(){
 		if (instance == null) instance = new XMLfileOpener();
 		return instance;

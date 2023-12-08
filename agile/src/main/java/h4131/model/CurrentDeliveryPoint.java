@@ -9,10 +9,10 @@ public class CurrentDeliveryPoint extends Observable{
 	private LinkedList<LinkedList<DeliveryPoint>> affectedDeliveryPoints;
 	private LinkedList<DeliveryPoint> nonAffectedDeliveryPoints;
 
-    public CurrentDeliveryPoint(){
+    public CurrentDeliveryPoint(int nbofCourier){
         
 		this.affectedDeliveryPoints = new LinkedList<>();
-		for(int i = 0; i<3; i++){
+		for(int i = 0; i<nbofCourier; i++){
 			this.affectedDeliveryPoints.add(new LinkedList<DeliveryPoint>());
 		}
 		this.nonAffectedDeliveryPoints = new LinkedList<>();
@@ -109,6 +109,14 @@ public class CurrentDeliveryPoint extends Observable{
     public void removeAssignedDeliveryPoint(DeliveryPoint deliveryPointToRemove, int courier) {
         this.affectedDeliveryPoints.get(courier-1).remove(deliveryPointToRemove);
         notifyObservers();
+    }
+
+    public void empty(int newNumberOfCourier){
+		this.affectedDeliveryPoints = new LinkedList<>();
+		for(int i = 0; i<newNumberOfCourier; i++){
+			this.affectedDeliveryPoints.add(new LinkedList<DeliveryPoint>());
+		}
+		this.nonAffectedDeliveryPoints = new LinkedList<>();
     }
 
 }

@@ -37,7 +37,7 @@ public class Controller {
 	 */
     public Controller(Stage primaryStage){
 		try {
-			this.map = new Map(null);
+			this.map = new Map();
 			XMLdeserializer.loadMap("largeMap.xml", this.map);
 		} catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
 			e.printStackTrace();
@@ -45,7 +45,8 @@ public class Controller {
         this.windowBuilder = new WindowBuilder(this, primaryStage, this.map);
         currentState = initialState;
 		numberOfCourier = 3;
-		currentDeliveryPoint = new CurrentDeliveryPoint();
+		globalTour = new GlobalTour();
+		currentDeliveryPoint = new CurrentDeliveryPoint(numberOfCourier);
 		currentDeliveryPoint.addObserver(windowBuilder);
     }
 
@@ -85,6 +86,10 @@ public class Controller {
 
 	public CurrentDeliveryPoint getCurrentDeliveryPoint(){
 		return this.currentDeliveryPoint;
+	}
+
+	public void setCurrentDeliveryPoint(CurrentDeliveryPoint currentDeliveryPoint){
+		this.currentDeliveryPoint = currentDeliveryPoint;
 	}
 
 	// Methods corresponding to user events 
@@ -167,5 +172,13 @@ public class Controller {
     public void computeGlobalTour() {
 		currentState.computeGlobalTour(this, windowBuilder);
     }
+
+	/**
+	 * Method called after a click on "save gloabl tour" button
+	 */
+	public void saveGlobalTour() {
+		currentState.saveGlobalTour(this, windowBuilder);
+	}
+
 
 }

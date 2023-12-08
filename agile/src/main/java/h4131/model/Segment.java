@@ -68,4 +68,16 @@ public class Segment {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o){
+        
+        if(!(o instanceof Segment))
+            return false;
+        else{
+            Segment s = (Segment) o;
+            return (destination.equals(s.getDestination()) && origin.equals(s.getOrigin()) && length == s.getLength() && name.equals(s.getName()));
+        }
+        
+    }
+
 }
