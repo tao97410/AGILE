@@ -17,7 +17,7 @@ import h4131.model.Tour;
 import h4131.model.GlobalTour;
 
 
-public class CompleteGraph implements Graph{
+public class CompleteGraph implements TemplateGraph{
 
     private static final double MAX_COST = 10000;
 	private static final double MIN_COST = 100;
@@ -38,28 +38,6 @@ public class CompleteGraph implements Graph{
         
     }
     
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (Arc a : arcs) {
-            result.append("* From (" 
-                + a.origin.getPlace().getLatitude() 
-                + ", " 
-                + a.origin.getPlace().getLongitude() 
-                + ") to (" 
-                + a.destination.getPlace().getLatitude() 
-                + ", " 
-                + a.destination.getPlace().getLongitude() 
-                + "): " + a.distance + "\n");
-        }
-        return result.toString();
-    }
-
-    @Override
-	public int getNbVertices() {
-		return nbNodes;
-	}
-
-
 
     //After having computed the best tour, we have a tab of the indexes of the nodes 
     // Then we have to associate each index to the corresponding DeliveryPoint 
@@ -221,6 +199,9 @@ public class CompleteGraph implements Graph{
         }
         this.timeWindow=resTimeWindow;
     }
+
+
+
     private void createNbPlageHoraire(){
         nbPlageHoraire=new int[nbNodes];
         Arrays.fill(nbPlageHoraire,0);
@@ -254,17 +235,7 @@ public class CompleteGraph implements Graph{
         }
     }
 
-	@Override
-	public double getCost(int i, int j) {
-		if (i<0 || i>=nbNodes || j<0 || j>=nbNodes)
-			return -1;
-		return cost[i][j];
-	}
-
-    @Override
-    public double getWindow(int firstOrLast,Integer i){
-        return timeWindow[i][firstOrLast];
-    }
+	
 
 	@Override
 	public boolean isArc(int i, int j) {
@@ -276,6 +247,9 @@ public class CompleteGraph implements Graph{
     public double timeTravel(int i, int j){
         return cost[i][j]/15000.0;
     }
+
+
+    // ******************GET METHODS********************
 
     @Override
     public int getNbPlageHoraire(int plageHoraire){
@@ -293,6 +267,27 @@ public class CompleteGraph implements Graph{
     public DeliveryPoint getDeliveryErreur(){
         return deliveryErreur;
     }
+
+    @Override
+	public double getCost(int i, int j) {
+		if (i<0 || i>=nbNodes || j<0 || j>=nbNodes)
+			return -1;
+		return cost[i][j];
+	}
+
+    @Override
+    public double getWindow(int firstOrLast,Integer i){
+        return timeWindow[i][firstOrLast];
+    }
+
+    @Override
+	public int getNbVertices() {
+		return nbNodes;
+	}
+    // ******************GET METHODS********************
+
+
+    // ******************SET METHODS********************
 
     public void setCost(double[][] cost) {
         this.cost = cost;
@@ -335,7 +330,22 @@ public class CompleteGraph implements Graph{
     }
 
 
-    
+    // ******************SET METHODS********************
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Arc a : arcs) {
+            result.append("* From (" 
+                + a.origin.getPlace().getLatitude() 
+                + ", " 
+                + a.origin.getPlace().getLongitude() 
+                + ") to (" 
+                + a.destination.getPlace().getLatitude() 
+                + ", " 
+                + a.destination.getPlace().getLongitude() 
+                + "): " + a.distance + "\n");
+        }
+        return result.toString();
+    }
 
     
     

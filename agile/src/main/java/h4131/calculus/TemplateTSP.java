@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 public abstract class TemplateTSP implements TSP {
 	protected Integer[] bestSol;
-	protected Graph g;
+	protected TemplateGraph g;
 	protected double bestSolCost;
 	protected int timeLimit;
 	protected long startTime;
@@ -16,6 +16,11 @@ public abstract class TemplateTSP implements TSP {
 	
 
 
+	/**
+	 * Template method of a branch and bound algorithm for solving the TSP in <code>g</code>.
+	 * @param timeLimit stops the research if the timeLimit is exceeded
+	 * @param g the completeGraph for which we want to search a solution
+	 */	
 	public void searchSolution(int timeLimit, CompleteGraph g){
 		if (timeLimit <= 0) return;
 		startTime = System.currentTimeMillis();	
@@ -30,15 +35,6 @@ public abstract class TemplateTSP implements TSP {
 		branchAndBound(0, unvisited, visited, 0,g.getTimeBegining().ordinal()+7.0,0,g.getTimeBegining().ordinal(),0);
 	}
 	
-	public Integer[] getSolution(){
-		return bestSol;
-	}
-	
-	public double getSolutionCost(){
-		if (g != null)
-			return bestSolCost;
-		return -1;
-	}
 	
 	/**
 	 * Method that must be defined in TemplateTSP subclasses
@@ -56,7 +52,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @param g
 	 * @return an iterator for visiting all vertices in <code>unvisited</code> which are successors of <code>currentVertex</code>
 	 */
-	protected abstract Iterator<Integer> iterator(Integer currentVertex, Collection<Integer> unvisited, Graph g);
+	protected abstract Iterator<Integer> iterator(Integer currentVertex, Collection<Integer> unvisited, TemplateGraph g);
 	
 	/**
 	 * Template method of a branch and bound algorithm for solving the TSP in <code>g</code>.
@@ -102,7 +98,6 @@ public abstract class TemplateTSP implements TSP {
 							indexDeliveryErreur=nextVertex;
 						}
 					}
-					//verifier le bestSol
 				}
 				else{
 					double newTime;
@@ -122,13 +117,30 @@ public abstract class TemplateTSP implements TSP {
 	        }	    
 	    }
 	}
+
+	// ******************GET METHODS********************
 	
 	public int getIndexDeliveryErreur(){
 		return indexDeliveryErreur;
 	}
 
+
+	public Integer[] getSolution(){
+		return bestSol;
+	}
+	
+	public double getSolutionCost(){
+		if (g != null)
+			return bestSolCost;
+		return -1;
+	}
+
+	// ******************GET METHODS********************
+
+
+	// ******************SET METHODS********************
 		
-	public void setG(Graph g) {
+	public void setG(TemplateGraph g) {
 		this.g = g;
 	}
 
@@ -136,6 +148,8 @@ public abstract class TemplateTSP implements TSP {
 		this.bestSolCost = bestSolCost;
 	}
 
+
+	// ******************SET METHODS********************
 	
 	
 
