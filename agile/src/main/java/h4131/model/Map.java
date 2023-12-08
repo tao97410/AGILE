@@ -64,31 +64,7 @@ public class Map {
     public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPoints) {
 
 
-        // TEST
-        // ArrayList<Intersection> allIntersections = new ArrayList<>(intersections.values());
-        // Collection<DeliveryPoint> deliveryPoints = new LinkedList<>();
-        // System.out.println("Warehouse - " + warehouse.toString());
-        // DeliveryPoint point1 = new DeliveryPoint(allIntersections.get(1), TimeWindow.EIGHT_NINE);
-        // deliveryPoints.add(point1);
-        // System.out.println(point1.toString());
-        // DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(51), TimeWindow.EIGHT_NINE);
-        // deliveryPoints.add(point2);
-        // System.out.println(point2.toString());
-        // DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(11), TimeWindow.NINE_TEN);
-        // deliveryPoints.add(point3);
-        // System.out.println(point3.toString());
-        // DeliveryPoint point4 = new DeliveryPoint(allIntersections.get(15), TimeWindow.TEN_ELEVEN);
-        // deliveryPoints.add(point4);
-        // System.out.println(point4.toString());
-        // DeliveryPoint point5 = new DeliveryPoint(allIntersections.get(6), TimeWindow.TEN_ELEVEN);
-        // deliveryPoints.add(point5);
-        // System.out.println(point5.toString());
-        // DeliveryPoint point6 = new DeliveryPoint(allIntersections.get(24), TimeWindow.TEN_ELEVEN);
-        // deliveryPoints.add(point6);
-        // System.out.println(point6.toString());
-        // DeliveryPoint point7 = new DeliveryPoint(allIntersections.get(21), TimeWindow.ELEVEN_TWELVE);
-        // deliveryPoints.add(point7);
-        // System.out.println(point7.toString());
+        
 
         Graph graph = new Graph();
         deliveryPoints.add(warehouse);
