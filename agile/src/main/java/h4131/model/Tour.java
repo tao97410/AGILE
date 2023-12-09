@@ -9,9 +9,9 @@ import java.util.List;
 public class Tour {
     private Collection<Segment> course;
     private Collection<DeliveryPoint> deliveryPoints;
-    private long courierId;
+    private int courierId;
 
-    public Tour(long aCourierId) {
+    public Tour(int aCourierId) {
         this.courierId = aCourierId;
         this.course = new ArrayList<>();
         this.deliveryPoints = new ArrayList<>();
@@ -46,14 +46,14 @@ public class Tour {
     /**
      * @return Courier return the courier
      */
-    public long getCourierId() {
+    public int getCourierId() {
         return courierId;
     }
 
     /**
       * @param courier the courier to set
       */
-    public void setCourier(long courierId) {
+    public void setCourier(int courierId) {
          this.courierId = courierId;
     }
 

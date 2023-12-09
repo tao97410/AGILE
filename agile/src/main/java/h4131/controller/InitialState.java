@@ -39,8 +39,9 @@ public class InitialState implements State{
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
             w.setFullScreen(false);
-            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map);
+            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map,c.getCurrentDeliveryPoint());
             c.setGlobalTour(loadedGlobalTour);
+            c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
             w.setFullScreen(true);
             w.drawGlobalTour(loadedGlobalTour);
             //controller.setState(...);
@@ -103,7 +104,7 @@ public class InitialState implements State{
     public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
         c.setGlobalTour(new GlobalTour());
         c.getGlobalTour().setMap("test");
-        long courier = 0;
+        int courier = 0;
         for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
             courier ++;
             if(!listDeliveryPoints.isEmpty()){
