@@ -39,7 +39,7 @@ public class TSP1Test {
         double actual;
         double expected=-1;
 
-        templateTSPMock.setG(new CompleteGraph());
+        templateTSPMock.setG(new Graph());
         actual=templateTSPMock.getSolutionCost();
             
         assertEquals(expected, actual);
@@ -50,7 +50,7 @@ public class TSP1Test {
     void testGetSolution() {
         double actual;
         double expected=12.0;
-        templateTSPMock.setG(new CompleteGraph());
+        templateTSPMock.setG(new Graph());
         templateTSPMock.setBestSolCost(12.0);
         actual=templateTSPMock.getSolutionCost();
         assertEquals(expected, actual);
@@ -71,7 +71,7 @@ public class TSP1Test {
     
     @Test
     void testSearchSolutionGeneric(){
-        CompleteGraph g=new CompleteGraph();
+        Graph g=new Graph();
 
         DeliveryPoint point1=new DeliveryPoint(new Intersection(10,45.74979, 4.87572), TimeWindow.WAREHOUSE);
         DeliveryPoint point2=new DeliveryPoint(new Intersection(11,45.76873, 4.8624663), TimeWindow.EIGHT_NINE);
@@ -120,7 +120,7 @@ public class TSP1Test {
     @Test
     void testSearchSolutionWithError(){
 
-        CompleteGraph g=new CompleteGraph();
+        Graph g=new Graph();
 
         DeliveryPoint point1=new DeliveryPoint(new Intersection(10,45.74979, 4.87572), TimeWindow.WAREHOUSE);
         DeliveryPoint point2=new DeliveryPoint(new Intersection(11,45.76873, 4.8624663), TimeWindow.EIGHT_NINE);

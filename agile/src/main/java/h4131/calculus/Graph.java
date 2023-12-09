@@ -127,17 +127,10 @@ public class Graph implements TemplateGraph{
         return course;
     }
 
-
-    private List<DeliveryPoint> buildListeDelivery(){
-        List<DeliveryPoint> listeDelivery=new ArrayList<DeliveryPoint>();
-        for(DeliveryPoint d:this.nodes){
-            listeDelivery.add(d);
-        }
-        return listeDelivery;
-    }
-    
-
-
+    /**
+     * Compute the TSP for a GlobalTour
+     * @param globalTour The globarTour from which we do the TSP
+     */	
     public void computeBestTour(GlobalTour globalTour){
         TSP1 tsp=new TSP1();
         this.initialiseCompleteGraph();
@@ -151,7 +144,7 @@ public class Graph implements TemplateGraph{
         this.arcs=findArc(this.nodes);
         Tour tour=new Tour();
         tour.setCourse(this.buildCourse());
-        tour.setDeliveryPoints(this.buildListeDelivery());
+        tour.setDeliveryPoints(new ArrayList<>(this.nodes));
         globalTour.addTour(tour);
 
     }
@@ -194,9 +187,15 @@ public class Graph implements TemplateGraph{
             nodePos++;
         }
     }
+
     private void createWareHouse(){
         wareHouse=nodes.toArray(new DeliveryPoint[1])[0];
     }
+
+
+    /**
+     * Put the timeBeginning to the lowest TimeWindow amongs the nodes
+     */	
     private void createWindowBegining(){
         TimeWindow min=TimeWindow.ELEVEN_TWELVE;
         for(DeliveryPoint d:nodes){
@@ -209,6 +208,9 @@ public class Graph implements TemplateGraph{
 
     }
 
+    /**
+     * Convert the timeWindow 
+     */	
     private void createTimeWindow(){
         int i=0;
         double resTimeWindow[][]=new double[nbNodes][2];
@@ -216,8 +218,6 @@ public class Graph implements TemplateGraph{
             resTimeWindow[i][0]=(double)(node.getTime().ordinal())+7.0;
             resTimeWindow[i][1]=(double)(node.getTime().ordinal())+8.0;
             i++;
-
-
         }
         this.timeWindow=resTimeWindow;
     }

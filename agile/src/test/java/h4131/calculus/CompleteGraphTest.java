@@ -34,11 +34,11 @@ import h4131.xml.XMLdeserializer;
 public class CompleteGraphTest {
 
     @Mock
-    CompleteGraph graph;
+    Graph graph;
 
     @BeforeEach    
     void beforeMethod(){
-        graph = new CompleteGraph();
+        graph = new Graph();
         Collection<DeliveryPoint> nodes= new ArrayList<>();
         DeliveryPoint point1 = new DeliveryPoint(new Intersection(0, 0, 0), TimeWindow.EIGHT_NINE);
         nodes.add(point1);
@@ -53,7 +53,7 @@ public class CompleteGraphTest {
 
     @Test
     void testComputeBestTour() {
-        CompleteGraph g=new CompleteGraph();
+        Graph g=new Graph();
 
         DeliveryPoint point1=new DeliveryPoint(new Intersection(10,45.74979, 4.87572), TimeWindow.WAREHOUSE);
         DeliveryPoint point2=new DeliveryPoint(new Intersection(11,45.76873, 4.8624663), TimeWindow.EIGHT_NINE);
@@ -146,7 +146,7 @@ public class CompleteGraphTest {
 
     @Test
     void testTimeTravel() {
-        graph = new CompleteGraph();
+        graph = new Graph();
         double [][] cout= new double[5][5];
         double [][] expected= new double[5][5];
         for(int i=0 ; i<cout.length ; i++){
