@@ -23,6 +23,7 @@ public class Controller {
 	private CurrentDeliveryPoint currentDeliveryPoint;
 	private GlobalTour globalTour;
 	private int numberOfCourier;
+	private String nameOfMap;
 
     private State currentState;
 
@@ -46,6 +47,7 @@ public class Controller {
         currentState = initialState;
 		numberOfCourier = 3;
 		globalTour = new GlobalTour();
+		nameOfMap = "largeMap.xml";
 		currentDeliveryPoint = new CurrentDeliveryPoint(numberOfCourier);
 		currentDeliveryPoint.addObserver(windowBuilder);
     }
@@ -91,6 +93,16 @@ public class Controller {
 	public void setCurrentDeliveryPoint(CurrentDeliveryPoint currentDeliveryPoint){
 		this.currentDeliveryPoint = currentDeliveryPoint;
 	}
+
+	public String getNameOfMap(){
+		return this.nameOfMap;
+	}
+
+	public void setNameOfMap(String name){
+		this.nameOfMap = name;
+	}
+
+
 
 	// Methods corresponding to user events 
 	/**

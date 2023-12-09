@@ -125,6 +125,7 @@ public class XMLdeserializer {
 		Tour tour = new Tour(CourierId);
 		NodeList routes = elt.getElementsByTagName("route");
 		NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
+		currentDp.addNewCourier();
 		for (int i=0; i<deliverypointList.getLength(); i++ ){
 			DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
 			tour.addDeliveryPoint(deliveryPoint);

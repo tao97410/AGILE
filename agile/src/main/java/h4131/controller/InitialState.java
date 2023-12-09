@@ -12,6 +12,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.xml.sax.SAXException;
 
 import h4131.calculus.Graph;
+import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
@@ -55,6 +56,7 @@ public class InitialState implements State{
         Map newMap = new Map();
         try {
             XMLdeserializer.loadMap(fileName, newMap);
+            c.setNameOfMap(fileName);
             c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.drawMap(newMap);
             c.setMap(newMap);
@@ -99,7 +101,7 @@ public class InitialState implements State{
     @Override
     public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
         c.setGlobalTour(new GlobalTour());
-        c.getGlobalTour().setMap("test");
+        c.getGlobalTour().setMap(c.getNameOfMap());
         int courier = 0;
         for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
             courier ++;
