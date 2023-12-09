@@ -12,15 +12,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.xml.sax.SAXException;
 
 import h4131.calculus.Graph;
-import h4131.calculus.TemplateGraph;
-import h4131.calculus.TSP;
-import h4131.calculus.TSP1;
-import h4131.calculus.Arc;
 import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
-import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
@@ -38,13 +33,13 @@ public class InitialState implements State{
         Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
+            c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.setFullScreen(false);
             XMLdeserializer.loadGlobalTour(loadedGlobalTour, map,c.getCurrentDeliveryPoint());
             c.setGlobalTour(loadedGlobalTour);
             c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
             w.setFullScreen(true);
             w.drawGlobalTour(loadedGlobalTour);
-            //controller.setState(...);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             if(!e.getMessage().equals("Problem when opening file")){
                 w.alert(e.getMessage());
@@ -60,6 +55,7 @@ public class InitialState implements State{
         Map newMap = new Map();
         try {
             XMLdeserializer.loadMap(fileName, newMap);
+            c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.drawMap(newMap);
             c.setMap(newMap);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
@@ -117,7 +113,6 @@ public class InitialState implements State{
             }
             
         }
-        
         windowBuilder.drawGlobalTour(c.getGlobalTour());
     }
 

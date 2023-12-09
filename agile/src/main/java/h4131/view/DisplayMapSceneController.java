@@ -36,6 +36,7 @@ public class DisplayMapSceneController {
 
     private Controller controller;
     private String previousNumberOfCourier = "3";
+    private int previousCourierChoice = 1;
 
     //Main containers
     @FXML
@@ -138,7 +139,8 @@ public class DisplayMapSceneController {
         this.validationPane.setVisible(false);
         String timeValue = this.timeWindowChoice.getValue();
         TimeWindow time = TimeWindow.getTimeWindowByRepresentation(timeValue);
-        controller.addDeliveryPoint(time, this.courierChoice.getValue());
+        previousCourierChoice = this.courierChoice.getValue();
+        controller.addDeliveryPoint(time, previousCourierChoice);
     }
 
     @FXML
@@ -169,6 +171,10 @@ public class DisplayMapSceneController {
     @FXML
     void doSaveGlobalTour(ActionEvent event){
         controller.saveGlobalTour();
+    }
+
+    public int getPreviousCourierChoice(){
+        return previousCourierChoice;
     }
 
     public VBox getTourListGroup(){

@@ -1,6 +1,5 @@
 package h4131.view;
 
-import h4131.model.DeliveryPoint;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 

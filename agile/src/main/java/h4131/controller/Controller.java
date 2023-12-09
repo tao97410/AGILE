@@ -46,7 +46,7 @@ public class Controller {
         currentState = initialState;
 		numberOfCourier = 3;
 		globalTour = new GlobalTour();
-		currentDeliveryPoint = new CurrentDeliveryPoint();
+		currentDeliveryPoint = new CurrentDeliveryPoint(numberOfCourier);
 		currentDeliveryPoint.addObserver(windowBuilder);
     }
 
@@ -86,6 +86,10 @@ public class Controller {
 
 	public CurrentDeliveryPoint getCurrentDeliveryPoint(){
 		return this.currentDeliveryPoint;
+	}
+
+	public void setCurrentDeliveryPoint(CurrentDeliveryPoint currentDeliveryPoint){
+		this.currentDeliveryPoint = currentDeliveryPoint;
 	}
 
 	// Methods corresponding to user events 
@@ -175,5 +179,6 @@ public class Controller {
 	public void saveGlobalTour() {
 		currentState.saveGlobalTour(this, windowBuilder);
 	}
+
 
 }
