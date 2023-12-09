@@ -58,6 +58,7 @@ public class XMLserializer {// Singleton
 	private Element createGTElt(GlobalTour gt) {
 		Element racine = document.createElement("globalTour");
         Element map = document.createElement("map");
+        racine.appendChild(map);
         createAttribute(map, "name", gt.getMap());
 		for (Tour tour : gt.getTours()){
             racine.appendChild(createTourElt(tour));

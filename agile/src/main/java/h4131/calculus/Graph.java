@@ -155,7 +155,7 @@ public class Graph implements TemplateGraph{
     
 
 
-    public void computeBestTour(GlobalTour globalTour){
+    public void computeBestTour(GlobalTour globalTour, long courierId){
         TSP1 tsp=new TSP1();
         this.initialiseGraph();
         System.out.println("Graphs with "+this.nbNodes+" vertices:");
@@ -169,6 +169,7 @@ public class Graph implements TemplateGraph{
         Tour tour=new Tour();
         tour.setCourse(this.buildCourse());
         tour.setDeliveryPoints(this.buildListeDelivery());
+        tour.setCourier(courierId);
         globalTour.addTour(tour);
 
     }
