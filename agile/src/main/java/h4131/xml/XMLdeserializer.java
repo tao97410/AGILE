@@ -83,6 +83,8 @@ public class XMLdeserializer {
 	}
 	
     private static void buildFromDOMXMLGT(Element noeudDOMRacine, GlobalTour gt,Map map) throws ExceptionXML, NumberFormatException{
+		String nameOfMap = ((Element)noeudDOMRacine.getElementsByTagName("map").item(0)).getAttribute("name");
+		gt.setMap(nameOfMap);
 		NodeList TourList = noeudDOMRacine.getElementsByTagName("tour");
 		for(int i =0;i<TourList.getLength();i++){
 			gt.addTour(createTour((Element)TourList.item(i),map));
