@@ -112,6 +112,7 @@ public class InitialState implements State{
             }
             
         }
+        windowBuilder.drawGlobalTour(c.getGlobalTour());
     }
 
     @Override
