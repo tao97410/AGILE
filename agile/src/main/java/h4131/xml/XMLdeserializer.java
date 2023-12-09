@@ -73,6 +73,7 @@ public class XMLdeserializer {
 		DeliveryPoint warehousePoint = new DeliveryPoint(warehouse, TimeWindow.WAREHOUSE);
 		map.setWarehouse(warehousePoint);		
     }
+	
 	//////////////////GLOBAL TOUR////////////////////////////
 	public static void loadGlobalTour(GlobalTour gt,Map map, CurrentDeliveryPoint currentDp) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
 		Element root = openFile("Choose a tour");
@@ -126,7 +127,7 @@ public class XMLdeserializer {
 		NodeList routes = elt.getElementsByTagName("route");
 		NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
 		currentDp.addNewCourier();
-		for (int i=0; i<deliverypointList.getLength(); i++ ){
+		for (int i=1; i<deliverypointList.getLength(); i++ ){
 			DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
 			tour.addDeliveryPoint(deliveryPoint);
 			currentDp.addAffectedDeliveryPoint(CourierId, deliveryPoint);
