@@ -15,6 +15,7 @@ import h4131.model.Segment;
 import h4131.model.Tour;
 import h4131.observer.Observable;
 import h4131.observer.Observer;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -301,7 +302,7 @@ public class WindowBuilder implements Observer {
                 "Intersection coordinates:\n" + intersection.getLatitude() + "°, " + intersection.getLongitude() + "°");
         whichIntersection.setWrapText(true);
         Pane validationPane = displayMapSceneController.getvalidationPane();
-        validationPane.setVisible(true);
+        fadeIn(validationPane);
         validationPane.setDisable(false);
         disableBackground(true);
     }
@@ -514,7 +515,7 @@ public class WindowBuilder implements Observer {
                 + deliveryPoint.getPlace().getLongitude() + "°");
         whichDeliveryPoint.setWrapText(true);
         Pane modifyPane = displayMapSceneController.getModifyPane();
-        modifyPane.setVisible(true);
+        fadeIn(modifyPane);
         modifyPane.setDisable(false);
         disableBackground(true);
     }
@@ -550,4 +551,22 @@ public class WindowBuilder implements Observer {
             }
         }
     }
+
+    /* Styling and animation methods */
+    public void fadeIn(Pane pane) {
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        pane.setVisible(true);
+    }
+
+    public void fadeOut(Pane pane) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.play();
+        pane.setVisible(false);
+    }
+
 }

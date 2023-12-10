@@ -5,6 +5,11 @@ import java.util.LinkedList;
 import h4131.controller.Controller;
 import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -28,6 +33,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -45,6 +52,12 @@ public class DisplayMapSceneController {
     private VBox layout;
 
     // Main menu controls
+    @FXML
+    private Button loadTourButton;
+    @FXML
+    private Button computeTourButton;
+    @FXML
+    private Button saveGlobalTourButton;
     @FXML
     private ChoiceBox<String> mapChoiceBox;
     @FXML
@@ -83,6 +96,12 @@ public class DisplayMapSceneController {
     private VBox tourListGroup;
     @FXML
     private ScrollPane scrollPane;
+
+    // Alert texts
+    @FXML
+    private Text courierChangeAlert;
+    @FXML
+    private Pane alertPane;
 
     @FXML
     private void initialize() {
@@ -129,6 +148,24 @@ public class DisplayMapSceneController {
                 && event.getCode() == KeyCode.ENTER) {
             previousNumberOfCourier = numberOfCourierField.getText();
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
+
+            // Alert the user of the number of courier effectively changed
+            courierChangeAlert.setText(numberOfCourierField.getText());
+
+            // Fade in
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.7), alertPane);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+
+            // Fade out
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.6), alertPane);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+
+            // Set up the sequence
+            SequentialTransition sequence = new SequentialTransition(fadeIn, new PauseTransition(Duration.seconds(3)),
+                    fadeOut);
+            sequence.play();
         }
     }
 
@@ -139,7 +176,7 @@ public class DisplayMapSceneController {
 
     @FXML
     void validateInformation(ActionEvent event) {
-        this.validationPane.setVisible(false);
+        fadeOut(validationPane);
         String timeValue = this.timeWindowChoice.getValue();
         TimeWindow time = TimeWindow.getTimeWindowByRepresentation(timeValue);
         previousCourierChoice = this.courierChoice.getValue();
@@ -148,13 +185,13 @@ public class DisplayMapSceneController {
 
     @FXML
     void cancelIntersection(ActionEvent event) {
-        this.validationPane.setVisible(false);
+        fadeOut(validationPane);
         controller.cancelDeliveryPoint();
     }
 
     @FXML
     void modifyDeliveryPoint(ActionEvent event) {
-        this.modifyPane.setVisible(false);
+        fadeOut(modifyPane);
         String timeValue = this.modifyTimeWindowChoice.getValue();
         TimeWindow time = TimeWindow.getTimeWindowByRepresentation(timeValue);
         controller.changeInfosDeliveryPoint(time, this.modifyCourierChoice.getValue());
@@ -162,7 +199,7 @@ public class DisplayMapSceneController {
 
     @FXML
     void deleteDeliveryPoint(ActionEvent event) {
-        this.modifyPane.setVisible(false);
+        fadeOut(modifyPane);
         controller.deleteDeliveryPoint();
     }
 
@@ -174,6 +211,49 @@ public class DisplayMapSceneController {
     @FXML
     void doSaveGlobalTour(ActionEvent event) {
         controller.saveGlobalTour();
+    }
+
+    /*--------- Styling and animation methods ---------*/
+
+    public void fadeIn(Node node) {
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), node);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        node.setVisible(true);
+    }
+
+    public void fadeOut(Node node) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.play();
+        node.setVisible(false);
+    }
+
+    /**
+     * Apply animation transition to any JavaFX node.
+     * 
+     * @param node     The JavaFX node to apply animation.
+     * @param scaleTo  The scaling factor to apply on hover.
+     * @param duration The duration of the animation.
+     */
+    public void applyAnimationTransition(Node node, double scaleTo, Duration duration) {
+        // Create a scale transition
+        ScaleTransition scaleTransition = new ScaleTransition(duration, node);
+        scaleTransition.setInterpolator(Interpolator.EASE_BOTH); // or other interpolator
+        scaleTransition.setToX(scaleTo);
+        scaleTransition.setToY(scaleTo);
+
+        // Create an inverse scale transition for when the mouse exits
+        ScaleTransition inverseScaleTransition = new ScaleTransition(duration, node);
+        inverseScaleTransition.setInterpolator(Interpolator.EASE_BOTH); // or other interpolator
+        inverseScaleTransition.setToX(1.0);
+        inverseScaleTransition.setToY(1.0);
+
+        // Add the transitions to the node
+        node.setOnMouseEntered(event -> scaleTransition.play());
+        node.setOnMouseExited(event -> inverseScaleTransition.play());
     }
 
     public int getPreviousCourierChoice() {
