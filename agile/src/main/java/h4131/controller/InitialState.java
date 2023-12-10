@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -21,6 +22,7 @@ import h4131.model.Tour;
 import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
+import h4131.xml.PDFgenerator;
 import h4131.xml.XMLdeserializer;
 
 
@@ -100,14 +102,16 @@ public class InitialState implements State{
     public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
         c.setGlobalTour(new GlobalTour());
         int courier = 0;
+        c.clearAllGraphs();
         for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
             courier ++;
             if(!listDeliveryPoints.isEmpty()){
                 Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
-                graph.computeBestTour(c.getGlobalTour());    
+                graph.computeBestTour(c.getGlobalTour());
+                c.addGraph(graph);    
                 if(graph.getDeliveryErreur()!=null){
-                windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
-            }
+                    windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
+                }
             }
             
         }
@@ -118,6 +122,12 @@ public class InitialState implements State{
     @Override
     public void saveGlobalTour(Controller c, WindowBuilder w){
         System.out.println("save tour");
+        List<Graph> graphs = c.getGraphs();
+        long tourId = 1;
+        for (Graph g : graphs) {
+            PDFgenerator.getPdfInstructions(g, tourId, "C:\\Users\\Florian Delhon\\Documents\\test_agile\\instructions_" + tourId + ".pdf");
+            tourId ++;
+        }
     }
 
 }
