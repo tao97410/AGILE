@@ -63,9 +63,6 @@ public class Map {
 
     public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPointsCol) throws NullPointerException {
 
-
-        
-
         Graph graph = new Graph();
         LinkedList<DeliveryPoint> deliveryPoints = new LinkedList<DeliveryPoint>(deliveryPointsCol);
         deliveryPoints.addFirst(warehouse);

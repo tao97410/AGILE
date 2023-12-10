@@ -1,21 +1,15 @@
 package h4131.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
-import h4131.view.WindowBuilder;
-import javafx.stage.Stage;
 
 public class ControllerTest {
 
