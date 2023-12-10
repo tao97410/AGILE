@@ -9,7 +9,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -140,6 +139,8 @@ public class DisplayMapSceneController {
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        alertPane.setVisible(false);
     }
 
     @FXML
@@ -152,20 +153,10 @@ public class DisplayMapSceneController {
             // Alert the user of the number of courier effectively changed
             courierChangeAlert.setText(numberOfCourierField.getText());
 
-            // Fade in
-            FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.7), alertPane);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-
-            // Fade out
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.6), alertPane);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-
-            // Set up the sequence
-            SequentialTransition sequence = new SequentialTransition(fadeIn, new PauseTransition(Duration.seconds(3)),
-                    fadeOut);
-            sequence.play();
+            fadeIn(alertPane);
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(e -> fadeOut(alertPane));
+            pause.play();
         }
     }
 

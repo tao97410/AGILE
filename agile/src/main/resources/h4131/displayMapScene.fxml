@@ -55,7 +55,7 @@
             <Insets left="20.0" top="20.0" />
          </StackPane.margin>
       </Group>
-      <Group disable="false" layoutX="100.0" visible="true" StackPane.alignment="TOP_CENTER">
+      <Group layoutX="100.0" StackPane.alignment="TOP_CENTER">
          <Pane fx:id="alertPane" prefHeight="68.0" prefWidth="424.0">
             <Text fx:id="courierAlertTitle" layoutX="62.0" layoutY="43.0" text="Number of courier(s) set to : " textAlignment="CENTER">
             </Text>
