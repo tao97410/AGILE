@@ -37,10 +37,20 @@ public class InitialState implements State{
             c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.setFullScreen(false);
             XMLdeserializer.loadGlobalTour(loadedGlobalTour, map,c.getCurrentDeliveryPoint());
-            c.setGlobalTour(loadedGlobalTour);
-            c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
-            w.setFullScreen(true);
-            w.drawGlobalTour(loadedGlobalTour);
+            if(loadedGlobalTour.getMap().equals(c.getNameOfMap())){
+                c.setGlobalTour(loadedGlobalTour);
+                c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
+                w.setFullScreen(true);
+                w.drawGlobalTour(loadedGlobalTour);
+            }
+            else{
+                loadMap(c, w, loadedGlobalTour.getMap());
+                c.setGlobalTour(loadedGlobalTour);
+                c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
+                w.setFullScreen(true);
+                w.drawGlobalTour(loadedGlobalTour);
+            }
+            
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             if(!e.getMessage().equals("Problem when opening file")){
                 w.alert(e.getMessage());
