@@ -12,7 +12,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.xml.sax.SAXException;
 
 import h4131.calculus.Graph;
-import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
@@ -26,6 +25,8 @@ import h4131.xml.XMLserializer;
 
 
 public class InitialState implements State{
+
+    public InitialState(){}
     
     @Override
     public void loadGlobalTour(Controller c, WindowBuilder w){
