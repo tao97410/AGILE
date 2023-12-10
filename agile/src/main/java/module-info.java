@@ -9,6 +9,7 @@ module h4131 {
     opens h4131.xml to java.xml, javafx.fxml, javafx.controls;
     opens h4131.controller;
     opens h4131.model;
+    opens h4131.calculus;
     
     exports h4131.app;
     exports h4131.view;
@@ -16,4 +17,5 @@ module h4131 {
     exports h4131.xml;
     exports h4131.model;
     exports h4131.observer;
+    exports h4131.calculus;
 }

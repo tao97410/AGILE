@@ -84,5 +84,12 @@ public interface State {
 	 */
 	public default void computeGlobalTour(Controller controller, WindowBuilder windowBuilder){}
 
+	/**
+	 * Method called by controller to save the tour
+	 * @param controller
+	 * @param windowBuilder
+	 */
+    public default void saveGlobalTour(Controller controller, WindowBuilder windowBuilder){}
+
 }
 

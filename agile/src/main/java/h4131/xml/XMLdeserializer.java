@@ -2,7 +2,7 @@ package h4131.xml;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,6 +19,7 @@ import h4131.model.Intersection;
 import h4131.model.Segment;
 import h4131.model.Tour;
 import h4131.model.TimeWindow;
+import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
 
 
@@ -42,20 +43,16 @@ public class XMLdeserializer {
 
 	/////////////////MAP////////////////////////////////
 	public static void loadMap(String mapFileName, Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
-		File xml;
-		try {
-			xml = new File(XMLdeserializer.class.getResource("/h4131/"+mapFileName).toURI());
-			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();	
-			Document document = docBuilder.parse(xml);
-			Element root = document.getDocumentElement();
-			if (root.getNodeName().equals("map")) {
-				buildFromDOMXMLMap(root, map);
-			}
-        	else
-        		throw new ExceptionXML("Wrong format");
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+		InputStream xml;
+		xml = XMLdeserializer.class.getResourceAsStream("/h4131/"+mapFileName);
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();	
+		Document document = docBuilder.parse(xml);
+		Element root = document.getDocumentElement();
+		if (root.getNodeName().equals("map")) {
+			buildFromDOMXMLMap(root, map);
 		}
+		else
+			throw new ExceptionXML("Wrong format");
 		
 	}
 	
@@ -76,20 +73,23 @@ public class XMLdeserializer {
 		DeliveryPoint warehousePoint = new DeliveryPoint(warehouse, TimeWindow.WAREHOUSE);
 		map.setWarehouse(warehousePoint);		
     }
+	
 	//////////////////GLOBAL TOUR////////////////////////////
-	public static void loadGlobalTour(GlobalTour gt,Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+	public static void loadGlobalTour(GlobalTour gt,Map map, CurrentDeliveryPoint currentDp) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
 		Element root = openFile("Choose a tour");
         if (root.getNodeName().equals("globalTour")) {
-           buildFromDOMXMLGT(root, gt,map);
+           buildFromDOMXMLGT(root, gt,map,currentDp);
         }
         else
         	throw new ExceptionXML("Wrong format");
 	}
 	
-    private static void buildFromDOMXMLGT(Element noeudDOMRacine, GlobalTour gt,Map map) throws ExceptionXML, NumberFormatException{
+    private static void buildFromDOMXMLGT(Element noeudDOMRacine, GlobalTour gt,Map map, CurrentDeliveryPoint currentDp) throws ExceptionXML, NumberFormatException{
+		String nameOfMap = ((Element)noeudDOMRacine.getElementsByTagName("map").item(0)).getAttribute("name");
+		gt.setMap(nameOfMap);
 		NodeList TourList = noeudDOMRacine.getElementsByTagName("tour");
 		for(int i =0;i<TourList.getLength();i++){
-			gt.addTour(createTour((Element)TourList.item(i),map));
+			gt.addTour(createTour((Element)TourList.item(i),map,currentDp));
 		}
        		
     }
@@ -118,17 +118,19 @@ public class XMLdeserializer {
    		return new Segment(origin, destination,length,name);
     }
 
-	private static Tour createTour(Element elt, Map map) throws ExceptionXML{
-		long CourierId = Long.parseLong(elt.getAttribute("courierId"));
+	private static Tour createTour(Element elt, Map map, CurrentDeliveryPoint currentDp) throws ExceptionXML{
+		int CourierId = Integer.parseInt(elt.getAttribute("courierId"));
 		if(CourierId<0){
 			throw new ExceptionXML("Error when reading file: The id of the courier must be positive");
 		}
 		Tour tour = new Tour(CourierId);
 		NodeList routes = elt.getElementsByTagName("route");
 		NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
-		for (int i=0; i<deliverypointList.getLength(); i++ ){
+		currentDp.addNewCourier();
+		for (int i=1; i<deliverypointList.getLength(); i++ ){
 			DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
 			tour.addDeliveryPoint(deliveryPoint);
+			currentDp.addAffectedDeliveryPoint(CourierId, deliveryPoint);
 		}
 		for (int i=0; i<routes.getLength(); i++ ){
 			Segment route = createSegment((Element) routes.item(i), map);

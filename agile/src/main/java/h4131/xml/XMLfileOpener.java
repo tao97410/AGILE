@@ -2,6 +2,7 @@ package h4131.xml;
 
 import java.io.File;
 
+
 import javafx.stage.FileChooser;
 
 public class XMLfileOpener {// Singleton
@@ -20,12 +21,21 @@ public class XMLfileOpener {// Singleton
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(fileType);
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
-        File selectedFile = (fileChooser.showOpenDialog(null));
-		if (accept(selectedFile)){
-			return selectedFile;
-		}else{
-			throw new ExceptionXML("Problem when opening file");
+		if(read){
+			
+			File selectedFile = (fileChooser.showOpenDialog(null));
+			if (accept(selectedFile)){
+				return selectedFile;
+			}
+			else{
+				throw new ExceptionXML("Problem when opening file");
+			}
 		}
+		else{
+			return fileChooser.showSaveDialog(null);
+		}
+		
+		
         	
         
  	}

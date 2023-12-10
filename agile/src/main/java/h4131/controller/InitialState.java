@@ -6,14 +6,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.xml.sax.SAXException;
 
 import h4131.calculus.Graph;
-import h4131.calculus.TemplateGraph;
-import h4131.calculus.TSP;
-import h4131.calculus.TSP1;
-import h4131.calculus.Arc;
 import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
@@ -22,11 +20,14 @@ import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
+import h4131.xml.XMLserializer;
 
 
 
 
 public class InitialState implements State{
+
+    public InitialState(){}
     
     @Override
     public void loadGlobalTour(Controller c, WindowBuilder w){
@@ -35,12 +36,23 @@ public class InitialState implements State{
         Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         try {
+            c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.setFullScreen(false);
-            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map);
-            c.setGlobalTour(loadedGlobalTour);
-            w.setFullScreen(true);
-            w.drawGlobalTour(loadedGlobalTour);
-            //controller.setState(...);
+            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map,c.getCurrentDeliveryPoint());
+            if(loadedGlobalTour.getMap().equals(c.getNameOfMap())){
+                c.setGlobalTour(loadedGlobalTour);
+                c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
+                w.setFullScreen(true);
+                w.drawGlobalTour(loadedGlobalTour);
+            }
+            else{
+                loadMap(c, w, loadedGlobalTour.getMap());
+                c.setGlobalTour(loadedGlobalTour);
+                c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
+                w.setFullScreen(true);
+                w.drawGlobalTour(loadedGlobalTour);
+            }
+            
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             if(!e.getMessage().equals("Problem when opening file")){
                 w.alert(e.getMessage());
@@ -56,6 +68,8 @@ public class InitialState implements State{
         Map newMap = new Map();
         try {
             XMLdeserializer.loadMap(fileName, newMap);
+            c.setNameOfMap(fileName);
+            c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.drawMap(newMap);
             c.setMap(newMap);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
@@ -98,20 +112,34 @@ public class InitialState implements State{
 
     @Override
     public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
+        c.setGlobalTour(new GlobalTour());
+        c.getGlobalTour().setMap(c.getNameOfMap());
         int courier = 0;
         for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
             courier ++;
             if(!listDeliveryPoints.isEmpty()){
                 Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
-                graph.computeBestTour(c.getGlobalTour());    
+                graph.computeBestTour(c.getGlobalTour(),courier);
+                   
                 if(graph.getDeliveryErreur()!=null){
                 windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
             }
             }
             
         }
-        
         windowBuilder.drawGlobalTour(c.getGlobalTour());
+    }
+
+    @Override
+    public void saveGlobalTour(Controller c, WindowBuilder w){
+        System.out.println("save tour");
+        try {
+            XMLserializer serializer = XMLserializer.getInstance();
+            serializer.save(c.getGlobalTour());
+        } catch (ParserConfigurationException | ExceptionXML | TransformerFactoryConfigurationError | TransformerException e) {
+            w.alert(e.getMessage());
+            e.printStackTrace();
+        } 
     }
 
 }

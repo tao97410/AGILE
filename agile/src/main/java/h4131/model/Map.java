@@ -61,10 +61,7 @@ public class Map {
         return res;
     }
 
-    public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPointsCol) {
-
-
-        
+    public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPointsCol) throws NullPointerException {
 
         Graph graph = new Graph();
         LinkedList<DeliveryPoint> deliveryPoints = new LinkedList<DeliveryPoint>(deliveryPointsCol);
@@ -77,7 +74,8 @@ public class Map {
             getPossibleDestinations(currentPoint, deliveryPoints, possibleDestinations);
             
             HashMap<Intersection,InterInfo> currentMap = dijkstra(currentPoint.getPlace(), possibleDestinations);
-            for (Intersection currentDestination : possibleDestinations){
+            if(currentMap != null){
+                for (Intersection currentDestination : possibleDestinations){
                 
                 Collection<Segment> currentPath = new LinkedList<Segment>();
                 getPath(currentPoint.getPlace(), currentDestination, currentMap, currentPath);
@@ -86,7 +84,11 @@ public class Map {
                 newArc.path = currentPath;
                 graph.arcs.add(newArc);
                 
+                }
+            }else{
+                throw new NullPointerException();
             }
+            
         }
         
         System.out.println(graph.toString());

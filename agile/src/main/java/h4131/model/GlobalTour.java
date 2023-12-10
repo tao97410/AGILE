@@ -1,11 +1,11 @@
 package h4131.model;
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class GlobalTour {
 
     private Collection<Tour> tours;
+    private String nameOfMapAssociated;
 
     public GlobalTour(){
         this.tours=new ArrayList<>();
@@ -40,5 +40,13 @@ public class GlobalTour {
             result.append(tour).append("\n");
         }
         return result.toString();
+    }
+
+    public String getMap(){
+        return nameOfMapAssociated;
+    }
+
+    public void setMap(String name){
+        this.nameOfMapAssociated = name;
     }
 }

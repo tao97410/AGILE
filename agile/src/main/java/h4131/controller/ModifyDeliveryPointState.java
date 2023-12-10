@@ -8,6 +8,8 @@ public class ModifyDeliveryPointState implements State{
 
     private DeliveryPoint currentDeliveryPoint;
     private int courier;
+
+    public ModifyDeliveryPointState(){}
     
     public void setCurrentDeliveryPoint(DeliveryPoint anDeliveryPoint){
         this.currentDeliveryPoint = anDeliveryPoint;
