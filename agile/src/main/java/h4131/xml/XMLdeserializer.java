@@ -90,7 +90,9 @@ public class XMLdeserializer {
 		gt.setMap(nameOfMap);
 		NodeList TourList = noeudDOMRacine.getElementsByTagName("tour");
 		for(int i =0;i<TourList.getLength();i++){
-			gt.addTour(createTour((Element)TourList.item(i),map,currentDp));
+			Tour tour = createTour((Element)TourList.item(i),map,currentDp);
+			if(tour != null)
+				gt.addTour(tour);
 		}
        		
     }
@@ -121,21 +123,32 @@ public class XMLdeserializer {
 
 	private static Tour createTour(Element elt, Map map, CurrentDeliveryPoint currentDp) throws ExceptionXML{
 		int CourierId = Integer.parseInt(elt.getAttribute("courierId"));
+		Tour tour = null;
 		if(CourierId<0){
 			throw new ExceptionXML("Error when reading file: The id of the courier must be positive");
 		}
-		Tour tour = new Tour(CourierId);
-		NodeList routes = elt.getElementsByTagName("route");
-		NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
-		for (int i=1; i<deliverypointList.getLength(); i++ ){
-			DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
-			tour.addDeliveryPoint(deliveryPoint);
-			currentDp.addDeliveryPointToAssociatedList(CourierId, deliveryPoint);
+		if(CourierId<=currentDp.getAffectedDeliveryPoints().size()){
+			tour = new Tour(CourierId);
+			NodeList routes = elt.getElementsByTagName("route");
+			NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
+			for (int i=1; i<deliverypointList.getLength(); i++ ){
+				DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
+				tour.addDeliveryPoint(deliveryPoint);
+				currentDp.addAffectedDeliveryPoint(CourierId, deliveryPoint);
+			}
+			for (int i=0; i<routes.getLength(); i++ ){
+				Segment route = createSegment((Element) routes.item(i), map);
+				tour.addSegment(route);
+			}
 		}
-		for (int i=0; i<routes.getLength(); i++ ){
-			Segment route = createSegment((Element) routes.item(i), map);
-			tour.addSegment(route);
+		else{
+			NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
+			for (int i=1; i<deliverypointList.getLength(); i++ ){
+				DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
+				currentDp.addNonAffectedDeliveryPoint(deliveryPoint);
+			}
 		}
+		
 		return tour;
 		
 	}
