@@ -12,6 +12,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.xml.sax.SAXException;
 
 import h4131.calculus.Graph;
+import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
@@ -35,23 +36,34 @@ public class InitialState implements State{
         Map map = c.getMap();
         Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
+        System.out.println(c.getNumberOfCourier());
+        CurrentDeliveryPoint loadedCurrentDeliveryPoint = new CurrentDeliveryPoint(c.getNumberOfCourier());
         try {
-            c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.setFullScreen(false);
-            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map,c.getCurrentDeliveryPoint());
-            if(loadedGlobalTour.getMap().equals(c.getNameOfMap())){
-                c.setGlobalTour(loadedGlobalTour);
-                c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
-                w.setFullScreen(true);
-                w.drawGlobalTour(loadedGlobalTour);
-            }
-            else{
+            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map,loadedCurrentDeliveryPoint);
+            // if(loadedGlobalTour.getMap().equals(c.getNameOfMap())){
+            //     c.setGlobalTour(loadedGlobalTour);
+            //     c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
+            //     w.setFullScreen(true);
+            //     w.drawGlobalTour(loadedGlobalTour);
+            // }
+            // else{
+            //     loadMap(c, w, loadedGlobalTour.getMap());
+            //     c.setGlobalTour(loadedGlobalTour);
+            //     c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
+            //     w.setFullScreen(true);
+            //     w.drawGlobalTour(loadedGlobalTour);
+            // }
+            if(!loadedGlobalTour.getMap().equals(c.getNameOfMap())){
                 loadMap(c, w, loadedGlobalTour.getMap());
-                c.setGlobalTour(loadedGlobalTour);
-                c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
-                w.setFullScreen(true);
-                w.drawGlobalTour(loadedGlobalTour);
             }
+            c.setGlobalTour(loadedGlobalTour);
+            loadedCurrentDeliveryPoint.addObserver(w);
+            c.setCurrentDeliveryPoint(loadedCurrentDeliveryPoint);
+            c.getCurrentDeliveryPoint().update();
+            w.setFullScreen(true);
+            w.drawGlobalTour(loadedGlobalTour);
+
             
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             if(!e.getMessage().equals("Problem when opening file")){

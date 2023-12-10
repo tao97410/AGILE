@@ -57,6 +57,19 @@ public class CurrentDeliveryPoint extends Observable{
         notifyObservers();
     }
 
+      /**
+     * Add an delivery point to one of the lists - affected or non affected
+     * @param courier the courier to who you want to add a point
+     * @param deliveryPoint to add
+     */
+    public void addDeliveryPointToAssociatedList(int courier,DeliveryPoint deliveryPoint){
+        if(courier<=this.getAffectedDeliveryPoints().size())
+            this.affectedDeliveryPoints.get(courier - 1).add(deliveryPoint);
+        else
+            this.nonAffectedDeliveryPoints.add(deliveryPoint);
+        notifyObservers();
+    }
+
     /**
      * Add a delivery point to the list of non affected points
      * @param deliveryPoint
@@ -108,6 +121,10 @@ public class CurrentDeliveryPoint extends Observable{
      */
     public void removeAssignedDeliveryPoint(DeliveryPoint deliveryPointToRemove, int courier) {
         this.affectedDeliveryPoints.get(courier-1).remove(deliveryPointToRemove);
+        notifyObservers();
+    }
+
+    public void update(){
         notifyObservers();
     }
 

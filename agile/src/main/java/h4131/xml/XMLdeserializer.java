@@ -25,8 +25,7 @@ import h4131.model.DeliveryPoint;
 
 public class XMLdeserializer {
 	/**
-	 * Open an XML file and create plan from this file
-	 * @param plan the plan to create from the file
+	 * Open an XML file and create different objects from this file
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
@@ -45,6 +44,8 @@ public class XMLdeserializer {
 	public static void loadMap(String mapFileName, Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
 		InputStream xml;
 		xml = XMLdeserializer.class.getResourceAsStream("/h4131/"+mapFileName);
+		if(xml==null)
+			throw new ExceptionXML("You're trying to load a global tour on a non-existing map");
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();	
 		Document document = docBuilder.parse(xml);
 		Element root = document.getDocumentElement();
@@ -126,11 +127,10 @@ public class XMLdeserializer {
 		Tour tour = new Tour(CourierId);
 		NodeList routes = elt.getElementsByTagName("route");
 		NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
-		currentDp.addNewCourier();
 		for (int i=1; i<deliverypointList.getLength(); i++ ){
 			DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
 			tour.addDeliveryPoint(deliveryPoint);
-			currentDp.addAffectedDeliveryPoint(CourierId, deliveryPoint);
+			currentDp.addDeliveryPointToAssociatedList(CourierId, deliveryPoint);
 		}
 		for (int i=0; i<routes.getLength(); i++ ){
 			Segment route = createSegment((Element) routes.item(i), map);
@@ -147,9 +147,15 @@ public class XMLdeserializer {
 				throw new ExceptionXML("Error when reading global tour file: The delivery points must exist in the loaded map");
 			Intersection intersectionDP = map.getIntersectionById(idDP);
 			int TWindex = Integer.parseInt(elt.getAttribute("timeWindow"));
-			if(TWindex<0 || TWindex>3)
+			if(TWindex<0 || TWindex>4)
 				throw new ExceptionXML("Error when reading file: The time window doesn't correspond to anything");//a changer
 			return new DeliveryPoint(intersectionDP,timeWindows[TWindex]);
 	} 
+
+	/////////////////////////////CURRENT DELIVERY POINT////////////////////////////////////
+
+	public static void loadCurrentDeliveryPoint(CurrentDeliveryPoint CDP){
+
+	}
  
 }
