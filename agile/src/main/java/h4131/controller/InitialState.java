@@ -97,10 +97,10 @@ public class InitialState implements State{
             for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
                 courier ++;
                 if(!listDeliveryPoints.isEmpty()){
-                    System.out.println("liste avant appel : "+listDeliveryPoints);
-                    for(DeliveryPoint dp : listDeliveryPoints){
-                        System.out.println(dp);
-                    }
+                    // System.out.println("liste avant appel : "+listDeliveryPoints);
+                    // for(DeliveryPoint dp : listDeliveryPoints){
+                    //     System.out.println(dp);
+                    // }
                     
                     Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
                     graph.computeBestTour(c.getGlobalTour());    
