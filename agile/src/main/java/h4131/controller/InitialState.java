@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import org.w3c.dom.Element;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -33,14 +34,14 @@ public class InitialState implements State{
     @Override
     public void loadGlobalTour(Controller c, WindowBuilder w){
         
-        Map map = c.getMap();
+        
         Collection<Tour> course = new ArrayList<>();
         GlobalTour loadedGlobalTour = new GlobalTour(course);
         System.out.println(c.getNumberOfCourier());
         CurrentDeliveryPoint loadedCurrentDeliveryPoint = new CurrentDeliveryPoint(c.getNumberOfCourier());
         try {
             w.setFullScreen(false);
-            XMLdeserializer.loadGlobalTour(loadedGlobalTour, map,loadedCurrentDeliveryPoint);
+            Element file = XMLdeserializer.loadGlobalTourFirst(loadedGlobalTour);
             // if(loadedGlobalTour.getMap().equals(c.getNameOfMap())){
             //     c.setGlobalTour(loadedGlobalTour);
             //     c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
@@ -57,6 +58,7 @@ public class InitialState implements State{
             if(!loadedGlobalTour.getMap().equals(c.getNameOfMap())){
                 loadMap(c, w, loadedGlobalTour.getMap());
             }
+            XMLdeserializer.buildRestFromDOMXMLGT(file, loadedGlobalTour, c.getMap(), loadedCurrentDeliveryPoint);
             c.setGlobalTour(loadedGlobalTour);
             loadedCurrentDeliveryPoint.addObserver(w);
             c.setCurrentDeliveryPoint(loadedCurrentDeliveryPoint);

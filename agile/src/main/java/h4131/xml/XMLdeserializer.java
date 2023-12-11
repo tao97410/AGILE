@@ -76,18 +76,26 @@ public class XMLdeserializer {
     }
 	
 	//////////////////GLOBAL TOUR////////////////////////////
-	public static void loadGlobalTour(GlobalTour gt,Map map, CurrentDeliveryPoint currentDp) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+	public static Element loadGlobalTourFirst(GlobalTour gt) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
 		Element root = openFile("Choose a tour");
         if (root.getNodeName().equals("globalTour")) {
-           buildFromDOMXMLGT(root, gt,map,currentDp);
+           buildMapFromDOMXMLGT(root,gt);
         }
         else
         	throw new ExceptionXML("Wrong format");
+		return root;
 	}
+
 	
-    private static void buildFromDOMXMLGT(Element noeudDOMRacine, GlobalTour gt,Map map, CurrentDeliveryPoint currentDp) throws ExceptionXML, NumberFormatException{
+	
+    private static void buildMapFromDOMXMLGT(Element noeudDOMRacine,GlobalTour gt) throws ExceptionXML, NumberFormatException{
 		String nameOfMap = ((Element)noeudDOMRacine.getElementsByTagName("map").item(0)).getAttribute("name");
 		gt.setMap(nameOfMap);
+       		
+    }
+
+
+	 public static void buildRestFromDOMXMLGT(Element noeudDOMRacine, GlobalTour gt,Map map, CurrentDeliveryPoint currentDp) throws ExceptionXML, NumberFormatException{
 		NodeList TourList = noeudDOMRacine.getElementsByTagName("tour");
 		for(int i =0;i<TourList.getLength();i++){
 			Tour tour = createTour((Element)TourList.item(i),map,currentDp);
@@ -165,10 +173,6 @@ public class XMLdeserializer {
 			return new DeliveryPoint(intersectionDP,timeWindows[TWindex]);
 	} 
 
-	/////////////////////////////CURRENT DELIVERY POINT////////////////////////////////////
-
-	public static void loadCurrentDeliveryPoint(CurrentDeliveryPoint CDP){
-
-	}
+	
  
 }
