@@ -72,10 +72,23 @@ public abstract class TemplateTSP implements TSP {
 		SeqIter it=new SeqIter(unvisited, g,currentVertex);
 	    if (!it.hasNext()){ 
 			
-	    	if (g.isArc(currentVertex,0)){ 
-	    		visited.toArray(bestSol);
-	    		bestSolCost = currentCost+g.getCost(currentVertex,0);
-	    	}
+	    	if(g.getCost(currentVertex,0)==Double.MAX_VALUE && nbSommetVisited>=this.maxNbSommetVisited){
+				if(currentCost<bestSolCost){
+					bestSolCost=currentCost;
+					visited.toArray(bestSol);
+				}
+
+			}
+			else if(g.getCost(currentVertex,0)!=Double.MAX_VALUE){
+				if(currentCost+g.getCost(currentVertex, 0)<bestSolCost){
+					bestSolCost=currentCost+g.getCost(currentVertex, 0);
+					visited.toArray(bestSol);
+				}
+			}
+
+			
+	    		
+	    	
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
 
 	        
