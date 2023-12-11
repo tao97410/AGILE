@@ -16,14 +16,11 @@ public class TSP1 extends TemplateTSP {
 	}
 
 	@Override
-	protected int bound(Integer currentVertex, Collection<Integer> unvisited) {
+	protected int bound(Integer currentVertex, Unvisited unvisited) {
 		return 0;
 	}
 
-	@Override
-	protected Iterator<Integer> iterator(Integer currentVertex, Collection<Integer> unvisited, TemplateGraph g) {
-		return new SeqIter(unvisited, currentVertex, g);
-	}
+	
 
 	
 

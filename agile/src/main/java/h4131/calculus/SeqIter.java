@@ -2,10 +2,16 @@ package h4131.calculus;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Arrays;
 
-public class SeqIter implements Iterator<Integer> {
-	private Integer[] candidates;
-	private int nbCandidates;
+public class SeqIter {
+	private Integer[][] candidates;
+	private int[] nbCandidates;
+	private int[] initialiseNbCandidate;
+	private TemplateGraph g;
+	private int currentWindow;
+	private Unvisited unvisited;
+
 
 	/**
 	 * Create an iterator to traverse the set of vertices in <code>unvisited</code> 
@@ -15,26 +21,99 @@ public class SeqIter implements Iterator<Integer> {
 	 * @param currentVertex
 	 * @param g
 	 */
-	public SeqIter(Collection<Integer> unvisited, int currentVertex, TemplateGraph g){
-		this.candidates = new Integer[unvisited.size()];
-		for (Integer s : unvisited){
-			if (g.isArc(currentVertex, s))
-				candidates[nbCandidates++] = s;
+	public SeqIter(Unvisited unvisited, TemplateGraph g,Integer currentVertex){
+		this.unvisited=unvisited;
+		this.candidates =unvisited.getCandidates();
+		this.nbCandidates=Arrays.copyOf(unvisited.initiliseNbCandidate(),5);
+		this.g=g;
+		this.currentWindow=g.getWindow(currentVertex).ordinal()-1;
+		if(currentWindow==-1){
+			currentWindow=0;
 		}
+		
 	}
 	
-	@Override
+	
 	public boolean hasNext() {
-		return nbCandidates > 0;
+		if(followingCandidate()==-1){
+			System.out.println(false);
+			if(isEmpty()){
+				return !(this.currentWindow+1==g.getSizeNbTimeWindow());
+			}
+			else{
+				return false;
+			}
+			
+				
+		}
+		return true;
+
+		
+	}
+	public boolean isEmpty(){
+		for(Integer i:candidates[currentWindow]){
+			if(i!=null && i!=-1){
+				return false;
+			}
+		}
+		return true;
+	}
+	public int followingCandidate(){
+		for(int i=nbCandidates[currentWindow]-1;i>=0;i--){
+			if(candidates[currentWindow][i]!=-1){
+				return candidates[currentWindow][i];
+			}
+		}
+		return -1;
+	}
+	
+	public int putFollowingCandidate(){
+		for(int i=nbCandidates[currentWindow]-1;i>=0;i--){
+			nbCandidates[currentWindow]-=1;
+			if(candidates[currentWindow][i]!=-1){
+				return candidates[currentWindow][i];
+			}
+		}
+		return -1;
 	}
 
-	@Override
 	public Integer next() {
-		nbCandidates--;
-		return candidates[nbCandidates];
+		System.out.println(followingCandidate());
+		if(followingCandidate()==-1){
+			while(followingCandidate()==-1){
+				currentWindow++;
+
+			}
+			
+		}
+		System.out.println(currentWindow);
+		
+		return putFollowingCandidate();
+	}
+	public Integer remove(Integer deliveryPoint){
+		int window=g.getWindow(deliveryPoint).ordinal()-1;
+		Integer elemDelete=candidates[window][nbCandidates[window]];
+		candidates[window][nbCandidates[window]]=-1;
+		return elemDelete;
+	}
+	public void addFollowing(Integer deliveryPoint){
+		int window=g.getWindow(deliveryPoint).ordinal()-1;
+		candidates[window][nbCandidates[window]]=deliveryPoint;
+	}
+	public  boolean isFinish(){
+		this.nbCandidates=Arrays.copyOf(unvisited.initiliseNbCandidate(),5);
+		return hasNext();
+	}
+	public String toString(){
+		String string="";
+		for(Integer[] i:candidates){
+			string+="////";
+			for(Integer j:i){
+				string+="/"+j;
+			}
+		}
+		return string;
 	}
 
-	@Override
-	public void remove() {}
 
 }

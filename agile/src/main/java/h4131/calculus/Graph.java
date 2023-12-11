@@ -31,6 +31,7 @@ public class Graph implements TemplateGraph{
     private TimeWindow timeBegining;
     private DeliveryPoint wareHouse;
     private DeliveryPoint deliveryErreur;
+    private int sizeNbTimeWindow;
 
     public Graph() {
         nodes = new ArrayList<>();
@@ -230,22 +231,18 @@ public class Graph implements TemplateGraph{
         Iterator<DeliveryPoint> d=nodes.iterator();
         d.next();
         DeliveryPoint actual;
-        DeliveryPoint previous=nodes.toArray(new DeliveryPoint[1])[0];
-        int plageHoraire=-1;
+        int plageHoraire=0;
         while(d.hasNext()){
-            actual=(DeliveryPoint)d.next();
-            if(actual.getTime()==previous.getTime()){
-                nbPlageHoraire[plageHoraire]+=1;
-
-            }
-            else{
-                plageHoraire++;
-                nbPlageHoraire[plageHoraire]+=1;
-            }
-            previous=actual;
-
-            
+           actual=d.next();
+           nbPlageHoraire[actual.getTime().ordinal()-1]+=1;
         }
+        for(int i:nbPlageHoraire){
+            if(i!=0){
+                plageHoraire+=1;
+            }
+        }
+        this.sizeNbTimeWindow=plageHoraire;
+        
     
     }
     private void createWindow(){
@@ -306,6 +303,10 @@ public class Graph implements TemplateGraph{
 	public int getNbVertices() {
 		return nbNodes;
 	}
+    @Override
+    public int getSizeNbTimeWindow(){
+        return sizeNbTimeWindow;
+    }
     // ******************GET METHODS********************
 
 

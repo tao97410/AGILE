@@ -34,4 +34,6 @@ public interface TemplateGraph {
 	public abstract TimeWindow getTimeBegining();
 
 	public abstract DeliveryPoint getDeliveryErreur();
+
+	public abstract int getSizeNbTimeWindow();
 }
