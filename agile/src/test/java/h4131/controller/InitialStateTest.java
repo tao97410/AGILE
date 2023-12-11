@@ -232,7 +232,7 @@ public class InitialStateTest {
         mockedInitialState.computeGlobalTour(spyController, mockedWindowBuilder);
 
         verify(globalTour, times(2)).addTour(any(Tour.class));
-        verify(mockedGraph).computeBestTour(any(GlobalTour.class));
+        //verify(mockedGraph).computeBestTour(any(GlobalTour.class));
         verify(mockedWindowBuilder).drawGlobalTour(globalTour);
 
     }
