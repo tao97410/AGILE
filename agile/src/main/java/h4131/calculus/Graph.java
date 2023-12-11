@@ -155,7 +155,7 @@ public class Graph implements TemplateGraph{
     
 
 
-    public void computeBestTour(GlobalTour globalTour, long courierId){
+    public void computeBestTour(GlobalTour globalTour, int courierId){
         TSP1 tsp=new TSP1();
         this.initialiseGraph();
         System.out.println("Graphs with "+this.nbNodes+" vertices:");

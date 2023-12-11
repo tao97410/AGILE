@@ -68,7 +68,7 @@ public class XMLserializer {// Singleton
 
     private Element createTourElt(Tour tour){
         Element tourElement = document.createElement("tour");
-        createAttribute(tourElement, "courierId", Long.toString(tour.getCourierId()));
+        createAttribute(tourElement, "courierId", Integer.toString(tour.getCourierId()));
         for (Segment route : tour.getCourse()){
             tourElement.appendChild(createRouteElt(route));
         }
