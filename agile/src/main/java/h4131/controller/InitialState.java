@@ -97,15 +97,11 @@ public class InitialState implements State{
             for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
                 courier ++;
                 if(!listDeliveryPoints.isEmpty()){
-                    // System.out.println("liste avant appel : "+listDeliveryPoints);
-                    // for(DeliveryPoint dp : listDeliveryPoints){
-                    //     System.out.println(dp);
-                    // }
                     
                     Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
                     graph.computeBestTour(c.getGlobalTour());    
                     if(graph.getDeliveryErreur()!=null){
-                        windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
+                        windowBuilder.alert("Calculation impossible on tour n°" + courier +" and on the time window : " + graph.getDeliveryErreur().getTime().getRepresentation());
                     }
                 }
                 else{
