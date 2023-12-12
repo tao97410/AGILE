@@ -26,7 +26,6 @@
 ChoiceBox {
     -fx-font-size: 18px;
     -fx-background-color: white;
-    -fx-text-fill: black;
 }
 
 ChoiceBox:hover {
@@ -42,13 +41,8 @@ ChoiceBox:hover {
     -fx-border-radius: 3px;
 }
 
-ChoiceBox .menu-item:focused {
-    -fx-background-color: rgb(150, 150, 150);
-}
-
-ChoiceBox .menu-item:focused>.label {
-    -fx-text-fill: white;
-}
+ChoiceBox .menu-item:focused { -fx-background-color: rgb(150, 150, 150); }
+ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
 
 /* ------- Pane styles ------- */
 
@@ -65,6 +59,7 @@ Button {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
     -fx-cursor: hand;
     -fx-transition: all 0.3s;
     /* Add transition for all properties over 0.3 seconds */
@@ -77,10 +72,24 @@ Button:hover,
     -fx-scale-y: 1.1;
 }
 
-#loadTourButton,
-#computeTourButton {
-    -fx-background-color: linear-gradient(to bottom, rgb(25, 110, 205), rgba(30, 135, 250, 1));
-    -fx-text-fill: rgb(255, 255, 255);
+#buttonList {
+    -fx-background-color : white;
+    -fx-background-radius:5px;
+    -fx-border-radius:5px;
+    -fx-border-width:2px;
+    -fx-border-color : rgb(100,149,237);
+}
+
+#loadTourButton, #computeTourButton, #saveGlobalTourButton {
+    -fx-border-radius: 5px;
+    -fx-border-color: rgb(100,149,237);
+    -fx-border-width: 2px;
+    -fx-background-color :white;
+}
+
+#loadTourButton:hover, #computeTourButton:hover, #saveGlobalTourButton:hover {
+    -fx-background-color :rgb(100, 149, 237);
+
 }
 
 #validationButton,
@@ -129,18 +138,19 @@ DeliveryPointLabel:hover {
 
 /* ------- Font styles ------- */
 
-#computeTourButton,
-#loadTourButton,
 #mapChoiceBox {
+    -fx-border-radius : 5px;
+    -fx-border-color :  rgb(100,149,237);
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
 
-#saveGlobalTourButton {
-    -fx-background-color: white;
-    -fx-font-size: 17px;
-    -fx-font-weight: bold;
-}
+/* #mapChoiceBox .label{    
+    -fx-text-fill: rgb(100,149,237);
+} */
+
+ChoiceBox .menu-item:focused { -fx-background-color: rgb(150, 150, 150); }
+ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
 
 #alertPane {
     -fx-padding: 10px;
