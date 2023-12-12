@@ -3,6 +3,8 @@ package h4131.calculus;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class Graph implements TemplateGraph{
 	private static final double MIN_COST = 100;
     public Collection<DeliveryPoint> nodes;
     public Collection<Arc> arcs;
+    public List<Arc> arcsSort;
     private double [][] cost;
     private double [][] timeWindow;
     private int [] nbPlageHoraire;
@@ -32,6 +35,7 @@ public class Graph implements TemplateGraph{
     private DeliveryPoint wareHouse;
     private DeliveryPoint deliveryErreur;
     private int sizeNbTimeWindow;
+    private DeliveryPoint[] tabDeliveryPoint;
 
     public Graph() {
         nodes = new ArrayList<>();
@@ -159,6 +163,8 @@ public class Graph implements TemplateGraph{
         createNbPlageHoraire();
         createWindow();
         createWindowBegining();
+        createListeArcByCost();
+        createTabDeliveryPoint();
     }
 
     //Creates the cost function
@@ -208,6 +214,9 @@ public class Graph implements TemplateGraph{
         timeBegining=min;
 
     }
+    private void createTabDeliveryPoint(){
+        tabDeliveryPoint= nodes.toArray(new DeliveryPoint[nbNodes]);
+    }
 
     /**
      * Convert the timeWindow 
@@ -252,6 +261,11 @@ public class Graph implements TemplateGraph{
             listeWindow[i]=d.getTime();
             i++;
         }
+    }
+    private void createListeArcByCost(){
+        this.arcsSort=new ArrayList<Arc>(arcs);
+        arcsSort.sort(Comparator.comparingDouble(Arc::getDistance));
+        System.out.println(arcsSort);
     }
 
 	
@@ -306,6 +320,18 @@ public class Graph implements TemplateGraph{
     @Override
     public int getSizeNbTimeWindow(){
         return sizeNbTimeWindow;
+    }
+    @Override
+    public List<Arc> getArcsSort(){
+        return this.arcsSort;
+    }
+    @Override
+    public DeliveryPoint getTabDeliveryPoint(int index){
+        return this.tabDeliveryPoint[index];
+    }
+    @Override
+    public DeliveryPoint getWareHouse(){
+        return wareHouse;
     }
     // ******************GET METHODS********************
 

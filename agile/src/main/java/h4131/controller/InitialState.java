@@ -17,6 +17,7 @@ import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
 import h4131.model.Courier;
+import h4131.model.DeliveryPoint;
 import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
@@ -59,6 +60,12 @@ public class InitialState implements State{
             Graph g = loadedMap.getGraphFromPoints(null);
             GlobalTour globalTour=new GlobalTour();
             g.computeBestTour(globalTour);
+            for(DeliveryPoint d:g.nodes){
+                System.out.println(d);
+            }
+            for(Arc a:g.arcs){
+                System.out.println(a);
+            }
             System.out.println("Voici le delivery qui coince : ");
             System.out.println(g.getDeliveryErreur());
 

@@ -36,7 +36,6 @@ public class SeqIter {
 	
 	public boolean hasNext() {
 		if(followingCandidate()==-1){
-			System.out.println(false);
 			if(isEmpty()){
 				return !(this.currentWindow+1==g.getSizeNbTimeWindow());
 			}
@@ -48,8 +47,22 @@ public class SeqIter {
 		}
 		return true;
 
+	
+
 		
 	}
+	public boolean hasNextForBound() {
+		if(followingCandidate()==-1){
+				return !(this.currentWindow+1==g.getSizeNbTimeWindow());
+		}
+			
+		return true;
+
+	
+
+		
+	}
+	
 	public boolean isEmpty(){
 		for(Integer i:candidates[currentWindow]){
 			if(i!=null && i!=-1){
@@ -78,7 +91,6 @@ public class SeqIter {
 	}
 
 	public Integer next() {
-		System.out.println(followingCandidate());
 		if(followingCandidate()==-1){
 			while(followingCandidate()==-1){
 				currentWindow++;
@@ -86,7 +98,6 @@ public class SeqIter {
 			}
 			
 		}
-		System.out.println(currentWindow);
 		
 		return putFollowingCandidate();
 	}

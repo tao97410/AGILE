@@ -5,6 +5,7 @@ import javafx.scene.effect.Light.Spot;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 
 
@@ -39,23 +40,10 @@ public abstract class TemplateTSP implements TSP {
 		branchAndBound(0, unvisited, visited, 0,g.getTimeBegining().ordinal()+7.0,0);
 	}
 	
+
 	
-	/**
-	 * Method that must be defined in TemplateTSP subclasses
-	 * @param currentVertex
-	 * @param unvisited
-	 * @return a lower bound of the cost of paths in <code>g</code> starting from <code>currentVertex</code>, visiting 
-	 * every vertex in <code>unvisited</code> exactly once, and returning back to vertex <code>0</code>.
-	 */
-	protected abstract int bound(Integer currentVertex, Unvisited unvisited);
 	
-	/**
-	 * Method that must be defined in TemplateTSP subclasses
-	 * @param currentVertex
-	 * @param unvisited
-	 * @param g
-	 * @return an iterator for visiting all vertices in <code>unvisited</code> which are successors of <code>currentVertex</code>
-	 */
+
 
 	
 	/**
@@ -67,7 +55,6 @@ public abstract class TemplateTSP implements TSP {
 	 */	
 	private void branchAndBound(int currentVertex, Unvisited unvisited, 
 		Collection<Integer> visited, double currentCost,double time,int nbSommetVisited){
-		System.out.println("Grande boucle");
 		if (System.currentTimeMillis() - startTime > timeLimit) return;
 		SeqIter it=new SeqIter(unvisited, g,currentVertex);
 	    if (!it.hasNext()){ 
@@ -76,6 +63,7 @@ public abstract class TemplateTSP implements TSP {
 				if(currentCost<bestSolCost){
 					bestSolCost=currentCost;
 					visited.toArray(bestSol);
+					maxNbSommetVisited=nbSommetVisited;
 				}
 
 			}
@@ -83,13 +71,14 @@ public abstract class TemplateTSP implements TSP {
 				if(currentCost+g.getCost(currentVertex, 0)<bestSolCost){
 					bestSolCost=currentCost+g.getCost(currentVertex, 0);
 					visited.toArray(bestSol);
+					maxNbSommetVisited=nbSommetVisited+1;
 				}
 			}
 
 			
 	    		
 	    	
-	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
+	    } else if (currentCost<bestSolCost){
 
 	        
 			
@@ -97,7 +86,7 @@ public abstract class TemplateTSP implements TSP {
 				
 	        	Integer nextVertex = it.next();
 
-				if(g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
+				if(2!=2 && g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
 					
 					if(nbSommetVisited>=this.maxNbSommetVisited){
 						if(nbSommetVisited==this.maxNbSommetVisited){
@@ -105,6 +94,8 @@ public abstract class TemplateTSP implements TSP {
 								visited.toArray(bestSol);
 								bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
 								indexDeliveryErreur=nextVertex;
+								this.maxNbSommetVisited=nbSommetVisited;
+
 							}
 						}
 						else{

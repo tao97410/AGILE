@@ -1,5 +1,7 @@
 package h4131.calculus;
 
+import java.util.List;
+
 import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
 
@@ -36,4 +38,10 @@ public interface TemplateGraph {
 	public abstract DeliveryPoint getDeliveryErreur();
 
 	public abstract int getSizeNbTimeWindow();
+
+	public abstract List<Arc> getArcsSort();
+
+	public abstract DeliveryPoint getTabDeliveryPoint(int index);
+
+	public abstract DeliveryPoint getWareHouse();
 }
