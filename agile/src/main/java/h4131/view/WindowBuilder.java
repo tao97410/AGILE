@@ -35,6 +35,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -56,7 +57,8 @@ public class WindowBuilder implements Observer {
     private double latMin;
     private double latMax;
 
-    private final Color[] colors = { Color.RED, Color.DARKBLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE, Color.GREEN};
+    private final Color[] colors = { Color.RED, Color.DARKBLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE,
+            Color.GREEN };
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -91,7 +93,7 @@ public class WindowBuilder implements Observer {
                 IntersectionCircle circle = (IntersectionCircle) node;
                 circle.setFill(Color.TRANSPARENT);
                 circle.setRadius(2);
-            } else if(node instanceof Text){
+            } else if (node instanceof Text) {
                 Text number = (Text) node;
                 number.setVisible(false);
                 number.setManaged(false);
@@ -273,14 +275,15 @@ public class WindowBuilder implements Observer {
             }
         }
 
-        //drawing intersections order
-        for(Tour tour : globalTour.getTours()){
+        // drawing intersections order
+        for (Tour tour : globalTour.getTours()) {
             int deliveryNumber = 1;
-            for(DeliveryPoint delivery : tour.getDeliveryPoints()){
-                if(delivery.getTime()!=TimeWindow.WAREHOUSE){
+            for (DeliveryPoint delivery : tour.getDeliveryPoints()) {
+                if (delivery.getTime() != TimeWindow.WAREHOUSE) {
                     double lat = delivery.getPlace().getLatitude();
                     double longi = delivery.getPlace().getLongitude();
-                    double deliveryX = ((longi - longMin) / (longMax - longMin)) * screenHeight + (screenWidth - screenHeight) / 2;
+                    double deliveryX = ((longi - longMin) / (longMax - longMin)) * screenHeight
+                            + (screenWidth - screenHeight) / 2;
                     double deliveryY = screenHeight - ((lat - latMin) / (latMax - latMin)) * screenHeight;
                     Text deliveryOrder = new Text(String.valueOf(deliveryNumber));
                     deliveryOrder.setFont(Font.font("Calibri", FontWeight.BOLD, 4));
@@ -290,25 +293,25 @@ public class WindowBuilder implements Observer {
                     deliveryOrder.setY(deliveryY + deliveryOrder.getBoundsInLocal().getHeight() / 4);
                     shapesPane.getChildren().add(deliveryOrder);
                     deliveryOrder.setViewOrder(-1);
-                    deliveryNumber++; 
-                }      
+                    deliveryNumber++;
+                }
             }
         }
     }
 
     private void hideOldTour() {
-        for (Node node : shapesPane.getChildren()){
-            if (node instanceof SegmentLine){
+        for (Node node : shapesPane.getChildren()) {
+            if (node instanceof SegmentLine) {
                 SegmentLine segment = (SegmentLine) node;
                 if (segment.getStroke() != Color.WHITE) {
                     segment.setVisible(false);
                     segment.setManaged(false);
                 }
-            } else if (node instanceof Polygon){
+            } else if (node instanceof Polygon) {
                 Polygon arrow = (Polygon) node;
                 arrow.setVisible(false);
                 arrow.setManaged(false);
-            } else if(node instanceof Text){
+            } else if (node instanceof Text) {
                 Text number = (Text) node;
                 number.setVisible(false);
                 number.setManaged(false);
@@ -493,11 +496,11 @@ public class WindowBuilder implements Observer {
             if (!list.isEmpty()) {
                 VBox listDeliveryPoint = new VBox();
                 TitledPane titledPane = new TitledPane();
-                Rectangle rectangle = new Rectangle(17.5, 17.5, colors[(courier - 1) % colors.length]);
-                rectangle.setStroke(Color.BLACK);
+                Circle circle = new Circle(8.75, colors[(courier - 1) % colors.length]);
+                circle.setStroke(Color.BLACK);
                 Label title = new Label("Courier : " + courier);
                 HBox titleContent = new HBox(12);
-                titleContent.getChildren().addAll(rectangle, title);
+                titleContent.getChildren().addAll(circle, title);
                 titledPane.setGraphic(titleContent);
                 titledPane.setContent(listDeliveryPoint);
                 tourListGroup.getChildren().add(titledPane);
