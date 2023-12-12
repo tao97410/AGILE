@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import h4131.controller.Controller;
 import h4131.model.CurrentDeliveryPoint;
@@ -27,6 +28,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
@@ -114,12 +117,48 @@ public class WindowBuilder implements Observer {
     }
 
     /**
+     * Pop up if the number of loaded couriers is greater than the current number of couriers
+     * 
+     * @param currentNumberOfCourier the number of current couriers
+     * @param numberOfCourierLoaded the number of couriers loaded
+     * @return boolean true if he wants to load all the tours
+     */
+    public boolean NumberCourierChoice(int currentNumberOfCourier, int numberOfCourierLoaded) {
+        ButtonType loaded = new ButtonType("All " + numberOfCourierLoaded, ButtonBar.ButtonData.OK_DONE);
+        ButtonType current = new ButtonType("Only " + currentNumberOfCourier, ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(AlertType.WARNING,
+                "You currently have " + currentNumberOfCourier + " couriers and you're trying to load a Global Tour with " + numberOfCourierLoaded + " couriers. How many tours do you want to load ?",
+                current,
+                loaded);
+
+        alert.setTitle(null);
+        alert.setHeaderText("Number of couriers mismatched");
+
+        stage.setFullScreen(false);
+        Optional<ButtonType> result = alert.showAndWait();
+        stage.setFullScreen(true);
+        return (result.get() == loaded);
+    }
+
+
+
+
+    /**
      * set the window fullscreen or not
      * 
      * @param bool true or false
      */
     public void setFullScreen(boolean bool) {
         stage.setFullScreen(bool);
+    }
+    /**
+     * Refresh the number of courier field after a load
+     * 
+     * 
+     */
+
+    public void refreshNumberOfCourier(){
+        displayMapSceneController.setNumberOfCourierFieldValue(String.valueOf(controller.getNumberOfCourier()));
     }
 
     /**
