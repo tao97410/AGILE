@@ -299,6 +299,9 @@ public class WindowBuilder implements Observer {
         }
     }
 
+    /**
+     * Method called before printing new tour to hide the old one
+     */
     private void hideOldTour() {
         for (Node node : shapesPane.getChildren()) {
             if (node instanceof SegmentLine) {
@@ -562,6 +565,9 @@ public class WindowBuilder implements Observer {
         disableBackground(true);
     }
 
+    /**
+     * Called by update to display the current delivery points on the map
+     */
     public void displayPointsOnMap() {
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -594,7 +600,10 @@ public class WindowBuilder implements Observer {
         }
     }
 
-    /* Styling and animation methods */
+    /**
+     * Used to display notification 
+     * @param pane the notification to display
+     */
     public void fadeIn(Pane pane) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
         fadeIn.setFromValue(0);
@@ -603,6 +612,10 @@ public class WindowBuilder implements Observer {
         pane.setVisible(true);
     }
 
+    /**
+     * Used to hide notification
+     * @param pane the notification to hide
+     */
     public void fadeOut(Pane pane) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
         fadeOut.setFromValue(1);

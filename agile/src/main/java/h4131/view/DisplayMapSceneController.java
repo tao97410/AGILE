@@ -31,6 +31,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -64,14 +67,16 @@ public class DisplayMapSceneController {
     private Button saveGlobalTourButton;  
     @FXML
     private TextField numberOfCourierField;
-
-    // Search bar menu
     @FXML
     private ChoiceBox<String> mapChoiceBox;
+
+    // Search bar menu    
     @FXML
     private Button cancelResearch;
     @FXML
     private TextField searchBar;
+    @FXML
+    private ImageView numberOfBike;
 
     // Delivery point validation menu
     @FXML
@@ -115,7 +120,7 @@ public class DisplayMapSceneController {
 
     @FXML
     private void initialize() {
-        mapChoiceBox.setValue("Select a map  ");
+        mapChoiceBox.setValue("Map  ");
         mapChoiceBox.getItems().addAll("small", "medium", "large");
 
         // Add a ChangeListener to the ChoiceBox to detect selection changes
@@ -152,6 +157,34 @@ public class DisplayMapSceneController {
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        Tooltip tooltip = new Tooltip("Load a global tour");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(loadTourButton, tooltip);
+        tooltip = new Tooltip("Save the current tour");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(saveGlobalTourButton, tooltip);
+        tooltip = new Tooltip("Compute global tour");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(computeTourButton, tooltip);
+        tooltip = new Tooltip("Number of couriers available");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(numberOfBike, tooltip);
+
+        loadTourButton.setOnMouseEntered(this::onMouseEnteredLoad);
+        computeTourButton.setOnMouseEntered(this::onMouseEnteredCompute);
+        saveGlobalTourButton.setOnMouseEntered(this::onMouseEnteredSave);
+        loadTourButton.setOnMouseExited(this::onMouseExitedLoad);
+        computeTourButton.setOnMouseExited(this::onMouseExitedCompute);
+        saveGlobalTourButton.setOnMouseExited(this::onMouseExitedSave);
 
         alertPane.setVisible(false);
     }
@@ -255,6 +288,10 @@ public class DisplayMapSceneController {
 
     /*--------- Styling and animation methods ---------*/
 
+    /**
+     * Used to display a node with fading effect
+     * @param node the node to display
+     */
     public void fadeIn(Node node) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), node);
         fadeIn.setFromValue(0);
@@ -263,6 +300,10 @@ public class DisplayMapSceneController {
         node.setVisible(true);
     }
 
+    /**
+     * Used to hide a node with fading effect
+     * @param node the node to hide 
+     */
     public void fadeOut(Node node) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
         fadeOut.setFromValue(1);
@@ -294,6 +335,42 @@ public class DisplayMapSceneController {
         // Add the transitions to the node
         node.setOnMouseEntered(event -> scaleTransition.play());
         node.setOnMouseExited(event -> inverseScaleTransition.play());
+    }
+
+    public void onMouseEnteredLoad(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/open-white.png"));
+        ImageView imageView = new ImageView(image); 
+        this.loadTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseEnteredCompute(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/play-white.png"));
+        ImageView imageView = new ImageView(image); 
+        this.computeTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseEnteredSave(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/save-white.png"));
+        ImageView imageView = new ImageView(image); 
+        this.saveGlobalTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseExitedLoad(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/open.png"));
+        ImageView imageView = new ImageView(image); 
+        this.loadTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseExitedCompute(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/play.png"));
+        ImageView imageView = new ImageView(image); 
+        this.computeTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseExitedSave(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/save.png"));
+        ImageView imageView = new ImageView(image); 
+        this.saveGlobalTourButton.setGraphic(imageView);
     }
 
     public int getPreviousCourierChoice() {
