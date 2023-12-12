@@ -56,7 +56,7 @@ public class WindowBuilder implements Observer {
     private double latMin;
     private double latMax;
 
-    private final Color[] colors = { Color.RED, Color.BLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE, Color.GREEN};
+    private final Color[] colors = { Color.RED, Color.DARKBLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE, Color.GREEN};
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -91,6 +91,10 @@ public class WindowBuilder implements Observer {
                 IntersectionCircle circle = (IntersectionCircle) node;
                 circle.setFill(Color.TRANSPARENT);
                 circle.setRadius(2);
+            } else if(node instanceof Text){
+                Text number = (Text) node;
+                number.setVisible(false);
+                number.setManaged(false);
             }
         }
         displayPointsOnMap();
@@ -216,6 +220,7 @@ public class WindowBuilder implements Observer {
             Tooltip.install(warehouse, tooltip);
 
             Group group = new Group(shapesPane);
+            displayMapSceneController.setShapesPane(shapesPane);
             Parent zoomPane = displayMapSceneController.createZoomPane(group);
             layout = displayMapSceneController.getLayout();
             layout.getChildren().setAll(zoomPane);
@@ -391,6 +396,7 @@ public class WindowBuilder implements Observer {
     private void addLine(double startX, double startY, double endX, double endY, Segment segment) {
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(Color.WHITE);
+        line.setPreviousColor(Color.WHITE);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
         Tooltip tooltip = new Tooltip("Name : " + segment.getName() + "\nLength : " + segment.getLength() + "m");
@@ -415,6 +421,7 @@ public class WindowBuilder implements Observer {
     private void addLineTour(double startX, double startY, double endX, double endY, int color, Segment segment) {
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(colors[(color % colors.length)]);
+        line.setPreviousColor(colors[(color % colors.length)]);
         line.setStrokeWidth(2.0);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);

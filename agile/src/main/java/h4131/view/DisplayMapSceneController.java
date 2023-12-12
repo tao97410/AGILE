@@ -1,6 +1,10 @@
 package h4131.view;
 
+import java.text.Collator;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import h4131.controller.Controller;
 import h4131.model.DeliveryPoint;
@@ -49,6 +53,7 @@ public class DisplayMapSceneController {
     private StackPane container;
     @FXML
     private VBox layout;
+    private Pane shapesPane;
 
     // Main menu controls
     @FXML
@@ -56,11 +61,17 @@ public class DisplayMapSceneController {
     @FXML
     private Button computeTourButton;
     @FXML
-    private Button saveGlobalTourButton;
+    private Button saveGlobalTourButton;  
+    @FXML
+    private TextField numberOfCourierField;
+
+    // Search bar menu
     @FXML
     private ChoiceBox<String> mapChoiceBox;
     @FXML
-    private TextField numberOfCourierField;
+    private Button cancelResearch;
+    @FXML
+    private TextField searchBar;
 
     // Delivery point validation menu
     @FXML
@@ -105,14 +116,14 @@ public class DisplayMapSceneController {
     @FXML
     private void initialize() {
         mapChoiceBox.setValue("Select a map  ");
-        mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
+        mapChoiceBox.getItems().addAll("small", "medium", "large");
 
         // Add a ChangeListener to the ChoiceBox to detect selection changes
         mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 // load the chosen map
-                String fileName = mapChoiceBox.getValue() + ".xml";
+                String fileName = mapChoiceBox.getValue() + "Map.xml";
                 controller.loadMap(fileName);
             }
         });
@@ -126,6 +137,8 @@ public class DisplayMapSceneController {
             }
 
         });
+
+        searchBar.setPromptText("Search a street name...");
 
         timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(),
                 TimeWindow.NINE_TEN.getRepresentation(),
@@ -141,6 +154,42 @@ public class DisplayMapSceneController {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         alertPane.setVisible(false);
+    }
+
+    @FXML
+    void doCancelResearch(ActionEvent event){
+        for(Node node : shapesPane.getChildren()){
+            if(node instanceof SegmentLine){
+                SegmentLine segment = (SegmentLine) node;
+                segment.setStroke(segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
+            }
+        }
+    }
+
+    @FXML
+    void doSearch(KeyEvent event){
+        // hide previous results
+        for(Node node : shapesPane.getChildren()){
+            if(node instanceof SegmentLine){
+                SegmentLine segment = (SegmentLine) node;
+                segment.setStroke(segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
+            }
+        }
+
+        if(!searchBar.getText().equals("")){
+            // show new results
+            for(Node node : shapesPane.getChildren()){
+                if(node instanceof SegmentLine){
+                    SegmentLine segment = (SegmentLine) node;
+                    String segmentName = Normalizer.normalize(segment.getSegment().getName(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                    String searchTextWithoutAccent = Normalizer.normalize(searchBar.getText(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                    if(segmentName.toLowerCase().contains(searchTextWithoutAccent.toLowerCase())){
+                        segment.setStroke(Color.BLUE);                    
+                    }
+
+                }
+            }
+        }
     }
 
     @FXML
@@ -305,6 +354,10 @@ public class DisplayMapSceneController {
 
     public ChoiceBox<String> getModifyTimeWindowChoice() {
         return modifyTimeWindowChoice;
+    }
+
+    public void setShapesPane(Pane newShapesPane){
+        this.shapesPane = newShapesPane;
     }
 
     /**
@@ -545,4 +598,6 @@ public class DisplayMapSceneController {
             scroller.setVvalue(scroller.getVmin());
         }
     }
+
+
 }

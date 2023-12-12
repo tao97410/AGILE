@@ -69,6 +69,23 @@
             <Insets left="20.0" top="20.0" />
          </StackPane.margin>
       </Group>
+      <Group StackPane.alignment="TOP_CENTER" >
+         <HBox alignment="CENTER" layoutY="10.0" spacing="0.0">
+            <children> 
+               <TextField fx:id="searchBar" onKeyReleased="#doSearch" prefWidth="500.0" prefHeight="40.0" /> 
+               <Button fx:id="cancelResearch" mnemonicParsing="false" onAction="#doCancelResearch" prefHeight="40.0" prefWidth="175.0" text="Cancel" textAlignment="CENTER">
+                  <padding>
+                     <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
+                  </padding>
+                  <font>
+                     <Font name="System Bold" size="18.0" />
+                  </font></Button>   
+            </children>
+            <padding>
+               <Insets top="10.0" />
+            </padding>            
+         </HBox>
+      </Group>
       <Group layoutX="100.0" StackPane.alignment="TOP_CENTER">
          <Pane fx:id="alertPane" prefHeight="68.0" prefWidth="424.0">
             <Text fx:id="courierAlertTitle" layoutX="62.0" layoutY="43.0" text="Number of courier(s) set to : " textAlignment="CENTER">
@@ -154,7 +171,7 @@
          </ScrollPane>
          <StackPane.margin>
             <Insets right="20.0" top="20.0" />
-         </StackPane.margin>
-      </Group>
+         </StackPane.margin></Group>
+      
    </children>
 </StackPane>
