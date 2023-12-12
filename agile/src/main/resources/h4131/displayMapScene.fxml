@@ -22,44 +22,44 @@
       <Group disable="false" layoutX="100.0" visible="true" StackPane.alignment="TOP_LEFT">
          <Pane fx:id="topLeftMenuPane" layoutX="-28.0" layoutY="-30.0" style="                   -fx-background-color: rgba(40, 40, 40, 0.96);                   -fx-padding: 10px;                   -fx-background-radius: 7px;">
             <VBox alignment="CENTER" layoutX="10.0" spacing="15.0">
-            <children>
-               <Button fx:id="loadTourButton" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="40.0" prefWidth="175.0" text="Load a tour">
-                  <padding>
-                     <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
-                  </padding>
-                  <font>
-                     <Font name="System Bold" size="18.0" />
-                  </font>
-               </Button>
-               <ChoiceBox fx:id="mapChoiceBox" prefHeight="40.0" prefWidth="175.0">
-                  <padding>
-                     <Insets bottom="4.0" left="7.0" right="7.0" top="5.0" />
-                  </padding>  
-               </ChoiceBox>   
-               <Button fx:id="computeTourButton" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Compute a global tour" textAlignment="CENTER">
-                  <padding>
-                     <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
-                  </padding>
-                  <font>
-                     <Font name="System Bold" size="18.0" />
-                  </font></Button>
-               <Button fx:id="saveGlobalTourButton" maxHeight="40.0" mnemonicParsing="false" onAction="#doSaveGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Save a global tour">
-                  <padding>
-                     <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
-                  </padding>
-                  <font>
-                     <Font name="System Bold" size="18.0" />
-                  </font></Button>
-               <HBox spacing="5.0">
-               <children>   
-                  <Text fill="WHITE" text="Number of courier(s) : " wrappingWidth="174.1578369140625">
+               <children>
+                  <Button fx:id="loadTourButton" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="40.0" prefWidth="175.0" text="Load a tour">
+                     <padding>
+                        <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
+                     </padding>
                      <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font></Text>
-                  <TextField fx:id="numberOfCourierField" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
-               </children> 
-               </HBox> 
-            </children>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Button>
+                  <ChoiceBox fx:id="mapChoiceBox" prefHeight="40.0" prefWidth="175.0">
+                     <padding>
+                        <Insets bottom="4.0" left="7.0" right="7.0" top="5.0" />
+                     </padding>  
+                  </ChoiceBox>   
+                  <Button fx:id="computeTourButton" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Compute a global tour" textAlignment="CENTER">
+                     <padding>
+                        <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
+                     </padding>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Button>
+                  <Button fx:id="saveGlobalTourButton" maxHeight="40.0" mnemonicParsing="false" onAction="#doSaveGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Save a global tour">
+                     <padding>
+                        <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                     </padding>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Button>
+                  <HBox spacing="5.0">
+                     <children>   
+                        <Text fill="WHITE" text="Number of courier(s) : " wrappingWidth="174.1578369140625">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font></Text>
+                        <TextField fx:id="numberOfCourierField" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
+                     </children> 
+                  </HBox> 
+               </children>
                <padding>
                   <Insets top="10.0" />
                </padding>            
@@ -149,9 +149,12 @@
       <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT"><ScrollPane fx:id="scrollPane" maxHeight="1000.0"><VBox fx:id="tourListGroup" disable="false" visible="true">
                <padding>
                   <Insets right="10.0" />
-               </padding></VBox></ScrollPane>
+               </padding>
+            </VBox>
+         </ScrollPane>
          <StackPane.margin>
             <Insets right="20.0" top="20.0" />
-         </StackPane.margin></Group>
+         </StackPane.margin>
+      </Group>
    </children>
 </StackPane>
