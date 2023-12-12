@@ -184,7 +184,7 @@
          <ScrollPane fx:id="scrollPane" maxHeight="1000.0">
             <VBox fx:id="tourListGroup" disable="false" visible="true">
                <padding>
-                  <Insets right="10.0" />
+                  <Insets right="10.0" bottom="10.0" />
                </padding>
             </VBox>
          </ScrollPane>
