@@ -2,11 +2,14 @@ package h4131.xml;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -48,15 +51,8 @@ public class PDFgenerator {
     private static String getInstructionsForTour(Graph graph, long courierId) {
 
         StringBuilder result = new StringBuilder();
-        
-        result.append(" _________________________________________ \n");
-        result.append("| ___  _   __  ____   __                  |\n");
-        result.append("|  |   |\\  |  |___    /\\                  |\n");
-        result.append("|  |   | \\ |      \\  /__\\                 |\n");
-        result.append("| _|_ _|_ \\|  \\___/ /_   \\_   PATH MASTER |\n");
-        result.append("|_________________________________________|\n\n\n\n");
 
-        result.append("# INSTRUCTIONS FOR THE COURIER " + courierId + " #\n");
+        result.append("\n# INSTRUCTIONS FOR THE COURIER " + courierId + " #\n");
 
         List<Arc> arcsList = new LinkedList<>(graph.arcs);
         int deliveryCount = 0;
@@ -242,27 +238,37 @@ public class PDFgenerator {
     private static void generatePdf(String path, String content) {
         Document document = new Document();
         try {
+            com.itextpdf.text.Image img = com.itextpdf.text.Image.getInstance(System.getProperty("user.dir") + "\\agile\\src\\main\\resources\\h4131\\main_logo.png");
+            img.scalePercent(10);
+            img.setAlignment(Image.RIGHT);
+            try {
             PdfWriter.getInstance(document, new FileOutputStream(path));
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DocumentException e) {
-            // TODO Auto-generated catch block
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+            
+            document.open();
+            try {
+                document.add(img);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+            Font font = FontFactory.getFont(FontFactory.COURIER, 10, new BaseColor(33, 69, 134));
+            Paragraph words = new Paragraph(content, font);
+            words.setLeading((float) 12.0);
+
+            try {
+                document.add(words);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+            document.close();
+        } catch (BadElementException | IOException e) {
             e.printStackTrace();
         }
         
-        document.open();
-        Font font = FontFactory.getFont(FontFactory.COURIER, 10, BaseColor.BLACK);
-        Paragraph words = new Paragraph(content, font);
-        words.setLeading((float) 12.0);
-
-        try {
-            document.add(words);
-        } catch (DocumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        document.close();
     }
 
 }

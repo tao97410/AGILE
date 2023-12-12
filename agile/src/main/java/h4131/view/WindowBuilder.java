@@ -69,7 +69,7 @@ public class WindowBuilder implements Observer {
 
         drawMap(firstMap);
 
-        Image icon = new Image(getClass().getResourceAsStream("/h4131/insa_logo.png"));
+        Image icon = new Image(getClass().getResourceAsStream("/h4131/icon_logo.png"));
         stage.getIcons().add(icon);
 
         stage.setTitle("INSA Path Master");
