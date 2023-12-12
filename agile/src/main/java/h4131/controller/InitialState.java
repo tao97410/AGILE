@@ -1,5 +1,6 @@
 package h4131.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -149,15 +150,15 @@ public class InitialState implements State{
 
     @Override
     public void saveGlobalTour(Controller c, WindowBuilder w){
-        List<Graph> graphs = c.getGraphs();
-        long tourId = 1;
-        for (Graph g : graphs) {
-            PDFgenerator.getPdfInstructions(g, tourId, ".\\test_agile\\instructions_" + tourId + ".pdf");
-            tourId ++;
-        }
         try {
             XMLserializer serializer = XMLserializer.getInstance();
-            serializer.save(c.getGlobalTour());
+            String resulting_path = serializer.save(c.getGlobalTour());
+            List<Graph> graphs = c.getGraphs();
+            long tourId = 1;
+            for (Graph g : graphs) {
+                PDFgenerator.getPdfInstructions(g, tourId, resulting_path + "\\..\\instructions_" + tourId + ".pdf");
+                tourId ++;
+            }
         } catch (ParserConfigurationException | ExceptionXML | TransformerFactoryConfigurationError | TransformerException e) {
             w.alert(e.getMessage());
             e.printStackTrace();

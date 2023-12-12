@@ -46,8 +46,6 @@ public class PDFgenerator {
      * @return String containing all the instructions
      */
     private static String getInstructionsForTour(Graph graph, long courierId) {
-        
-
 
         StringBuilder result = new StringBuilder();
         

@@ -39,12 +39,13 @@ public class XMLserializer {// Singleton
 	/**
 	 * Open an XML file and write an XML description of the plan in it 
 	 * @param plan the plan to serialise
+     * @return 
 	 * @throws ParserConfigurationException
 	 * @throws TransformerFactoryConfigurationError
 	 * @throws TransformerException
 	 * @throws ExceptionXML
 	 */
-	public void save(GlobalTour gt) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, ExceptionXML{
+	public String save(GlobalTour gt) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, ExceptionXML{
 		File xml = XMLfileOpener.getInstance().open(false,null);
   		StreamResult result = new StreamResult(xml);
        	document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -53,6 +54,7 @@ public class XMLserializer {// Singleton
         Transformer xformer = TransformerFactory.newInstance().newTransformer();
         xformer.setOutputProperty(OutputKeys.INDENT, "yes");
         xformer.transform(source, result);
+        return xml.getAbsolutePath();
 	}
 
 	private Element createGTElt(GlobalTour gt) {
