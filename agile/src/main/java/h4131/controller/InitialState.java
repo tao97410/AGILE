@@ -45,19 +45,6 @@ public class InitialState implements State{
         try {
             w.setFullScreen(false);
             Element file = XMLdeserializer.loadGlobalTourFirst(loadedGlobalTour);
-            // if(loadedGlobalTour.getMap().equals(c.getNameOfMap())){
-            //     c.setGlobalTour(loadedGlobalTour);
-            //     c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
-            //     w.setFullScreen(true);
-            //     w.drawGlobalTour(loadedGlobalTour);
-            // }
-            // else{
-            //     loadMap(c, w, loadedGlobalTour.getMap());
-            //     c.setGlobalTour(loadedGlobalTour);
-            //     c.setNumberOfCourier(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size());
-            //     w.setFullScreen(true);
-            //     w.drawGlobalTour(loadedGlobalTour);
-            // }
             if(!loadedGlobalTour.getMap().equals(c.getNameOfMap())){
                 loadMap(c, w, loadedGlobalTour.getMap());
             }
@@ -66,8 +53,22 @@ public class InitialState implements State{
             loadedCurrentDeliveryPoint.addObserver(w);
             c.setCurrentDeliveryPoint(loadedCurrentDeliveryPoint);
             c.getCurrentDeliveryPoint().update();
+            int currentNumberOfCourier = c.getNumberOfCourier();
+            int loadedNumberOfCourier = c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size();
+            if(loadedNumberOfCourier>currentNumberOfCourier){
+                if(w.NumberCourierChoice(currentNumberOfCourier, loadedNumberOfCourier))
+                    setNumberOfCourier(c, w, loadedNumberOfCourier);
+                else{
+                    setNumberOfCourier(c, w, currentNumberOfCourier);
+                    computeGlobalTour(c, w);
+                }
+            }
+            
+            
             w.setFullScreen(true);
-            w.drawGlobalTour(loadedGlobalTour);
+            w.drawGlobalTour(c.getGlobalTour());
+            w.refreshNumberOfCourier();
+            
 
             
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
@@ -76,6 +77,7 @@ public class InitialState implements State{
                 e.printStackTrace();
             }
             w.setFullScreen(true);
+            
             
         } 
     }
@@ -128,22 +130,30 @@ public class InitialState implements State{
     }
 
     @Override
-    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
-        c.setGlobalTour(new GlobalTour());
-        c.getGlobalTour().setMap(c.getNameOfMap());
-        int courier = 0;
-        c.clearAllGraphs();
-        for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
-            courier ++;
-            if(!listDeliveryPoints.isEmpty()){
-                Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
-                graph.computeBestTour(c.getGlobalTour(), courier);
-                c.addGraph(graph);
-                if(graph.getDeliveryErreur()!=null){
-                    windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
+    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){        
+        try{
+            c.setGlobalTour(new GlobalTour());
+            c.setNameOfMap(c.getNameOfMap());
+            int courier = 0;
+            c.clearAllGraphs();
+            for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
+                courier ++;
+                if(!listDeliveryPoints.isEmpty()){
+                
+                    Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
+                    graph.computeBestTour(c.getGlobalTour(),courier);    
+                    c.addGraph(graph);
+                    if(graph.getDeliveryErreur()!=null){
+                        windowBuilder.alert("Calculation impossible on tour n°" + courier +" and on the time window : " + graph.getDeliveryErreur().getTime().getRepresentation());
+                    }
                 }
-            }
-            
+                else{
+                    c.getGlobalTour().addTour(new Tour());
+                }
+            }                
+            windowBuilder.drawGlobalTour(c.getGlobalTour());
+        }catch(NullPointerException e){
+            windowBuilder.alert("No path found. Check that every intersections are accessibles in both ways.");
         }
         windowBuilder.drawGlobalTour(c.getGlobalTour());
     }

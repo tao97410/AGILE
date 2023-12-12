@@ -21,35 +21,49 @@
       <VBox fx:id="layout" stylesheets="@styleMap.css" />
       <Group disable="false" layoutX="100.0" visible="true" StackPane.alignment="TOP_LEFT">
          <Pane fx:id="topLeftMenuPane" layoutX="-28.0" layoutY="-30.0" style="                   -fx-background-color: rgba(40, 40, 40, 0.96);                   -fx-padding: 10px;                   -fx-background-radius: 7px;">
-            <Button fx:id="loadTourButton" layoutX="45.0" layoutY="16.0" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="5.0" prefWidth="165.0" text="Load a tour">
+            <VBox alignment="CENTER" layoutX="10.0" spacing="15.0">
+            <children>
+               <Button fx:id="loadTourButton" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="40.0" prefWidth="175.0" text="Load a tour">
+                  <padding>
+                     <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
+                  </padding>
+                  <font>
+                     <Font name="System Bold" size="18.0" />
+                  </font>
+               </Button>
+               <ChoiceBox fx:id="mapChoiceBox" prefHeight="40.0" prefWidth="175.0">
+                  <padding>
+                     <Insets bottom="4.0" left="7.0" right="7.0" top="5.0" />
+                  </padding>  
+               </ChoiceBox>   
+               <Button fx:id="computeTourButton" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Compute a global tour" textAlignment="CENTER">
+                  <padding>
+                     <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
+                  </padding>
+                  <font>
+                     <Font name="System Bold" size="18.0" />
+                  </font></Button>
+               <Button fx:id="saveGlobalTourButton" maxHeight="40.0" mnemonicParsing="false" onAction="#doSaveGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Save a global tour">
+                  <padding>
+                     <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                  </padding>
+                  <font>
+                     <Font name="System Bold" size="18.0" />
+                  </font></Button>
+               <HBox spacing="5.0">
+               <children>   
+                  <Text fill="WHITE" text="Number of courier(s) : " wrappingWidth="174.1578369140625">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font></Text>
+                  <TextField fx:id="numberOfCourierField" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
+               </children> 
+               </HBox> 
+            </children>
                <padding>
-                  <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
-               </padding>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Button>
-            <ChoiceBox fx:id="mapChoiceBox" layoutX="45.0" layoutY="73.0" prefHeight="4.0" prefWidth="165.0">
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>  
-            </ChoiceBox>   
-            <Text fill="WHITE" layoutX="28.0" layoutY="183.0" text="Number of courier(s) : " wrappingWidth="174.1578369140625">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font></Text>
-            <TextField fx:id="numberOfCourierField" layoutX="202.0" layoutY="166.0" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
-            <Button fx:id="computeTourButton" layoutX="28.0" layoutY="231.0" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefHeight="46.0" prefWidth="200.0" text="Compute a global tour">
-               <padding>
-                  <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
-               </padding>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Button>
-            <Button fx:id="saveGlobalTourButton" layoutX="28.0" layoutY="292.0" mnemonicParsing="false" onAction="#doSaveGlobalTour" prefHeight="42.0" prefWidth="200.0" text="Save a global tour">
-               <padding>
-                  <Insets bottom="15.0" left="9.0" right="9.0" top="15.0" />
-               </padding></Button>
+                  <Insets top="10.0" />
+               </padding>            
+            </VBox>
          </Pane>
          <StackPane.margin>
             <Insets left="20.0" top="20.0" />
@@ -78,7 +92,7 @@
                <children>
                   <ImageView fitHeight="150.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@clock.png.png" />
+                        <Image url="@clock.png" />
                      </image>
                   </ImageView>
                   <ChoiceBox fx:id="timeWindowChoice" prefWidth="150.0" />
@@ -91,7 +105,7 @@
                <children>
                   <ImageView fitHeight="150.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@bike.png.png" />
+                        <Image url="@bike.png" />
                      </image>
                   </ImageView>
                   <ChoiceBox fx:id="courierChoice" prefWidth="150.0" />
@@ -112,7 +126,7 @@
                <children>
                   <ImageView fitHeight="150.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@clock.png.png" />
+                        <Image url="@clock.png" />
                      </image>
                   </ImageView>
                   <ChoiceBox fx:id="modifyTimeWindowChoice" prefWidth="150.0" />
@@ -122,7 +136,7 @@
                <children>
                   <ImageView fitHeight="150.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@bike.png.png" />
+                        <Image url="@bike.png" />
                      </image>
                   </ImageView>
                   <ChoiceBox fx:id="modifyCourierChoice" prefHeight="46.0" prefWidth="149.0" />

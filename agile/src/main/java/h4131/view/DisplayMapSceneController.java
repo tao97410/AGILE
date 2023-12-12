@@ -362,7 +362,7 @@ public class DisplayMapSceneController {
         if (event.getSource() instanceof IntersectionCircle) {
             IntersectionCircle intersection = (IntersectionCircle) event.getSource();
             intersection.setPreviousColor(intersection.getFill());
-            intersection.setFill(Color.LIGHTSKYBLUE);
+            intersection.setFill(Color.CORNFLOWERBLUE);
             intersection.setCursor(Cursor.HAND);
         }
     }
@@ -387,7 +387,7 @@ public class DisplayMapSceneController {
         if (event.getSource() instanceof SegmentLine) {
             SegmentLine segment = (SegmentLine) event.getSource();
             segment.setPreviousColor(segment.getStroke());
-            segment.setStroke(Color.LIGHTSKYBLUE);
+            segment.setStroke(Color.CORNFLOWERBLUE);
             segment.setCursor(Cursor.DEFAULT);
         }
     }

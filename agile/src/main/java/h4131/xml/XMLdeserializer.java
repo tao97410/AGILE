@@ -135,27 +135,23 @@ public class XMLdeserializer {
 		if(CourierId<0){
 			throw new ExceptionXML("Error when reading file: The id of the courier must be positive");
 		}
-		if(CourierId<=currentDp.getAffectedDeliveryPoints().size()){
+		
 			tour = new Tour(CourierId);
 			NodeList routes = elt.getElementsByTagName("route");
 			NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
 			for (int i=1; i<deliverypointList.getLength(); i++ ){
 				DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
 				tour.addDeliveryPoint(deliveryPoint);
+				if(CourierId>currentDp.getAffectedDeliveryPoints().size())
+					currentDp.addNewCourier();
 				currentDp.addAffectedDeliveryPoint(CourierId, deliveryPoint);
 			}
 			for (int i=0; i<routes.getLength(); i++ ){
 				Segment route = createSegment((Element) routes.item(i), map);
 				tour.addSegment(route);
 			}
-		}
-		else{
-			NodeList deliverypointList = elt.getElementsByTagName("deliveryPoint");
-			for (int i=1; i<deliverypointList.getLength(); i++ ){
-				DeliveryPoint deliveryPoint = createDeliveryPoint((Element) deliverypointList.item(i), map);
-				currentDp.addNonAffectedDeliveryPoint(deliveryPoint);
-			}
-		}
+		
+		
 		
 		return tour;
 		
