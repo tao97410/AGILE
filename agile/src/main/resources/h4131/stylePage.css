@@ -3,6 +3,8 @@
     -fx-faint-focus-color: transparent;
 }
 
+/* ------- ChoiceBox styles ------- */
+
 ChoiceBox {
     -fx-font-size: 18px;
     -fx-background-color: white;
@@ -10,7 +12,6 @@ ChoiceBox {
 }
 
 ChoiceBox:hover {
-    -fx-background-color : rgb(181, 181, 181);
     -fx-cursor: hand;
 } 
 
@@ -20,10 +21,12 @@ ChoiceBox:hover {
     -fx-border-radius: 3px;
 }
 
-ChoiceBox .menu-item:focused { -fx-background-color: red; }
+ChoiceBox .menu-item:focused { -fx-background-color: rgb(150, 150, 150); }
 ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
 
-Pane{
+/* ------- Pane styles ------- */
+
+#validationPane, #modifyPane{
     -fx-background-color: white;
 }
 
@@ -32,44 +35,90 @@ Pane{
 Button {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+     -fx-transition: all 0.3s; /* Add transition for all properties over 0.3 seconds */
 }
 
-Button:hover {
-    -fx-cursor: hand;
+Button:hover, #mapChoiceBox:hover {
+    -fx-scale-x: 1.1; /* Scale effect on hover */
+    -fx-scale-y: 1.1;
+}
+
+#loadTourButton, #computeTourButton {
+    -fx-background-color: linear-gradient(to bottom, rgb(25, 110, 205), rgba(30, 135, 250, 1));
+    -fx-text-fill: rgb(255, 255, 255);
 }
 
 #validationButton, #modifyButton {
-    -fx-background-color : rgb(50, 140, 50);
-    -fx-text-fill : white;
+    -fx-background-color: rgb(50, 140, 50);
+    -fx-text-fill: white;
 }
 
 #cancelButton, #deleteButton {
-    -fx-text-fill:white;
+    -fx-text-fill: white;
     -fx-background-color: rgb(255, 56, 56);
 }
 
-#tourListGroup{    
+/* ------- Group styles ------- */
+
+#tourListGroup {    
     -fx-margin:50px;
-    -fx-spacing:10px
+    -fx-spacing:10px;
 } 
 
-#groupScrollable{
+#groupScrollable {
     -fx-padding:10 50 0 0;
 }
 
-#scrollPane{
-    -fx-background-color:transparent;
+/* ------- ScrollPane styles ------- */
+
+#scrollPane {
+    -fx-background-color: transparent;
 }
 
 #scrollPane > .viewport {
-    -fx-background-color:transparent;
+    -fx-background-color: transparent;
 }
 
-Label{
+/* ------- Label styles ------- */
+
+Label {
     -fx-alignment: center;
 }
 
 DeliveryPointLabel:hover{
     -fx-cursor: hand;
     -fx-text-fill: red;
+}
+
+/* ------- Font styles ------- */
+
+#computeTourButton, #loadTourButton, #mapChoiceBox {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#saveGlobalTourButton {
+    -fx-background-color :white;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+#alertPane {
+    -fx-padding: 10px;
+    -fx-background-radius: 10px;
+    -fx-background-color: rgba(255, 255, 255, 0.75);
+}
+
+#courierChangeAlert {
+    -fx-fill: rgb(25, 110, 205);
+    -fx-font-weight : bold;
+    -fx-font-size : 24px;
+}
+
+#courierAlertTitle {
+    -fx-fill: rgb(30, 30, 30);
+    -fx-font-weight : bold;
+    -fx-font-size : 22px;
 }

@@ -9,10 +9,10 @@ public class CurrentDeliveryPoint extends Observable{
 	private LinkedList<LinkedList<DeliveryPoint>> affectedDeliveryPoints;
 	private LinkedList<DeliveryPoint> nonAffectedDeliveryPoints;
 
-    public CurrentDeliveryPoint(){
+    public CurrentDeliveryPoint(int nbofCourier){
         
 		this.affectedDeliveryPoints = new LinkedList<>();
-		for(int i = 0; i<3; i++){
+		for(int i = 0; i<nbofCourier; i++){
 			this.affectedDeliveryPoints.add(new LinkedList<DeliveryPoint>());
 		}
 		this.nonAffectedDeliveryPoints = new LinkedList<>();
@@ -54,6 +54,19 @@ public class CurrentDeliveryPoint extends Observable{
      */
     public void addAffectedDeliveryPoint(int courier, DeliveryPoint deliveryPoint){
         this.affectedDeliveryPoints.get(courier - 1).add(deliveryPoint);
+        notifyObservers();
+    }
+
+      /**
+     * Add an delivery point to one of the lists - affected or non affected
+     * @param courier the courier to who you want to add a point
+     * @param deliveryPoint to add
+     */
+    public void addDeliveryPointToAssociatedList(int courier,DeliveryPoint deliveryPoint){
+        if(courier<=this.getAffectedDeliveryPoints().size())
+            this.affectedDeliveryPoints.get(courier - 1).add(deliveryPoint);
+        else
+            this.nonAffectedDeliveryPoints.add(deliveryPoint);
         notifyObservers();
     }
 
@@ -109,6 +122,18 @@ public class CurrentDeliveryPoint extends Observable{
     public void removeAssignedDeliveryPoint(DeliveryPoint deliveryPointToRemove, int courier) {
         this.affectedDeliveryPoints.get(courier-1).remove(deliveryPointToRemove);
         notifyObservers();
+    }
+
+    public void update(){
+        notifyObservers();
+    }
+
+    public void empty(int newNumberOfCourier){
+		this.affectedDeliveryPoints = new LinkedList<>();
+		for(int i = 0; i<newNumberOfCourier; i++){
+			this.affectedDeliveryPoints.add(new LinkedList<DeliveryPoint>());
+		}
+		this.nonAffectedDeliveryPoints = new LinkedList<>();
     }
 
 }

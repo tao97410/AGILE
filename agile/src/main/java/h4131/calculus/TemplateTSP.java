@@ -1,6 +1,4 @@
 package h4131.calculus;
-import h4131.model.TimeWindow;
-import javafx.scene.effect.Light.Spot;
 
 import java.util.ArrayList;
 import java.util.Collection;

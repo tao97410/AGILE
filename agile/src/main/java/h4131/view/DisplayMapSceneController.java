@@ -5,6 +5,10 @@ import java.util.LinkedList;
 import h4131.controller.Controller;
 import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -28,6 +32,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -36,20 +42,27 @@ public class DisplayMapSceneController {
 
     private Controller controller;
     private String previousNumberOfCourier = "3";
+    private int previousCourierChoice = 1;
 
-    //Main containers
+    // Main containers
     @FXML
     private StackPane container;
     @FXML
     private VBox layout;
 
-    //Main menu controls
+    // Main menu controls
+    @FXML
+    private Button loadTourButton;
+    @FXML
+    private Button computeTourButton;
+    @FXML
+    private Button saveGlobalTourButton;
     @FXML
     private ChoiceBox<String> mapChoiceBox;
     @FXML
     private TextField numberOfCourierField;
 
-    //Delivery point validation menu
+    // Delivery point validation menu
     @FXML
     private Pane validationPane;
     @FXML
@@ -63,7 +76,7 @@ public class DisplayMapSceneController {
     @FXML
     private Button cancelButton;
 
-    //Delivery point modification menu
+    // Delivery point modification menu
     @FXML
     private Button deleteButton;
     @FXML
@@ -77,15 +90,21 @@ public class DisplayMapSceneController {
     @FXML
     private Button modifyButton;
 
-    //List of delivery points by courier
+    // List of delivery points by courier
     @FXML
     private VBox tourListGroup;
     @FXML
     private ScrollPane scrollPane;
 
+    // Alert texts
+    @FXML
+    private Text courierChangeAlert;
+    @FXML
+    private Pane alertPane;
+
     @FXML
     private void initialize() {
-        mapChoiceBox.setValue("Select a map...");
+        mapChoiceBox.setValue("Select a map  ");
         mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
 
         // Add a ChangeListener to the ChoiceBox to detect selection changes
@@ -102,29 +121,42 @@ public class DisplayMapSceneController {
             if (!event.getCharacter().matches("\\d")) {
                 event.consume(); // Consume non-numeric input
             }
-            if(numberOfCourierField.getText().equals("0")){
+            if (numberOfCourierField.getText().equals("0")) {
                 numberOfCourierField.setText(previousNumberOfCourier);
             }
-            
+
         });
 
-        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(), TimeWindow.NINE_TEN.getRepresentation(),
-            TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
+        timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(),
+                TimeWindow.NINE_TEN.getRepresentation(),
+                TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
         timeWindowChoice.setValue(TimeWindow.EIGHT_NINE.getRepresentation());
 
-        modifyTimeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(), TimeWindow.NINE_TEN.getRepresentation(),
-            TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
+        modifyTimeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(),
+                TimeWindow.NINE_TEN.getRepresentation(),
+                TimeWindow.TEN_ELEVEN.getRepresentation(), TimeWindow.ELEVEN_TWELVE.getRepresentation());
         modifyTimeWindowChoice.setValue(TimeWindow.EIGHT_NINE.getRepresentation());
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        alertPane.setVisible(false);
     }
 
     @FXML
-    void onNumberOfCouriersChanged(KeyEvent event){        
-        if(!numberOfCourierField.getText().equals("") && !numberOfCourierField.getText().equals("0") && event.getCode()==KeyCode.ENTER){
+    void onNumberOfCouriersChanged(KeyEvent event) {
+        if (!numberOfCourierField.getText().equals("") && !numberOfCourierField.getText().equals("0")
+                && event.getCode() == KeyCode.ENTER) {
             previousNumberOfCourier = numberOfCourierField.getText();
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
+
+            // Alert the user of the number of courier effectively changed
+            courierChangeAlert.setText(numberOfCourierField.getText());
+
+            fadeIn(alertPane);
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(e -> fadeOut(alertPane));
+            pause.play();
         }
     }
 
@@ -135,21 +167,22 @@ public class DisplayMapSceneController {
 
     @FXML
     void validateInformation(ActionEvent event) {
-        this.validationPane.setVisible(false);
+        fadeOut(validationPane);
         String timeValue = this.timeWindowChoice.getValue();
         TimeWindow time = TimeWindow.getTimeWindowByRepresentation(timeValue);
-        controller.addDeliveryPoint(time, this.courierChoice.getValue());
+        previousCourierChoice = this.courierChoice.getValue();
+        controller.addDeliveryPoint(time, previousCourierChoice);
     }
 
     @FXML
     void cancelIntersection(ActionEvent event) {
-        this.validationPane.setVisible(false);
+        fadeOut(validationPane);
         controller.cancelDeliveryPoint();
     }
 
     @FXML
     void modifyDeliveryPoint(ActionEvent event) {
-        this.modifyPane.setVisible(false);
+        fadeOut(modifyPane);
         String timeValue = this.modifyTimeWindowChoice.getValue();
         TimeWindow time = TimeWindow.getTimeWindowByRepresentation(timeValue);
         controller.changeInfosDeliveryPoint(time, this.modifyCourierChoice.getValue());
@@ -157,25 +190,72 @@ public class DisplayMapSceneController {
 
     @FXML
     void deleteDeliveryPoint(ActionEvent event) {
-        this.modifyPane.setVisible(false);
+        fadeOut(modifyPane);
         controller.deleteDeliveryPoint();
     }
 
     @FXML
-    void doComputeGlobalTour(ActionEvent event){
+    void doComputeGlobalTour(ActionEvent event) {
         controller.computeGlobalTour();
     }
 
     @FXML
-    void doSaveGlobalTour(ActionEvent event){
+    void doSaveGlobalTour(ActionEvent event) {
         controller.saveGlobalTour();
     }
 
-    public VBox getTourListGroup(){
+    /*--------- Styling and animation methods ---------*/
+
+    public void fadeIn(Node node) {
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), node);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        node.setVisible(true);
+    }
+
+    public void fadeOut(Node node) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.play();
+        node.setVisible(false);
+    }
+
+    /**
+     * Apply animation transition to any JavaFX node.
+     * 
+     * @param node     The JavaFX node to apply animation.
+     * @param scaleTo  The scaling factor to apply on hover.
+     * @param duration The duration of the animation.
+     */
+    public void applyAnimationTransition(Node node, double scaleTo, Duration duration) {
+        // Create a scale transition
+        ScaleTransition scaleTransition = new ScaleTransition(duration, node);
+        scaleTransition.setInterpolator(Interpolator.EASE_BOTH); // or other interpolator
+        scaleTransition.setToX(scaleTo);
+        scaleTransition.setToY(scaleTo);
+
+        // Create an inverse scale transition for when the mouse exits
+        ScaleTransition inverseScaleTransition = new ScaleTransition(duration, node);
+        inverseScaleTransition.setInterpolator(Interpolator.EASE_BOTH); // or other interpolator
+        inverseScaleTransition.setToX(1.0);
+        inverseScaleTransition.setToY(1.0);
+
+        // Add the transitions to the node
+        node.setOnMouseEntered(event -> scaleTransition.play());
+        node.setOnMouseExited(event -> inverseScaleTransition.play());
+    }
+
+    public int getPreviousCourierChoice() {
+        return previousCourierChoice;
+    }
+
+    public VBox getTourListGroup() {
         return this.tourListGroup;
     }
 
-    public Label getWhichIntersection(){
+    public Label getWhichIntersection() {
         return this.idIntersection;
     }
 
@@ -235,9 +315,9 @@ public class DisplayMapSceneController {
             IntersectionCircle intersectionClicked = (IntersectionCircle) event.getSource();
             boolean isPresent = false;
             int courier = 1;
-            for(LinkedList<DeliveryPoint> list : controller.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
-                for(DeliveryPoint deliveryPoint : list){
-                    if(deliveryPoint.getPlace().getId()==intersectionClicked.getIntersectionId()){
+            for (LinkedList<DeliveryPoint> list : controller.getCurrentDeliveryPoint().getAffectedDeliveryPoints()) {
+                for (DeliveryPoint deliveryPoint : list) {
+                    if (deliveryPoint.getPlace().getId() == intersectionClicked.getIntersectionId()) {
                         controller.modifyDeliveryPoint(deliveryPoint, courier);
                         isPresent = true;
                         break;
@@ -245,23 +325,25 @@ public class DisplayMapSceneController {
                 }
                 courier++;
             }
-            if(!isPresent){
-                for(DeliveryPoint deliveryPoint : controller.getCurrentDeliveryPoint().getNonAffectedDeliveryPoints()){
-                    if(deliveryPoint.getPlace().getId()==intersectionClicked.getIntersectionId()){
+            if (!isPresent) {
+                for (DeliveryPoint deliveryPoint : controller.getCurrentDeliveryPoint()
+                        .getNonAffectedDeliveryPoints()) {
+                    if (deliveryPoint.getPlace().getId() == intersectionClicked.getIntersectionId()) {
                         controller.modifyDeliveryPoint(deliveryPoint, 0);
                         isPresent = true;
                         break;
                     }
                 }
-            }            
-            if(!isPresent){
+            }
+            if (!isPresent) {
                 this.controller.leftClick(intersectionClicked.getIntersectionId());
             }
         }
     }
 
     /**
-     * Method called after click on an label of a delivery point on the right scroll pane
+     * Method called after click on an label of a delivery point on the right scroll
+     * pane
      */
     public void handleDeliveryPointLabelClicked(MouseEvent event) {
 
