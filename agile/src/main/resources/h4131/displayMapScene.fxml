@@ -183,7 +183,7 @@
          <VBox disable="false" visible="true">
             <TitledPane alignment="CENTER_RIGHT">
                <graphic>
-                  <HBox prefHeight="0.0" prefWidth="133.0" spacing="12">
+                  <HBox prefHeight="0.0" prefWidth="133.0" >
                      <Circle fill="red" radius="8.75" stroke="BLACK" strokeWidth="1.2" />   
                      <Label alignment="CENTER" prefHeight="18.0" prefWidth="87.0" style="-fx-font-weight: bold; -fx-text-fill: white;" text="Courier : 1" textFill="WHITE" />
                   </HBox>

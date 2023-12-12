@@ -10,7 +10,9 @@
 .titled-pane>.title {
     -fx-background-color: cornflowerblue;
     -fx-font-weight: bold;
+    -fx-padding: 7 20 7 20;
 }
+
 
 .titled-pane>.title>.arrow-button .arrow {
     -fx-background-color: white;
