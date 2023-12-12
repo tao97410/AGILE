@@ -64,10 +64,10 @@ public class DisplayMapSceneController {
     private Button saveGlobalTourButton;  
     @FXML
     private TextField numberOfCourierField;
-
-    // Search bar menu
     @FXML
     private ChoiceBox<String> mapChoiceBox;
+
+    // Search bar menu    
     @FXML
     private Button cancelResearch;
     @FXML
@@ -255,6 +255,10 @@ public class DisplayMapSceneController {
 
     /*--------- Styling and animation methods ---------*/
 
+    /**
+     * Used to display a node with fading effect
+     * @param node the node to display
+     */
     public void fadeIn(Node node) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), node);
         fadeIn.setFromValue(0);
@@ -263,6 +267,10 @@ public class DisplayMapSceneController {
         node.setVisible(true);
     }
 
+    /**
+     * Used to hide a node with fading effect
+     * @param node the node to hide 
+     */
     public void fadeOut(Node node) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
         fadeOut.setFromValue(1);
