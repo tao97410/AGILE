@@ -125,21 +125,28 @@ public class InitialState implements State{
     }
 
     @Override
-    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){
-        c.setGlobalTour(new GlobalTour());
-        c.getGlobalTour().setMap(c.getNameOfMap());
-        int courier = 0;
-        for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
-            courier ++;
-            if(!listDeliveryPoints.isEmpty()){
-                Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
-                graph.computeBestTour(c.getGlobalTour(),courier);
-                   
-                if(graph.getDeliveryErreur()!=null){
-                windowBuilder.alert("error on this time window : " + graph.getDeliveryErreur().getTime() + "on tour n°" + courier);
-            }
-            }
-            
+    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){        
+        try{
+            c.setGlobalTour(new GlobalTour());
+          
+            int courier = 0;
+            for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
+                courier ++;
+                if(!listDeliveryPoints.isEmpty()){
+                
+                    Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
+                    graph.computeBestTour(c.getGlobalTour());    
+                    if(graph.getDeliveryErreur()!=null){
+                        windowBuilder.alert("Calculation impossible on tour n°" + courier +" and on the time window : " + graph.getDeliveryErreur().getTime().getRepresentation());
+                    }
+                }
+                else{
+                    c.getGlobalTour().addTour(new Tour());
+                }
+            }                
+            windowBuilder.drawGlobalTour(c.getGlobalTour());
+        }catch(NullPointerException e){
+            windowBuilder.alert("No path found. Check that every intersections are accessibles in both ways.");
         }
         windowBuilder.drawGlobalTour(c.getGlobalTour());
     }

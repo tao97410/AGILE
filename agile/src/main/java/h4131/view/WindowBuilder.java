@@ -12,6 +12,7 @@ import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
 import h4131.model.Segment;
+import h4131.model.TimeWindow;
 import h4131.model.Tour;
 import h4131.observer.Observable;
 import h4131.observer.Observer;
@@ -35,6 +36,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -52,7 +56,7 @@ public class WindowBuilder implements Observer {
     private double latMin;
     private double latMax;
 
-    private final Color[] colors = { Color.RED, Color.BLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE, Color.GREEN };
+    private final Color[] colors = { Color.RED, Color.BLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE, Color.GREEN};
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -69,7 +73,7 @@ public class WindowBuilder implements Observer {
 
         drawMap(firstMap);
 
-        Image icon = new Image(getClass().getResourceAsStream("/h4131/insa_logo.png"));
+        Image icon = new Image(getClass().getResourceAsStream("/h4131/app-logo.png"));
         stage.getIcons().add(icon);
 
         stage.setTitle("INSA Path Master");
@@ -259,26 +263,50 @@ public class WindowBuilder implements Observer {
             color++;
         }
         for (Segment segment : tours) {
-            if (segment.getLength() > 50) {
+            if (segment.getLength() > 75) {
                 drawArrow(segment, 5, 5);
+            }
+        }
+
+        //drawing intersections order
+        for(Tour tour : globalTour.getTours()){
+            int deliveryNumber = 1;
+            for(DeliveryPoint delivery : tour.getDeliveryPoints()){
+                if(delivery.getTime()!=TimeWindow.WAREHOUSE){
+                    double lat = delivery.getPlace().getLatitude();
+                    double longi = delivery.getPlace().getLongitude();
+                    double deliveryX = ((longi - longMin) / (longMax - longMin)) * screenHeight + (screenWidth - screenHeight) / 2;
+                    double deliveryY = screenHeight - ((lat - latMin) / (latMax - latMin)) * screenHeight;
+                    Text deliveryOrder = new Text(String.valueOf(deliveryNumber));
+                    deliveryOrder.setFont(Font.font("Calibri", FontWeight.BOLD, 4));
+                    deliveryOrder.setFill(Color.WHITE);
+                    deliveryOrder.setMouseTransparent(true);
+                    deliveryOrder.setX(deliveryX - deliveryOrder.getBoundsInLocal().getWidth() / 2);
+                    deliveryOrder.setY(deliveryY + deliveryOrder.getBoundsInLocal().getHeight() / 4);
+                    shapesPane.getChildren().add(deliveryOrder);
+                    deliveryOrder.setViewOrder(-1);
+                    deliveryNumber++; 
+                }      
             }
         }
     }
 
     private void hideOldTour() {
-        for (Node node : shapesPane.getChildren()) {
-            if (node instanceof SegmentLine) {
+        for (Node node : shapesPane.getChildren()){
+            if (node instanceof SegmentLine){
                 SegmentLine segment = (SegmentLine) node;
                 if (segment.getStroke() != Color.WHITE) {
-                    // segment.setStroke(Color.WHITE);
-                    // segment.setStrokeWidth(1.0);
                     segment.setVisible(false);
                     segment.setManaged(false);
                 }
-            } else if (node instanceof Polygon) {
+            } else if (node instanceof Polygon){
                 Polygon arrow = (Polygon) node;
                 arrow.setVisible(false);
                 arrow.setManaged(false);
+            } else if(node instanceof Text){
+                Text number = (Text) node;
+                number.setVisible(false);
+                number.setManaged(false);
             }
         }
     }
@@ -348,6 +376,7 @@ public class WindowBuilder implements Observer {
         circle.setOnMouseEntered(displayMapSceneController::handleIntersectionEntered);
         circle.setOnMouseExited(displayMapSceneController::handleIntersectionExited);
         shapesPane.getChildren().add(circle);
+        circle.setViewOrder(0);
     }
 
     /**
@@ -370,6 +399,7 @@ public class WindowBuilder implements Observer {
         tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
         Tooltip.install(line, tooltip);
         shapesPane.getChildren().add(line);
+        line.setViewOrder(3);
     }
 
     /**
@@ -390,6 +420,7 @@ public class WindowBuilder implements Observer {
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
         line.setMouseTransparent(true);
         shapesPane.getChildren().add(line);
+        line.setViewOrder(2);
     }
 
     /**
@@ -439,6 +470,7 @@ public class WindowBuilder implements Observer {
         arrow.setFill(Color.WHITE);
         arrow.setMouseTransparent(true);
         shapesPane.getChildren().add(arrow);
+        arrow.setViewOrder(1);
     }
 
     /**

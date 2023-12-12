@@ -14,11 +14,7 @@ import h4131.model.TimeWindow;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
-import javafx.animation.FadeTransition;
-import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Controller {
 
