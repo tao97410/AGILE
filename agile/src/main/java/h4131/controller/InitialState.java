@@ -128,14 +128,14 @@ public class InitialState implements State{
     public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){        
         try{
             c.setGlobalTour(new GlobalTour());
-          
+            c.setNameOfMap(c.getNameOfMap());
             int courier = 0;
             for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
                 courier ++;
                 if(!listDeliveryPoints.isEmpty()){
                 
                     Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
-                    graph.computeBestTour(c.getGlobalTour());    
+                    graph.computeBestTour(c.getGlobalTour(),courier);    
                     if(graph.getDeliveryErreur()!=null){
                         windowBuilder.alert("Calculation impossible on tour n°" + courier +" and on the time window : " + graph.getDeliveryErreur().getTime().getRepresentation());
                     }
