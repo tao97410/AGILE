@@ -80,13 +80,29 @@ Button {
     -fx-scale-y: 1.1;
 }
 
+#hBoxResearch {
+    -fx-background-color: white;
+    -fx-background-radius:20px;
+    -fx-border-width: 5px;
+    -fx-border-radius: 7px;
+    -fx-border-color: rgb(100,149,237);
+}
+
 #buttonList {
     -fx-background-color: white;
-    -fx-background-radius: 7px;
+    -fx-background-radius: 25px;
     -fx-border-radius: 6px;
-    -fx-border-width: 5px;
-    -fx-border-color: rgb(225, 225, 225);
+    -fx-border-width: 7px;
+    -fx-border-color: rgb(100, 149, 237);
     -fx-padding: 15px;
+}
+
+#logo {
+    -fx-background-color: white;
+    -fx-background-radius: 25px;
+    -fx-border-radius: 6px;
+    -fx-border-width: 7px;
+    -fx-border-color: rgb(100, 149, 237);
 }
 
 #loadTourButton,
@@ -106,12 +122,20 @@ Button {
     -fx-border-radius: 12px;
 }
 
-#cancelResearch {    
+#cancelResearch {   
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0; 
+    -fx-background-radius: 5px;
     -fx-background-color : white;
 }
 
-#cancelResearch {    
-    -fx-background-color : white;
+#searchBar :focused{
+    -fx-min-height:65;
+    -fx-min-width:300.0;
+}
+
+#searchBar {
+    -fx-background-radius: 5px;
 }
 
 #validationButton,
@@ -167,10 +191,6 @@ DeliveryPointLabel:hover {
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
-
-/* #mapChoiceBox .label{    
-    -fx-text-fill: rgb(100,149,237);
-} */
 
 ChoiceBox .menu-item:focused {
     -fx-background-color: rgb(150, 150, 150);

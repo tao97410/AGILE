@@ -57,8 +57,8 @@ public class WindowBuilder implements Observer {
     private double latMin;
     private double latMax;
 
-    private final Color[] colors = { Color.RED, Color.DARKBLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE,
-            Color.GREEN };
+    private final Color[] colors = { Color.CHARTREUSE, Color.DARKSALMON, Color.DEEPPINK, Color.GOLD,Color.BLUEVIOLET, Color.TOMATO,
+            Color.GREEN, Color.AQUA, Color.RED, Color.DARKBLUE };
 
     /**
      * creates a window builder and displays the first scene of the application

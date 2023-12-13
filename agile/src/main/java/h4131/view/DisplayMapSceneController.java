@@ -41,6 +41,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -57,6 +58,10 @@ public class DisplayMapSceneController {
     @FXML
     private VBox layout;
     private Pane shapesPane;
+
+    //Logo
+    @FXML
+    private Pane logo;
 
     // Main menu controls
     @FXML
@@ -77,6 +82,8 @@ public class DisplayMapSceneController {
     private TextField searchBar;
     @FXML
     private ImageView numberOfBike;
+    @FXML
+    private HBox hBoxResearch;
 
     // Delivery point validation menu
     @FXML
@@ -178,6 +185,13 @@ public class DisplayMapSceneController {
         tooltip.setHideDelay(Duration.millis(100));
         tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
         Tooltip.install(numberOfBike, tooltip);
+
+        
+        tooltip = new Tooltip("Version : 1.0 \nAuthors : H4131 (ALFACATA)");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(logo, tooltip);
 
         loadTourButton.setOnMouseEntered(this::onMouseEnteredLoad);
         computeTourButton.setOnMouseEntered(this::onMouseEnteredCompute);
@@ -380,16 +394,16 @@ public class DisplayMapSceneController {
     public void onMouseEnteredCancel(MouseEvent event){
         Image image = new Image(getClass().getResourceAsStream("/h4131/red-cross.png"));
         ImageView imageView = new ImageView(image); 
-        imageView.setFitWidth(25.0);
-        imageView.setFitHeight(25.0);
+        imageView.setFitWidth(30.0);
+        imageView.setFitHeight(30.0);
         this.cancelResearch.setGraphic(imageView);
     }
 
     public void onMouseExitedCancel(MouseEvent event){
         Image image = new Image(getClass().getResourceAsStream("/h4131/cross.png"));
         ImageView imageView = new ImageView(image); 
-        imageView.setFitWidth(25.0);
-        imageView.setFitHeight(25.0);
+        imageView.setFitWidth(30.0);
+        imageView.setFitHeight(30.0);
         this.cancelResearch.setGraphic(imageView);
     }
 
