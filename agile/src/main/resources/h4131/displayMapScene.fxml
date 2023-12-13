@@ -109,15 +109,27 @@
          </StackPane.margin>
       </Group>
       <Group layoutX="100.0" StackPane.alignment="TOP_CENTER">
-         <Pane fx:id="alertPane" prefHeight="68.0" prefWidth="424.0" visible="false">
-            <Text fx:id="courierAlertTitle" layoutX="62.0" layoutY="43.0" text="Number of courier(s) set to : " textAlignment="CENTER">
+         <Pane fx:id="alertCourierChange" prefHeight="65.0" prefWidth="420.0" styleClass="alertPane">
+            <Text layoutX="62.0" layoutY="41.0" styleClass="alertText" text="Number of courier(s) set to : " textAlignment="CENTER">
             </Text>
-            <Text fx:id="courierChangeAlert" layoutX="366.0" layoutY="45.0" text="3" textAlignment="CENTER">
+            <Text fx:id="courierChangeText" layoutX="366.0" layoutY="42.0" styleClass="secondaryAlertText" textAlignment="CENTER">
             </Text>
          </Pane>
          
          <StackPane.margin>
-            <Insets top="20.0" />
+            <Insets top="30.0" />
+         </StackPane.margin>
+      </Group>
+      <Group layoutX="100.0" StackPane.alignment="TOP_CENTER">
+         <Pane fx:id="alertMapChange" prefHeight="65.0" prefWidth="420.0" styleClass="alertPane">
+            <Text layoutX="62.0" layoutY="41.0" styleClass="alertText" text="Map size set to : " textAlignment="CENTER">
+            </Text>
+            <Text fx:id="mapChangeText" layoutX="270.0" layoutY="41.0" styleClass="secondaryAlertText" textAlignment="CENTER">
+            </Text>
+         </Pane>
+         
+         <StackPane.margin>
+            <Insets top="30.0" />
          </StackPane.margin>
       </Group>
       <Pane fx:id="validationPane" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" visible="false" StackPane.alignment="CENTER">

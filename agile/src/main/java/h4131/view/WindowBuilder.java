@@ -17,6 +17,8 @@ import h4131.model.Tour;
 import h4131.observer.Observable;
 import h4131.observer.Observer;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -306,7 +308,7 @@ public class WindowBuilder implements Observer {
         for (Node node : shapesPane.getChildren()) {
             if (node instanceof SegmentLine) {
                 SegmentLine segment = (SegmentLine) node;
-                if (segment.getStroke() != Color.WHITE) {
+                if (segment.getStroke() != Color.WHITE && segment.getStroke() != Color.BLUE) {
                     segment.setVisible(false);
                     segment.setManaged(false);
                 }
@@ -340,7 +342,7 @@ public class WindowBuilder implements Observer {
         whichIntersection.setText(
                 "Intersection coordinates:\n" + intersection.getLatitude() + "°, " + intersection.getLongitude() + "°");
         whichIntersection.setWrapText(true);
-        Pane validationPane = displayMapSceneController.getvalidationPane();
+        Pane validationPane = displayMapSceneController.getValidationPane();
         fadeIn(validationPane);
         validationPane.setDisable(false);
         disableBackground(true);
@@ -601,27 +603,42 @@ public class WindowBuilder implements Observer {
     }
 
     /**
-     * Used to display notification 
-     * @param pane the notification to display
+     * Used to notify the user with a pane
+     * 
+     * @param pane the pane to show
      */
-    public void fadeIn(Pane pane) {
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.play();
-        pane.setVisible(true);
+    public void alertMapChange(String mapSize) {
+        displayMapSceneController.getMapChangeText().setText(mapSize);
+        fadeIn(displayMapSceneController.getAlertMapChange());
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(e -> fadeOut(displayMapSceneController.getAlertMapChange()));
+        pause.play();
     }
 
     /**
-     * Used to hide notification
-     * @param pane the notification to hide
+     * Used to display an element with fading
+     * 
+     * @param node the element to show
      */
-    public void fadeOut(Pane pane) {
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
+    public void fadeIn(Node node) {
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), node);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        node.setVisible(true);
+    }
+
+    /**
+     * Used to hide an element with fading
+     * 
+     * @param node the element to hide
+     */
+    public void fadeOut(Node node) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
         fadeOut.play();
-        pane.setVisible(false);
+        node.setVisible(false);
     }
 
 }
