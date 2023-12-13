@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public class GlobalTour {
     private List<Tour> tours;
+
     public GlobalTour(){
         this.tours=new ArrayList<>();
     }
+    
     public GlobalTour(List<Tour> someTours){
         this.tours = someTours;
     }

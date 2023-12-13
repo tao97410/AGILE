@@ -15,8 +15,8 @@ public abstract class TemplateTSP implements TSP {
 	protected double bestSolCost;
 	protected int timeLimit;
 	protected long startTime;
-	protected int indexDeliveryErreur;
-	private int maxNbSommetVisited=0;
+	protected int indexDeliveryError;
+	private int maxnbVisitedNodes=0;
 	
 
 
@@ -40,11 +40,6 @@ public abstract class TemplateTSP implements TSP {
 		branchAndBound(0, unvisited, visited, 0,g.getTimeBegining().ordinal()+7.0,0);
 	}
 	
-
-	
-	
-
-
 	
 	/**
 	 * Template method of a branch and bound algorithm for solving the TSP in <code>g</code>.
@@ -52,18 +47,19 @@ public abstract class TemplateTSP implements TSP {
 	 * @param unvisited the set of vertex that have not yet been visited
 	 * @param visited the sequence of vertices that have been already visited (including currentVertex)
 	 * @param currentCost the cost of the path corresponding to <code>visited</code>
+	 * @param time the current run time of the method
+	 * @param nbVisitedNodes the number of visited nodes 
 	 */	
 	private void branchAndBound(int currentVertex, Unvisited unvisited, 
-		Collection<Integer> visited, double currentCost,double time,int nbSommetVisited){
+		Collection<Integer> visited, double currentCost,double time,int nbVisitedNodes){
 		if (System.currentTimeMillis() - startTime > timeLimit) return;
 		SeqIter it=new SeqIter(unvisited, g,currentVertex);
 	    if (!it.hasNext()){ 
-			
-	    	if(g.getCost(currentVertex,0)==Double.MAX_VALUE && nbSommetVisited>=this.maxNbSommetVisited){
+	    	if(g.getCost(currentVertex,0)==Double.MAX_VALUE && nbVisitedNodes>=this.maxnbVisitedNodes){
 				if(currentCost<bestSolCost){
 					bestSolCost=currentCost;
 					visited.toArray(bestSol);
-					maxNbSommetVisited=nbSommetVisited;
+					maxnbVisitedNodes=nbVisitedNodes;
 				}
 
 			}
@@ -71,38 +67,27 @@ public abstract class TemplateTSP implements TSP {
 				if(currentCost+g.getCost(currentVertex, 0)<bestSolCost){
 					bestSolCost=currentCost+g.getCost(currentVertex, 0);
 					visited.toArray(bestSol);
-					maxNbSommetVisited=nbSommetVisited+1;
+					maxnbVisitedNodes=nbVisitedNodes+1;
 				}
 			}
-
-			
-	    		
-	    	
 	    } else if (currentCost<bestSolCost){
-
-	        
-			
 	        while (it.hasNext()){
-				
 	        	Integer nextVertex = it.next();
-
-				if(2!=2 && g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
-					
-					if(nbSommetVisited>=this.maxNbSommetVisited){
-						if(nbSommetVisited==this.maxNbSommetVisited){
+				if(g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
+					if(nbVisitedNodes>=this.maxnbVisitedNodes){
+						if(nbVisitedNodes==this.maxnbVisitedNodes){
 							if(currentCost+g.getCost(currentVertex,nextVertex)<bestSolCost){
 								visited.toArray(bestSol);
 								bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
-								indexDeliveryErreur=nextVertex;
-								this.maxNbSommetVisited=nbSommetVisited;
-
+								indexDeliveryError=nextVertex;
+								this.maxnbVisitedNodes=nbVisitedNodes;
 							}
 						}
 						else{
-							this.maxNbSommetVisited=nbSommetVisited;
+							this.maxnbVisitedNodes=nbVisitedNodes;
 							visited.toArray(bestSol);
 							bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
-							indexDeliveryErreur=nextVertex;
+							indexDeliveryError=nextVertex;
 						}
 					}
 				}
@@ -115,9 +100,9 @@ public abstract class TemplateTSP implements TSP {
 						newTime=time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0;
 					}
 					visited.add(nextVertex);
-					Integer develeryPointDelete=it.remove(nextVertex);
+					Integer develeryPointDelete=it.remove();
 					branchAndBound(nextVertex, unvisited, visited, 
-							currentCost+g.getCost(currentVertex, nextVertex),newTime,nbSommetVisited++);
+							currentCost+g.getCost(currentVertex, nextVertex),newTime,nbVisitedNodes++);
 					visited.remove(nextVertex);
 					it.addFollowing(develeryPointDelete);
 				}
@@ -127,8 +112,8 @@ public abstract class TemplateTSP implements TSP {
 
 	// ******************GET METHODS********************
 	
-	public int getIndexDeliveryErreur(){
-		return indexDeliveryErreur;
+	public int getIndexDeliveryError(){
+		return indexDeliveryError;
 	}
 
 

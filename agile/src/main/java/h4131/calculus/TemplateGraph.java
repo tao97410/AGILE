@@ -6,6 +6,7 @@ import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
 
 public interface TemplateGraph {
+	
 	/**
 	 * @return the number of vertices in <code>this</code>
 	 */
@@ -24,12 +25,18 @@ public interface TemplateGraph {
 	 * @return true if <code>(i,j)</code> is an arc of <code>this</code>
 	 */
 	public abstract boolean isArc(int i, int j);
-
+ 
+	/**
+     * Compute the time in seconds to go from i to j
+     * @param i beginning of an arc
+     * @param j end of an arc
+     * @return the time in seconds to go from i to j
+     */
 	public abstract double timeTravel(int i, int j);
 
 	public abstract double getWindow(int firstOrLast,Integer i);
 
-	public abstract int getNbPlageHoraire(int plageHoraire);
+	public abstract int getnbDeliveryPointByTimeSlot(int plageHoraire);
 
 	public abstract TimeWindow getWindow(Integer deliveryPoint);
 
@@ -38,8 +45,6 @@ public interface TemplateGraph {
 	public abstract DeliveryPoint getDeliveryErreur();
 
 	public abstract int getSizeNbTimeWindow();
-
-	public abstract List<Arc> getArcsSort();
 
 	public abstract DeliveryPoint getTabDeliveryPoint(int index);
 

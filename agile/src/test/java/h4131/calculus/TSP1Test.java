@@ -16,11 +16,43 @@ import h4131.model.TimeWindow;
 
 public class TSP1Test {
 
-     @Mock
+    @Mock
     TSP1 templateTSPMock;
 
     @BeforeEach
     void setUp(){
+        Graph g=new Graph();
+        DeliveryPoint point1=new DeliveryPoint(new Intersection(10,45.74979, 4.87572), TimeWindow.WAREHOUSE);
+        DeliveryPoint point2=new DeliveryPoint(new Intersection(11,45.76873, 4.8624663), TimeWindow.EIGHT_NINE);
+        g.nodes.add(point1);
+        g.nodes.add(point2);
+        g.setNbNodes(2);
+
+        g.arcs.add(new Arc(point1,point2,3202.5041610000007));
+        g.arcs.add(new Arc(point2,point1,3202.5041610000007));
+
+        g.setTimeBegining(TimeWindow.EIGHT_NINE);
+
+        int[] nbPlageHoraire=new int[2];
+        nbPlageHoraire[0]=1;
+        g.setnbDeliveryPointByTimeSlot(nbPlageHoraire);
+
+        TimeWindow[] listeWindow=new TimeWindow[2];
+        listeWindow[0]=TimeWindow.WAREHOUSE;
+        listeWindow[1]=TimeWindow.EIGHT_NINE;
+        g.setListeWindow(listeWindow);
+        double[][]cost= new double[2][2];
+        cost[0][1]=3202.5041610000007;
+        cost[1][0]=3202.5041610000007;
+
+        double[][] timeWindow=new double[2][2];
+        timeWindow[0][0]=7.0;
+        timeWindow[0][1]=8.0;
+        timeWindow[1][0]=8.0;
+        timeWindow[1][1]=9.0;
+        g.setTimeWindow(timeWindow);
+
+        g.setCost(cost);
         templateTSPMock = new TSP1(); 
     }
 
@@ -86,7 +118,7 @@ public class TSP1Test {
 
         int[] nbPlageHoraire=new int[2];
         nbPlageHoraire[0]=1;
-        g.setNbPlageHoraire(nbPlageHoraire);
+        g.setnbDeliveryPointByTimeSlot(nbPlageHoraire);
 
         TimeWindow[] listeWindow=new TimeWindow[2];
         listeWindow[0]=TimeWindow.WAREHOUSE;
@@ -157,7 +189,7 @@ public class TSP1Test {
 
         int[] nbPlageHoraire=new int[2];
         nbPlageHoraire[0]=4;
-        g.setNbPlageHoraire(nbPlageHoraire);
+        g.setnbDeliveryPointByTimeSlot(nbPlageHoraire);
 
         TimeWindow[] listeWindow=new TimeWindow[5];
         listeWindow[0]=TimeWindow.WAREHOUSE;
@@ -211,7 +243,7 @@ public class TSP1Test {
 
         double actual;
         double expected=4;
-        actual=templateTSPMock.getIndexDeliveryErreur();
+        actual=templateTSPMock.getIndexDeliveryError();
         assertEquals(expected, actual);
 
     }

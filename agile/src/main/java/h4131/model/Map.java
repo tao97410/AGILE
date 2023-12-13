@@ -70,7 +70,7 @@ public class Map {
         ArrayList<Intersection> allIntersections = new ArrayList<>(intersections.values());
         LinkedList<DeliveryPoint> deliveryPoints = new LinkedList<>();
         System.out.println("Warehouse - " + warehouse.toString());
-        DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(23), TimeWindow.EIGHT_NINE);
+        DeliveryPoint point3 = new DeliveryPoint(allIntersections.get(23), TimeWindow.ELEVEN_TWELVE);
         deliveryPoints.add(point3);
         System.out.println(point3.toString());
         DeliveryPoint point1 = new DeliveryPoint(allIntersections.get(1), TimeWindow.EIGHT_NINE);

@@ -19,6 +19,8 @@ public class Arc {
         this.distance = aDistance;
         this.path = new LinkedList<>();
     }
+
+    
     public double getDistance(){
         return distance;
     }

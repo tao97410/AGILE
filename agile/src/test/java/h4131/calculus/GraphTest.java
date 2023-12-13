@@ -31,7 +31,7 @@ import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
 
 
-public class CompleteGraphTest {
+public class GraphTest {
 
     @Mock
     Graph graph;
@@ -68,7 +68,7 @@ public class CompleteGraphTest {
 
         int[] nbPlageHoraire=new int[2];
         nbPlageHoraire[0]=1;
-        g.setNbPlageHoraire(nbPlageHoraire);
+        g.setnbDeliveryPointByTimeSlot(nbPlageHoraire);
 
         TimeWindow[] listeWindow=new TimeWindow[2];
         listeWindow[0]=TimeWindow.WAREHOUSE;
@@ -91,6 +91,7 @@ public class CompleteGraphTest {
 
         GlobalTour globalTour= new GlobalTour();
         GlobalTour globalTourMock=spy(globalTour);
+        globalTourMock.setTours(new ArrayList<>());
 
         g.computeBestTour(globalTourMock);
 
@@ -163,4 +164,39 @@ public class CompleteGraphTest {
         }
 
     }
+
+
+    @Test
+    void testFindDeliveryErreurNegative() {
+        graph = new Graph();
+        assertNull(graph.findDeliveryErreur(-1));
+       
+
+    }
+
+    @Test
+    void testFindDeliveryErreur() {
+        graph = new Graph();
+        Collection<DeliveryPoint> node=new ArrayList<>();
+        DeliveryPoint point1=new DeliveryPoint(new Intersection(10,45.74979, 4.87572), TimeWindow.WAREHOUSE);
+        DeliveryPoint point2=new DeliveryPoint(new Intersection(11,45.76873, 4.8624663), TimeWindow.EIGHT_NINE);
+        DeliveryPoint point3=new DeliveryPoint(new Intersection(11,0, 2), TimeWindow.EIGHT_NINE);
+        DeliveryPoint point4=new DeliveryPoint(new Intersection(11,1, 2), TimeWindow.EIGHT_NINE);
+        
+        node.add(point1);
+        node.add(point2);
+        node.add(point3);
+        node.add(point4);
+       
+        graph.setNodes(node);
+        
+        DeliveryPoint expected=point3;
+        DeliveryPoint actual=graph.findDeliveryErreur(2);
+
+
+        assertEquals(expected, actual);
+
+    }
+
 }
+

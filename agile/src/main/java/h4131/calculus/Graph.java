@@ -25,10 +25,9 @@ public class Graph implements TemplateGraph{
 	private static final double MIN_COST = 100;
     public Collection<DeliveryPoint> nodes;
     public Collection<Arc> arcs;
-    public List<Arc> arcsSort;
     private double [][] cost;
     private double [][] timeWindow;
-    private int [] nbPlageHoraire;
+    private int [] nbDeliveryPointByTimeSlot;
     private TimeWindow [] listeWindow;
     private int nbNodes;
     private TimeWindow timeBegining;
@@ -107,14 +106,14 @@ public class Graph implements TemplateGraph{
     /**
      * At the end of TSP, we have a tab of indexes that correspond each to a deliveryPoint 
      * This method transform the tab into a collection of the associated deliveryPoint  
-     * @param indexDeliveryErreur The index of the deliveryPoint that can't be delivered 
+     * @param indexDeliveryError The index of the deliveryPoint that can't be delivered 
      * @return The concerned DeliveryPoint
      */	
-    public DeliveryPoint findDeliveryErreur(int indexDeliveryErreur){
-        if(indexDeliveryErreur==-1){
+    public DeliveryPoint findDeliveryErreur(int indexDeliveryError){
+        if(indexDeliveryError==-1){
             return null;
         }
-        return nodes.toArray(new DeliveryPoint[nbNodes])[indexDeliveryErreur];
+        return nodes.toArray(new DeliveryPoint[nbNodes])[indexDeliveryError];
     }
 
      /**
@@ -142,7 +141,7 @@ public class Graph implements TemplateGraph{
         System.out.println("Graphs with "+this.nbNodes+" vertices:");
         long startTime = System.currentTimeMillis();
         tsp.searchSolution(20000, this);
-        deliveryErreur=findDeliveryErreur(tsp.getIndexDeliveryErreur());
+        deliveryErreur=findDeliveryErreur(tsp.getIndexDeliveryError());
         System.out.println("Solution of cost "+tsp.getSolutionCost()+" found in "
                 +(System.currentTimeMillis() - startTime)+"ms : ");
         this.nodes=tabToCollection(tsp.getSolution());
@@ -154,20 +153,23 @@ public class Graph implements TemplateGraph{
 
     }
 
-    //Initialise the cost board and the number of nodes
+    /**
+     * Initialise the cost board and the number of nodes
+     */
     private void initialiseCompleteGraph(){
         nbNodes=nodes.size();
         createCost();
         createWareHouse();
         createTimeWindow();
-        createNbPlageHoraire();
+        createNbDeliveryPointByTimeSlot();
         createWindow();
         createWindowBegining();
-        createListeArcByCost();
         createTabDeliveryPoint();
     }
 
-    //Creates the cost function
+    /**
+     * Creates the cost function
+     */
     private void createCost(){
         int nodePos=0;
         int nodePos2=0;
@@ -195,6 +197,9 @@ public class Graph implements TemplateGraph{
         }
     }
 
+    /**
+     * Initialise Warehouse
+     */
     private void createWareHouse(){
         wareHouse=nodes.toArray(new DeliveryPoint[1])[0];
     }
@@ -214,12 +219,16 @@ public class Graph implements TemplateGraph{
         timeBegining=min;
 
     }
+
+    /**
+     * Creates the tabDeliveryPoint from the collection nodes
+     */
     private void createTabDeliveryPoint(){
         tabDeliveryPoint= nodes.toArray(new DeliveryPoint[nbNodes]);
     }
 
     /**
-     * Convert the timeWindow 
+     * Convert the type TimeWindow of each DeliveryPoint into its separate beginning's hour and end's hour
      */	
     private void createTimeWindow(){
         int i=0;
@@ -233,27 +242,35 @@ public class Graph implements TemplateGraph{
     }
 
 
-
-    private void createNbPlageHoraire(){
-        nbPlageHoraire=new int[nbNodes];
-        Arrays.fill(nbPlageHoraire,0);
+    /**
+     * Fill the tab nbDeliveryPointByTimeSlot with the number of deliveryPoint in each 
+     */
+    private void createNbDeliveryPointByTimeSlot(){
+        nbDeliveryPointByTimeSlot=new int[TimeWindow.values().length];
+        Arrays.fill(nbDeliveryPointByTimeSlot,0);
         Iterator<DeliveryPoint> d=nodes.iterator();
         d.next();
         DeliveryPoint actual;
-        int plageHoraire=0;
+        int timeSlot=0;
+        int index=0;
         while(d.hasNext()){
            actual=d.next();
-           nbPlageHoraire[actual.getTime().ordinal()-1]+=1;
+           nbDeliveryPointByTimeSlot[actual.getTime().ordinal()-1]+=1;
         }
-        for(int i:nbPlageHoraire){
-            if(i!=0){
-                plageHoraire+=1;
+        for(int nbPlage:nbDeliveryPointByTimeSlot){
+            if(nbPlage>0){
+                timeSlot=index;
             }
+            index++;
         }
-        this.sizeNbTimeWindow=plageHoraire;
+        this.sizeNbTimeWindow=timeSlot;
         
     
     }
+
+    /**
+     * Fill the tab listeWindow with all the different DeliveryPoint's TimeWindow
+     */
     private void createWindow(){
         listeWindow=new TimeWindow[nbNodes];
         int i=0;
@@ -262,20 +279,15 @@ public class Graph implements TemplateGraph{
             i++;
         }
     }
-    private void createListeArcByCost(){
-        this.arcsSort=new ArrayList<Arc>(arcs);
-        arcsSort.sort(Comparator.comparingDouble(Arc::getDistance));
-        System.out.println(arcsSort);
-    }
-
-	
-
+  
 	@Override
 	public boolean isArc(int i, int j) {
         if (i<0 || i>=nodes.size() || j<0 || j>=nodes.size())
 			return false;
 		return i != j;
 	}
+
+   
     @Override
     public double timeTravel(int i, int j){
         return cost[i][j]/15000.0;
@@ -285,8 +297,8 @@ public class Graph implements TemplateGraph{
     // ******************GET METHODS********************
 
     @Override
-    public int getNbPlageHoraire(int plageHoraire){
-        return nbPlageHoraire[plageHoraire];
+    public int getnbDeliveryPointByTimeSlot(int plageHoraire){
+        return nbDeliveryPointByTimeSlot[plageHoraire];
     }
     @Override
     public TimeWindow getWindow(Integer deliveryPoint){
@@ -321,10 +333,7 @@ public class Graph implements TemplateGraph{
     public int getSizeNbTimeWindow(){
         return sizeNbTimeWindow;
     }
-    @Override
-    public List<Arc> getArcsSort(){
-        return this.arcsSort;
-    }
+ 
     @Override
     public DeliveryPoint getTabDeliveryPoint(int index){
         return this.tabDeliveryPoint[index];
@@ -358,8 +367,8 @@ public class Graph implements TemplateGraph{
         this.timeWindow = timeWindow;
     }
 
-    public void setNbPlageHoraire(int[] nbPlageHoraire) {
-        this.nbPlageHoraire = nbPlageHoraire;
+    public void setnbDeliveryPointByTimeSlot(int[] nbDeliveryPointByTimeSlot) {
+        this.nbDeliveryPointByTimeSlot = nbDeliveryPointByTimeSlot;
     }
 
     public void setListeWindow(TimeWindow[] listeWindow) {
@@ -378,7 +387,9 @@ public class Graph implements TemplateGraph{
         this.deliveryErreur = deliveryErreur;
     }
 
-
+    public void setSizeNbTimeWindow(int sizeNbTimeWindow){
+        this.sizeNbTimeWindow=sizeNbTimeWindow;
+    }
     // ******************SET METHODS********************
     public String toString() {
         StringBuilder result = new StringBuilder();
