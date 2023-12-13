@@ -44,5 +44,9 @@ public class Arc {
         }
         return res;
     }
+    
+    public double getDistance(){
+        return distance;
+    }
 
 }

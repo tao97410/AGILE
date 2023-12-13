@@ -3,7 +3,6 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 public class GlobalTour {
-
     private Collection<Tour> tours;
     private String nameOfMapAssociated;
 

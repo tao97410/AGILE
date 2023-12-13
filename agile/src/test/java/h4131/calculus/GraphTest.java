@@ -9,12 +9,55 @@ import h4131.model.DeliveryPoint;
 import h4131.model.Intersection;
 import h4131.model.Segment;
 import h4131.model.TimeWindow;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.xml.sax.SAXException;
+
+import h4131.model.DeliveryPoint;
+import h4131.model.GlobalTour;
+import h4131.model.Intersection;
+import h4131.model.Map;
+import h4131.model.TimeWindow;
+import h4131.model.Tour;
+import h4131.xml.ExceptionXML;
+import h4131.xml.XMLdeserializer;
 
 public class GraphTest {
 
-    
+    @Mock
     Graph mockedGraph;
 
+    @BeforeEach    
+    void beforeMethod(){
+        mockedGraph = new Graph();
+        Collection<DeliveryPoint> nodes= new ArrayList<>();
+        DeliveryPoint point1 = new DeliveryPoint(new Intersection(0, 0, 0), TimeWindow.EIGHT_NINE);
+        nodes.add(point1);
+        System.out.println(point1.toString());
+        DeliveryPoint point2 = new DeliveryPoint(new Intersection(0, 0, 0), TimeWindow.EIGHT_NINE);
+        nodes.add(point2);
+        DeliveryPoint point3 = new DeliveryPoint(new Intersection(0, 0, 0), TimeWindow.NINE_TEN);
+        nodes.add(point3);
+        mockedGraph.setNodes(nodes);
+
+    }
 
     @Test
     void testEquals() {
@@ -80,4 +123,102 @@ public class GraphTest {
         
         assertTrue(mockedGraph.equals(result));
     }
+
+
+   
+
+    @Test
+    void testIsArcOutOfBounds1() {
+        boolean expected= false;
+        boolean actual;
+        actual=mockedGraph.isArc(-1,-1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testIsArcOutOfBounds2() {
+        boolean expected= true;
+        boolean actual;
+        actual=mockedGraph.isArc(2,0);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testIsArcOutOfBounds3() {
+        boolean expected= false;
+        boolean actual;
+        actual=mockedGraph.isArc(3,4);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testIsArcBetweenDifferentNodes() {
+        boolean expected= true;
+        boolean actual;
+        actual=mockedGraph.isArc(2,1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testIsArcBetweenSameNodes() {
+        boolean expected= false;
+        boolean actual;
+        actual=mockedGraph.isArc(-1,-1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testTimeTravel() {
+        mockedGraph = new Graph();
+        double [][] cout= new double[5][5];
+        double [][] expected= new double[5][5];
+        for(int i=0 ; i<cout.length ; i++){
+            for(int j=0 ; j<cout.length ; j++){
+                 cout[i][j]=(double)16000.0*i;
+                 expected[i][j]=cout[i][j]/15000.0;
+            }
+        }
+        mockedGraph.setCost(cout);
+        for(int i=0 ; i<cout.length ; i++){
+            for(int j=0 ; j<cout.length ; j++){
+                 assertEquals(expected[i][j], mockedGraph.timeTravel(i, j),0);
+            }
+        }
+
+    }
+
+
+    @Test
+    void testFindDeliveryErreurNegative() {
+        mockedGraph = new Graph();
+        assertNull(mockedGraph.findDeliveryErreur(-1));
+       
+
+    }
+
+    @Test
+    void testFindDeliveryErreur() {
+        mockedGraph = new Graph();
+        Collection<DeliveryPoint> node=new ArrayList<>();
+        DeliveryPoint point1=new DeliveryPoint(new Intersection(10,45.74979, 4.87572), TimeWindow.WAREHOUSE);
+        DeliveryPoint point2=new DeliveryPoint(new Intersection(11,45.76873, 4.8624663), TimeWindow.EIGHT_NINE);
+        DeliveryPoint point3=new DeliveryPoint(new Intersection(11,0, 2), TimeWindow.EIGHT_NINE);
+        DeliveryPoint point4=new DeliveryPoint(new Intersection(11,1, 2), TimeWindow.EIGHT_NINE);
+        
+        node.add(point1);
+        node.add(point2);
+        node.add(point3);
+        node.add(point4);
+       
+        mockedGraph.setNodes(node);
+        
+        DeliveryPoint expected=point3;
+        DeliveryPoint actual=mockedGraph.findDeliveryErreur(2);
+
+
+        assertEquals(expected, actual);
+
+    }
+
 }
+

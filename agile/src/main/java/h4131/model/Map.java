@@ -17,7 +17,7 @@ public class Map {
     private DeliveryPoint warehouse;
 
     public Map(){
-                this.intersections = new HashMap<>();
+        this.intersections = new HashMap<>();
         this.adjacency = new HashMap<>();
     }
 
@@ -65,6 +65,7 @@ public class Map {
 
         Graph graph = new Graph();
         LinkedList<DeliveryPoint> deliveryPoints = new LinkedList<DeliveryPoint>(deliveryPointsCol);
+    
         deliveryPoints.addFirst(warehouse);
 
         for (DeliveryPoint currentPoint : deliveryPoints)

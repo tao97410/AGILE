@@ -24,6 +24,9 @@ public interface TSP {
 	 */
 	public double getSolutionCost();
 
-	public int getIndexDeliveryErreur();
+	/**
+	 * @return the index of the delivery that caused an error
+	 */
+	public int getIndexDeliveryError();
 
 }

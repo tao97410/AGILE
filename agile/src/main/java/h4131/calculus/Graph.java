@@ -3,12 +3,13 @@ package h4131.calculus;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-
-
+import javax.security.auth.login.CredentialException;
 
 import h4131.model.DeliveryPoint;
 import h4131.model.Segment;
@@ -18,24 +19,20 @@ import h4131.model.GlobalTour;
 
 
 public class Graph implements TemplateGraph{
-	public void setNodes(Collection<DeliveryPoint> nodes) {
-        this.nodes = nodes;
-    }
     private static final double MAX_COST = 10000;
 	private static final double MIN_COST = 100;
     public Collection<DeliveryPoint> nodes;
-    public void setCost(double[][] cost) {
-        this.cost = cost;
-    }
     public Collection<Arc> arcs;
     private double [][] cost;
     private double [][] timeWindow;
-    private int [] nbPlageHoraire;
+    private int [] nbDeliveryPointByTimeSlot;
     private TimeWindow [] listeWindow;
     private int nbNodes;
     private TimeWindow timeBegining;
     private DeliveryPoint wareHouse;
     private DeliveryPoint deliveryErreur;
+    private int sizeNbTimeWindow;
+    private DeliveryPoint[] tabDeliveryPoint;
 
     public Graph() {
         nodes = new ArrayList<>();
@@ -43,43 +40,16 @@ public class Graph implements TemplateGraph{
         
     }
     
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-
-          for(DeliveryPoint d : nodes){
-            result.append("Node : (")
-            .append(d.getPlace().getLatitude())
-            .append(" , ")
-            .append(d.getPlace().getLongitude())
-            .append(") at ")
-            .append(d.getTime())
-            .append("\n");
-        }
-
-        for (Arc a : arcs) {
-            result.append("* From (" 
-                + a.origin.getPlace().getLatitude() 
-                + ", " 
-                + a.origin.getPlace().getLongitude() 
-                + ") to (" 
-                + a.destination.getPlace().getLatitude() 
-                + ", " 
-                + a.destination.getPlace().getLongitude() 
-                + "): " + a.distance + "\n");
-        }
-
-        return result.toString();
-    }
-
-    @Override
-	public int getNbVertices() {
-		return nbNodes;
-	}
 
 
 
-    //After having computed the best tour, we have a tab of the indexes of the nodes 
-    // Then we have to associate each index to the corresponding DeliveryPoint 
+    
+    /**
+     * At the end of TSP, we have a tab of indexes that correspond each to a deliveryPoint 
+     * This method transform the tab into a collection of the associated deliveryPoint  
+     * @param tab A tab of integer that represents the indexes of the deliveryPoints
+     * @return A collection of DeliveryPoint
+     */	
     private Collection<DeliveryPoint> tabToCollection(Integer [] tab){
         Collection<DeliveryPoint> bestTour= new LinkedList<>();
         int indexDelivery;
@@ -102,7 +72,11 @@ public class Graph implements TemplateGraph{
     }
 
 
-
+    /** At the end of TSP, we have a collection of DeliveryPoint by which the courier passes 
+     * This method gets the right arcs for each pair of successive points   
+     * @param delivery a collection of deliveryPoint by which the courier has to pass in the right order
+     * @return A collection of Arc
+     */
     private Collection<Arc> findArc(Collection<DeliveryPoint> delivery){
         Collection<Arc> arcsResult=new LinkedList<Arc>();
         Iterator<DeliveryPoint> d= delivery.iterator();
@@ -128,64 +102,78 @@ public class Graph implements TemplateGraph{
 
         return arcsResult;
     }
-    public DeliveryPoint findDeliveryErreur(int indexDeliveryErreur){
-        if(indexDeliveryErreur==-1){
+
+
+    /**
+     * At the end of TSP, we have a tab of indexes that correspond each to a deliveryPoint 
+     * This method transform the tab into a collection of the associated deliveryPoint  
+     * @param indexDeliveryError The index of the deliveryPoint that can't be delivered 
+     * @return The concerned DeliveryPoint
+     */	
+    public DeliveryPoint findDeliveryErreur(int indexDeliveryError){
+        if(indexDeliveryError==-1){
             return null;
         }
-        return nodes.toArray(new DeliveryPoint[nbNodes])[indexDeliveryErreur];
+        return nodes.toArray(new DeliveryPoint[nbNodes])[indexDeliveryError];
     }
+
+     /**
+     * Creates from all the arcs in the graph a list of all the segments corresponding to the arcs 
+     * @return A list of all the segments in the graph
+     */	
     private List<Segment> buildCourse(){
         List<Segment> course=new LinkedList<Segment>();
         for(Arc a:this.arcs){
             for(Segment s:a.path){
                 course.add(s);
-
             }
 
         }
         return course;
     }
-    private List<DeliveryPoint> buildListeDelivery(){
-        List<DeliveryPoint> listeDelivery=new ArrayList<DeliveryPoint>();
-        for(DeliveryPoint d:this.nodes){
-            listeDelivery.add(d);
-        }
-        return listeDelivery;
-    }
-    
 
 
-    public void computeBestTour(GlobalTour globalTour, int courierId){
+    /**
+     * Compute the TSP for a GlobalTour
+     * @param globalTour The globarTour from which we do the TSP
+     */	
+    public void computeBestTour(GlobalTour globalTour,int courier){
         TSP1 tsp=new TSP1();
-        this.initialiseGraph();
+        this.initialiseCompleteGraph();
         System.out.println("Graphs with "+this.nbNodes+" vertices:");
         long startTime = System.currentTimeMillis();
         tsp.searchSolution(20000, this);
-        deliveryErreur=findDeliveryErreur(tsp.getIndexDeliveryErreur());
+        deliveryErreur=findDeliveryErreur(tsp.getIndexDeliveryError());
         System.out.println("Solution of cost "+tsp.getSolutionCost()+" found in "
                 +(System.currentTimeMillis() - startTime)+"ms : ");
         this.nodes=tabToCollection(tsp.getSolution());
         this.arcs=findArc(this.nodes);
         Tour tour=new Tour();
         tour.setCourse(this.buildCourse());
-        tour.setDeliveryPoints(this.buildListeDelivery());
-        tour.setCourier(courierId);
+        tour.setCourier(courier);
+        tour.setDeliveryPoints(new ArrayList<>(this.nodes));
         globalTour.addTour(tour);
 
     }
 
-    //Initialise the cost board and the number of nodes
-    private void initialiseGraph(){
+
+    /**
+     * Initialise the cost board and the number of nodes
+     */
+    private void initialiseCompleteGraph(){
         nbNodes=nodes.size();
         createCost();
         createWareHouse();
         createTimeWindow();
-        createNbPlageHoraire();
+        createNbDeliveryPointByTimeSlot();
         createWindow();
         createWindowBegining();
+        createTabDeliveryPoint();
     }
 
-    //Creates the cost function
+    /**
+     * Creates the cost function
+     */
     private void createCost(){
         int nodePos=0;
         int nodePos2=0;
@@ -212,9 +200,19 @@ public class Graph implements TemplateGraph{
             nodePos++;
         }
     }
+
+
+    /**
+     * Initialise Warehouse
+     */
     private void createWareHouse(){
         wareHouse=nodes.toArray(new DeliveryPoint[1])[0];
     }
+
+
+    /**
+     * Put the timeBeginning to the lowest TimeWindow amongs the nodes
+     */	
     private void createWindowBegining(){
         TimeWindow min=TimeWindow.ELEVEN_TWELVE;
         for(DeliveryPoint d:nodes){
@@ -227,6 +225,17 @@ public class Graph implements TemplateGraph{
 
     }
 
+
+    /**
+     * Creates the tabDeliveryPoint from the collection nodes
+     */
+    private void createTabDeliveryPoint(){
+        tabDeliveryPoint= nodes.toArray(new DeliveryPoint[nbNodes]);
+    }
+
+    /**
+     * Convert the type TimeWindow of each DeliveryPoint into its separate beginning's hour and end's hour
+     */	
     private void createTimeWindow(){
         int i=0;
         double resTimeWindow[][]=new double[nbNodes][2];
@@ -235,34 +244,40 @@ public class Graph implements TemplateGraph{
             resTimeWindow[i][1]=(double)(node.getTime().ordinal())+8.0;
             i++;
 
-
         }
         this.timeWindow=resTimeWindow;
     }
-    private void createNbPlageHoraire(){
-        nbPlageHoraire=new int[nbNodes];
-        Arrays.fill(nbPlageHoraire,0);
+
+
+    /**
+     * Fill the tab nbDeliveryPointByTimeSlot with the number of deliveryPoint in each 
+     */
+    private void createNbDeliveryPointByTimeSlot(){
+        nbDeliveryPointByTimeSlot=new int[TimeWindow.values().length];
+        Arrays.fill(nbDeliveryPointByTimeSlot,0);
         Iterator<DeliveryPoint> d=nodes.iterator();
         d.next();
         DeliveryPoint actual;
-        DeliveryPoint previous=nodes.toArray(new DeliveryPoint[1])[0];
-        int plageHoraire=-1;
+        int timeSlot=0;
+        int index=0;
         while(d.hasNext()){
-            actual=(DeliveryPoint)d.next();
-            if(actual.getTime()==previous.getTime()){
-                nbPlageHoraire[plageHoraire]+=1;
-
-            }
-            else{
-                plageHoraire++;
-                nbPlageHoraire[plageHoraire]+=1;
-            }
-            previous=actual;
-
-            
+           actual=d.next();
+           nbDeliveryPointByTimeSlot[actual.getTime().ordinal()-1]+=1;
         }
+        for(int nbPlage:nbDeliveryPointByTimeSlot){
+            if(nbPlage>0){
+                timeSlot=index;
+            }
+            index++;
+        }
+        this.sizeNbTimeWindow=timeSlot;
+        
     
     }
+
+    /**
+     * Fill the tab listeWindow with all the different DeliveryPoint's TimeWindow
+     */
     private void createWindow(){
         listeWindow=new TimeWindow[nbNodes];
         int i=0;
@@ -271,35 +286,26 @@ public class Graph implements TemplateGraph{
             i++;
         }
     }
-
-
-
-	@Override
-	public double getCost(int i, int j) {
-		if (i<0 || i>=nbNodes || j<0 || j>=nbNodes)
-			return -1;
-		return cost[i][j];
-	}
-
-    @Override
-    public double getWindow(int firstOrLast,Integer i){
-        return timeWindow[i][firstOrLast];
-    }
-
+  
 	@Override
 	public boolean isArc(int i, int j) {
         if (i<0 || i>=nodes.size() || j<0 || j>=nodes.size())
 			return false;
 		return i != j;
 	}
+
+   
     @Override
     public double timeTravel(int i, int j){
         return cost[i][j]/15000.0;
     }
 
+
+    // ******************GET METHODS********************
+
     @Override
-    public int getNbPlageHoraire(int plageHoraire){
-        return nbPlageHoraire[plageHoraire];
+    public int getnbDeliveryPointByTimeSlot(int plageHoraire){
+        return nbDeliveryPointByTimeSlot[plageHoraire];
     }
     @Override
     public TimeWindow getWindow(Integer deliveryPoint){
@@ -313,7 +319,18 @@ public class Graph implements TemplateGraph{
     public DeliveryPoint getDeliveryErreur(){
         return deliveryErreur;
     }
-    
+
+    @Override
+	public double getCost(int i, int j) {
+		if (i<0 || i>=nbNodes || j<0 || j>=nbNodes)
+			return -1;
+		return cost[i][j];
+	}
+
+    @Override
+    public double getWindow(int firstOrLast,Integer i){
+        return timeWindow[i][firstOrLast];
+    }
 
     
 
@@ -340,5 +357,86 @@ public class Graph implements TemplateGraph{
     }
 
     
+    @Override
+	public int getNbVertices() {
+		return nbNodes;
+	}
+    @Override
+    public int getSizeNbTimeWindow(){
+        return sizeNbTimeWindow;
+    }
+ 
+    @Override
+    public DeliveryPoint getTabDeliveryPoint(int index){
+        return this.tabDeliveryPoint[index];
+    }
+    @Override
+    public DeliveryPoint getWareHouse(){
+        return wareHouse;
+    }
+    // ******************GET METHODS********************
+
+
+    // ******************SET METHODS********************
+
+    public void setCost(double[][] cost) {
+        this.cost = cost;
+    }
+
+    public void setNodes(Collection<DeliveryPoint> nodes) {
+        this.nodes = nodes;
+    }
+
+    public void setNbNodes(int nbNodes) {
+        this.nbNodes = nbNodes;
+    }
+
+    public void setArcs(Collection<Arc> arcs) {
+        this.arcs = arcs;
+    }
+
+    public void setTimeWindow(double[][] timeWindow) {
+        this.timeWindow = timeWindow;
+    }
+
+    public void setnbDeliveryPointByTimeSlot(int[] nbDeliveryPointByTimeSlot) {
+        this.nbDeliveryPointByTimeSlot = nbDeliveryPointByTimeSlot;
+    }
+
+    public void setListeWindow(TimeWindow[] listeWindow) {
+        this.listeWindow = listeWindow;
+    }
+
+    public void setTimeBegining(TimeWindow timeBegining) {
+        this.timeBegining = timeBegining;
+    }
+
+    public void setWareHouse(DeliveryPoint wareHouse) {
+        this.wareHouse = wareHouse;
+    }
+
+    public void setDeliveryErreur(DeliveryPoint deliveryErreur) {
+        this.deliveryErreur = deliveryErreur;
+    }
+
+    public void setSizeNbTimeWindow(int sizeNbTimeWindow){
+        this.sizeNbTimeWindow=sizeNbTimeWindow;
+    }
+    // ******************SET METHODS********************
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Arc a : arcs) {
+            result.append("* From (" 
+                + a.origin.getPlace().getLatitude() 
+                + ", " 
+                + a.origin.getPlace().getLongitude() 
+                + ") to (" 
+                + a.destination.getPlace().getLatitude() 
+                + ", " 
+                + a.destination.getPlace().getLongitude() 
+                + "): " + a.distance + "\n");
+        }
+        return result.toString();
+    }
 
 }

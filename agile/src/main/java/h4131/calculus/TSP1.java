@@ -2,21 +2,24 @@ package h4131.calculus;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+
+import h4131.model.DeliveryPoint;
 
 public class TSP1 extends TemplateTSP {
 
 
-	@Override
-	protected int bound(Integer currentVertex, Collection<Integer> unvisited) {
-		return 0;
+
+	/**
+	 * Initialise values for the TSP
+	 */
+	public TSP1(){
+		bestSol=null;
+		g=null;
+		bestSolCost=-1;
+		timeLimit=-1;
+		startTime=-1;
+		indexDeliveryError=-1;
 	}
-
-	@Override
-	protected Iterator<Integer> iterator(Integer currentVertex, Collection<Integer> unvisited, TemplateGraph g) {
-		return new SeqIter(unvisited, currentVertex, g);
-	}
-
-	
-
 
 }
