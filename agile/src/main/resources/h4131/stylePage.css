@@ -74,7 +74,8 @@ Button {
     -fx-transition: all 0.3s;
 }
 
-Button:hover {
+#loadTourButton:hover, #computeTourButton:hover, #saveGlobalTourButton:hover ,
+#mapChoiceBox:hover {
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
 }
@@ -103,6 +104,14 @@ Button:hover {
 #saveGlobalTourButton:hover {
     -fx-background-color: rgb(100, 149, 237);
     -fx-border-radius: 12px;
+}
+
+#cancelResearch {    
+    -fx-background-color : white;
+}
+
+#cancelResearch {    
+    -fx-background-color : white;
 }
 
 #validationButton,
