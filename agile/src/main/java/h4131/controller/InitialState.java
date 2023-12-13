@@ -1,7 +1,8 @@
 package h4131.controller;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -20,7 +21,6 @@ import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
-import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.PDFgenerator;
@@ -163,10 +163,13 @@ public class InitialState implements State{
         try {
             XMLserializer serializer = XMLserializer.getInstance();
             String resulting_path = serializer.save(c.getGlobalTour());
+            Path path = Paths.get(resulting_path);
+            String file_name = path.getFileName().toString().substring(0, path.getFileName().toString().indexOf('.'));
+
             List<Graph> graphs = c.getGraphs();
             long tourId = 1;
             for (Graph g : graphs) {
-                PDFgenerator.getPdfInstructions(g, tourId, resulting_path + "\\..\\instructions_" + tourId + ".pdf");
+                PDFgenerator.getPdfInstructions(g, tourId, resulting_path + "\\..\\" + file_name + "_instructions_" + tourId + ".pdf");
                 tourId ++;
             }
         } catch (ParserConfigurationException | ExceptionXML | TransformerFactoryConfigurationError | TransformerException e) {
