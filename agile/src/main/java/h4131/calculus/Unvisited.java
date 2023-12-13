@@ -15,7 +15,7 @@ public class Unvisited {
 	private int[] initialiseNbCandidate;
 
     public Unvisited(Collection<Integer> unvisited, TemplateGraph g){
-        this.candidates = new Integer[5][10];
+        this.candidates = new Integer[5][15];
 		this.initialiseNbCandidate=new int[5];
 		Arrays.fill(initialiseNbCandidate,0);
 		for (Integer s : unvisited){
