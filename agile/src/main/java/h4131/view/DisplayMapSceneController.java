@@ -13,6 +13,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -64,13 +65,13 @@ public class DisplayMapSceneController {
     @FXML
     private Button computeTourButton;
     @FXML
-    private Button saveGlobalTourButton;  
+    private Button saveGlobalTourButton;
     @FXML
     private TextField numberOfCourierField;
     @FXML
     private ChoiceBox<String> mapChoiceBox;
 
-    // Search bar menu    
+    // Search bar menu
     @FXML
     private Button cancelResearch;
     @FXML
@@ -114,9 +115,13 @@ public class DisplayMapSceneController {
 
     // Alert texts
     @FXML
-    private Text courierChangeAlert;
+    private Pane alertCourierChange;
     @FXML
-    private Pane alertPane;
+    private Pane alertMapChange;
+    @FXML
+    private Text mapChangeText;
+    @FXML
+    private Text courierChangeText;
 
     @FXML
     private void initialize() {
@@ -140,7 +145,6 @@ public class DisplayMapSceneController {
             if (numberOfCourierField.getText().equals("0")) {
                 numberOfCourierField.setText(previousNumberOfCourier);
             }
-
         });
 
         searchBar.setPromptText("Search a street name...");
@@ -186,38 +190,43 @@ public class DisplayMapSceneController {
         computeTourButton.setOnMouseExited(this::onMouseExitedCompute);
         saveGlobalTourButton.setOnMouseExited(this::onMouseExitedSave);
 
-        alertPane.setVisible(false);
+        alertCourierChange.setVisible(false);
+        alertMapChange.setVisible(false);
     }
 
     @FXML
-    void doCancelResearch(ActionEvent event){
-        for(Node node : shapesPane.getChildren()){
-            if(node instanceof SegmentLine){
+    void doCancelResearch(ActionEvent event) {
+        for (Node node : shapesPane.getChildren()) {
+            if (node instanceof SegmentLine) {
                 SegmentLine segment = (SegmentLine) node;
-                segment.setStroke(segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
+                segment.setStroke(
+                        segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
             }
         }
     }
 
     @FXML
-    void doSearch(KeyEvent event){
+    void doSearch(KeyEvent event) {
         // hide previous results
-        for(Node node : shapesPane.getChildren()){
-            if(node instanceof SegmentLine){
+        for (Node node : shapesPane.getChildren()) {
+            if (node instanceof SegmentLine) {
                 SegmentLine segment = (SegmentLine) node;
-                segment.setStroke(segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
+                segment.setStroke(
+                        segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
             }
         }
 
-        if(!searchBar.getText().equals("")){
+        if (!searchBar.getText().equals("")) {
             // show new results
-            for(Node node : shapesPane.getChildren()){
-                if(node instanceof SegmentLine){
+            for (Node node : shapesPane.getChildren()) {
+                if (node instanceof SegmentLine) {
                     SegmentLine segment = (SegmentLine) node;
-                    String segmentName = Normalizer.normalize(segment.getSegment().getName(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-                    String searchTextWithoutAccent = Normalizer.normalize(searchBar.getText(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-                    if(segmentName.toLowerCase().contains(searchTextWithoutAccent.toLowerCase())){
-                        segment.setStroke(Color.BLUE);                    
+                    String segmentName = Normalizer.normalize(segment.getSegment().getName(), Form.NFD)
+                            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                    String searchTextWithoutAccent = Normalizer.normalize(searchBar.getText(), Form.NFD)
+                            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                    if (segmentName.toLowerCase().contains(searchTextWithoutAccent.toLowerCase())) {
+                        segment.setStroke(Color.BLUE);
                     }
 
                 }
@@ -233,11 +242,10 @@ public class DisplayMapSceneController {
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
 
             // Alert the user of the number of courier effectively changed
-            courierChangeAlert.setText(numberOfCourierField.getText());
-
-            fadeIn(alertPane);
+            courierChangeText.setText(numberOfCourierField.getText());
+            fadeIn(alertCourierChange);
             PauseTransition pause = new PauseTransition(Duration.seconds(2));
-            pause.setOnFinished(e -> fadeOut(alertPane));
+            pause.setOnFinished(e -> fadeOut(alertCourierChange));
             pause.play();
         }
     }
@@ -290,6 +298,7 @@ public class DisplayMapSceneController {
 
     /**
      * Used to display a node with fading effect
+     * 
      * @param node the node to display
      */
     public void fadeIn(Node node) {
@@ -302,7 +311,8 @@ public class DisplayMapSceneController {
 
     /**
      * Used to hide a node with fading effect
-     * @param node the node to hide 
+     * 
+     * @param node the node to hide
      */
     public void fadeOut(Node node) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
@@ -337,39 +347,39 @@ public class DisplayMapSceneController {
         node.setOnMouseExited(event -> inverseScaleTransition.play());
     }
 
-    public void onMouseEnteredLoad(MouseEvent event){
+    public void onMouseEnteredLoad(MouseEvent event) {
         Image image = new Image(getClass().getResourceAsStream("/h4131/open-white.png"));
-        ImageView imageView = new ImageView(image); 
+        ImageView imageView = new ImageView(image);
         this.loadTourButton.setGraphic(imageView);
     }
 
-    public void onMouseEnteredCompute(MouseEvent event){
+    public void onMouseEnteredCompute(MouseEvent event) {
         Image image = new Image(getClass().getResourceAsStream("/h4131/play-white.png"));
-        ImageView imageView = new ImageView(image); 
+        ImageView imageView = new ImageView(image);
         this.computeTourButton.setGraphic(imageView);
     }
 
-    public void onMouseEnteredSave(MouseEvent event){
+    public void onMouseEnteredSave(MouseEvent event) {
         Image image = new Image(getClass().getResourceAsStream("/h4131/save-white.png"));
-        ImageView imageView = new ImageView(image); 
+        ImageView imageView = new ImageView(image);
         this.saveGlobalTourButton.setGraphic(imageView);
     }
 
-    public void onMouseExitedLoad(MouseEvent event){
+    public void onMouseExitedLoad(MouseEvent event) {
         Image image = new Image(getClass().getResourceAsStream("/h4131/open.png"));
-        ImageView imageView = new ImageView(image); 
+        ImageView imageView = new ImageView(image);
         this.loadTourButton.setGraphic(imageView);
     }
 
-    public void onMouseExitedCompute(MouseEvent event){
+    public void onMouseExitedCompute(MouseEvent event) {
         Image image = new Image(getClass().getResourceAsStream("/h4131/play.png"));
-        ImageView imageView = new ImageView(image); 
+        ImageView imageView = new ImageView(image);
         this.computeTourButton.setGraphic(imageView);
     }
 
-    public void onMouseExitedSave(MouseEvent event){
+    public void onMouseExitedSave(MouseEvent event) {
         Image image = new Image(getClass().getResourceAsStream("/h4131/save.png"));
-        ImageView imageView = new ImageView(image); 
+        ImageView imageView = new ImageView(image);
         this.saveGlobalTourButton.setGraphic(imageView);
     }
 
@@ -397,8 +407,20 @@ public class DisplayMapSceneController {
         return this.validationButton;
     }
 
-    public Pane getvalidationPane() {
+    public Pane getValidationPane() {
         return this.validationPane;
+    }
+
+    public Pane getAlertMapChange() {
+        return this.alertMapChange;
+    }
+
+    public Pane getAlertCourierChange() {
+        return this.alertCourierChange;
+    }
+
+    public ChoiceBox<String> getMapChoiceBox() {
+        return this.mapChoiceBox;
     }
 
     public void setChoiceBoxValue(String value) {
@@ -429,11 +451,15 @@ public class DisplayMapSceneController {
         return modifyPane;
     }
 
+    public Text getMapChangeText() {
+        return this.mapChangeText;
+    }
+
     public ChoiceBox<String> getModifyTimeWindowChoice() {
         return modifyTimeWindowChoice;
     }
 
-    public void setShapesPane(Pane newShapesPane){
+    public void setShapesPane(Pane newShapesPane) {
         this.shapesPane = newShapesPane;
     }
 
@@ -675,6 +701,5 @@ public class DisplayMapSceneController {
             scroller.setVvalue(scroller.getVmin());
         }
     }
-
 
 }

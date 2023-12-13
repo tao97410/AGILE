@@ -171,20 +171,20 @@ ChoiceBox .menu-item:focused>.label {
     -fx-text-fill: white;
 }
 
-#alertPane {
+.alertPane {
     -fx-padding: 10px;
     -fx-background-radius: 10px;
     -fx-background-color: rgba(255, 255, 255, 0.90);
 }
 
-#courierChangeAlert {
-    -fx-fill: rgb(25, 110, 205);
-    -fx-font-weight: bold;
-    -fx-font-size: 24px;
-}
-
-#courierAlertTitle {
+.alertText {
     -fx-fill: rgb(30, 30, 30);
     -fx-font-weight: bold;
     -fx-font-size: 22px;
+}
+
+.secondaryAlertText {
+    -fx-fill: rgb(25, 110, 205);
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
 }
