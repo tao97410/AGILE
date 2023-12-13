@@ -10,7 +10,10 @@
 .titled-pane>.title {
     -fx-background-color: cornflowerblue;
     -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 7 20 7 20;
 }
+
 
 .titled-pane>.title>.arrow-button .arrow {
     -fx-background-color: white;
@@ -26,6 +29,7 @@
 ChoiceBox {
     -fx-font-size: 18px;
     -fx-background-color: white;
+    -fx-border-radius: 3px;
 }
 
 ChoiceBox:hover {
@@ -41,8 +45,14 @@ ChoiceBox:hover {
     -fx-border-radius: 3px;
 }
 
-ChoiceBox .menu-item:focused { -fx-background-color: rgb(150, 150, 150); }
-ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
+
+ChoiceBox .menu-item:focused {
+    -fx-background-color: rgb(150, 150, 150);
+}
+
+ChoiceBox .menu-item:focused>.label {
+    -fx-text-fill: white;
+}
 
 /* ------- Pane styles ------- */
 
@@ -62,34 +72,42 @@ Button {
     -fx-border-radius: 5px;
     -fx-cursor: hand;
     -fx-transition: all 0.3s;
-    /* Add transition for all properties over 0.3 seconds */
 }
 
 #loadTourButton:hover, #computeTourButton:hover, #saveGlobalTourButton:hover ,
 #mapChoiceBox:hover {
     -fx-scale-x: 1.1;
-    /* Scale effect on hover */
     -fx-scale-y: 1.1;
 }
 
 #buttonList {
+    -fx-background-color: white;
+    -fx-background-radius: 7px;
+    -fx-border-radius: 6px;
+    -fx-border-width: 5px;
+    -fx-border-color: rgb(225, 225, 225);
+    -fx-padding: 15px;
+}
+
+#loadTourButton,
+#computeTourButton,
+#saveGlobalTourButton {
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-border-color: rgb(100, 149, 237);
+    -fx-border-width: 3px;
+    -fx-background-color: white;
+}
+
+#loadTourButton:hover,
+#computeTourButton:hover,
+#saveGlobalTourButton:hover {
+    -fx-background-color: rgb(100, 149, 237);
+    -fx-border-radius: 12px;
+}
+
+#cancelResearch {    
     -fx-background-color : white;
-    -fx-background-radius:5px;
-    -fx-border-radius:5px;
-    -fx-border-width:2px;
-    -fx-border-color : rgb(100,149,237);
-}
-
-#loadTourButton, #computeTourButton, #saveGlobalTourButton {
-    -fx-border-radius: 5px;
-    -fx-border-color: rgb(100,149,237);
-    -fx-border-width: 2px;
-    -fx-background-color :white;
-}
-
-#loadTourButton:hover, #computeTourButton:hover, #saveGlobalTourButton:hover {
-    -fx-background-color :rgb(100, 149, 237);
-
 }
 
 #cancelResearch {    
@@ -143,8 +161,9 @@ DeliveryPointLabel:hover {
 /* ------- Font styles ------- */
 
 #mapChoiceBox {
-    -fx-border-radius : 5px;
-    -fx-border-color :  rgb(100,149,237);
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: rgb(100, 149, 237);
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
@@ -153,8 +172,13 @@ DeliveryPointLabel:hover {
     -fx-text-fill: rgb(100,149,237);
 } */
 
-ChoiceBox .menu-item:focused { -fx-background-color: rgb(150, 150, 150); }
-ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
+ChoiceBox .menu-item:focused {
+    -fx-background-color: rgb(150, 150, 150);
+}
+
+ChoiceBox .menu-item:focused>.label {
+    -fx-text-fill: white;
+}
 
 #alertPane {
     -fx-padding: 10px;
