@@ -65,7 +65,7 @@ Button {
     /* Add transition for all properties over 0.3 seconds */
 }
 
-Button:hover,
+#loadTourButton:hover, #computeTourButton:hover, #saveGlobalTourButton:hover ,
 #mapChoiceBox:hover {
     -fx-scale-x: 1.1;
     /* Scale effect on hover */
@@ -90,6 +90,10 @@ Button:hover,
 #loadTourButton:hover, #computeTourButton:hover, #saveGlobalTourButton:hover {
     -fx-background-color :rgb(100, 149, 237);
 
+}
+
+#cancelResearch {    
+    -fx-background-color : white;
 }
 
 #validationButton,

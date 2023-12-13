@@ -185,6 +185,10 @@ public class DisplayMapSceneController {
         loadTourButton.setOnMouseExited(this::onMouseExitedLoad);
         computeTourButton.setOnMouseExited(this::onMouseExitedCompute);
         saveGlobalTourButton.setOnMouseExited(this::onMouseExitedSave);
+        
+        
+        cancelResearch.setOnMouseEntered(this::onMouseEnteredCancel);
+        cancelResearch.setOnMouseExited(this::onMouseExitedCancel);
 
         alertPane.setVisible(false);
     }
@@ -371,6 +375,22 @@ public class DisplayMapSceneController {
         Image image = new Image(getClass().getResourceAsStream("/h4131/save.png"));
         ImageView imageView = new ImageView(image); 
         this.saveGlobalTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseEnteredCancel(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/red-cross.png"));
+        ImageView imageView = new ImageView(image); 
+        imageView.setFitWidth(25.0);
+        imageView.setFitHeight(25.0);
+        this.cancelResearch.setGraphic(imageView);
+    }
+
+    public void onMouseExitedCancel(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/cross.png"));
+        ImageView imageView = new ImageView(image); 
+        imageView.setFitWidth(25.0);
+        imageView.setFitHeight(25.0);
+        this.cancelResearch.setGraphic(imageView);
     }
 
     public int getPreviousCourierChoice() {
