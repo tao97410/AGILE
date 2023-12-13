@@ -306,7 +306,7 @@ public class WindowBuilder implements Observer {
         for (Node node : shapesPane.getChildren()) {
             if (node instanceof SegmentLine) {
                 SegmentLine segment = (SegmentLine) node;
-                if (segment.getStroke() != Color.WHITE) {
+                if (segment.getStroke() != Color.WHITE && segment.getStroke() != Color.BLUE) {
                     segment.setVisible(false);
                     segment.setManaged(false);
                 }

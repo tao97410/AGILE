@@ -201,6 +201,9 @@ public class DisplayMapSceneController {
                 segment.setStroke(segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
             }
         }
+        searchBar.setText("");
+        searchBar.setPromptText("Search a street name...");
+
     }
 
     @FXML
