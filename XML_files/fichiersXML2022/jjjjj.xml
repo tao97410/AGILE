@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<globalTour>
+    <map name="largeMap.xml"/>
+    <tour courierId="1">
+        <route destination="25321456" length="64.89446" name="Rue Feuillat" origin="25303831"/>
+        <route destination="25321433" length="174.66516" name="Rue Fiol" origin="25321456"/>
+        <route destination="25321422" length="77.777405" name="Rue du Docteur Rebatel" origin="25321433"/>
+        <route destination="25321408" length="15.331951" name="Rue du Docteur Rebatel" origin="25321422"/>
+        <route destination="25321407" length="46.197845" name="Rue du Docteur Rebatel" origin="25321408"/>
+        <route destination="25321359" length="85.53022" name="Rue du Docteur Rebatel" origin="25321407"/>
+        <route destination="25321334" length="20.22657" name="Rue du Docteur Rebatel" origin="25321359"/>
+        <route destination="25321330" length="129.78181" name="Rue de l'Harmonie" origin="25321334"/>
+        <route destination="25321327" length="99.70037" name="Rue de l'Harmonie" origin="25321330"/>
+        <route destination="251167391" length="58.375137" name="Rue Feuillat" origin="25321327"/>
+        <route destination="25321469" length="92.586105" name="Rue Feuillat" origin="251167391"/>
+        <route destination="25321456" length="90.44906" name="Rue Feuillat" origin="25321469"/>
+        <route destination="25303831" length="64.89446" name="Rue Feuillat" origin="25321456"/>
+        <deliveryPoint idIntersection="25303831" timeWindow="0"/>
+        <deliveryPoint idIntersection="25321334" timeWindow="1"/>
+    </tour>
+    <tour courierId="0"/>
+    <tour courierId="0"/>
+</globalTour>

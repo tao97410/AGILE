@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<globalTour>
+    <map name="largeMap.xml"/>
+    <tour courierId="1">
+        <route destination="25321689" length="153.72511" name="Rue Feuillat" origin="25303831"/>
+        <route destination="25303831" length="153.72511" name="Rue Feuillat" origin="25321689"/>
+        <deliveryPoint idIntersection="25303831" timeWindow="0"/>
+        <deliveryPoint idIntersection="25321689" timeWindow="1"/>
+    </tour>
+    <tour courierId="0"/>
+    <tour courierId="0"/>
+</globalTour>

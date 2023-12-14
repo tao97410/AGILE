@@ -1,1 +1,3 @@
 agile/target/*
+.class
+.jar

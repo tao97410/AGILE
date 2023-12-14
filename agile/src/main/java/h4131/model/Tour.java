@@ -1,58 +1,81 @@
 package h4131.model;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import h4131.calculus.Arc;
+import h4131.calculus.Graph;
 
 public class Tour {
-    private List<Segment> course;
-    private List<DeliveryPoint> deliveryPoints;
-    private Courier courier;
+    private Collection<Segment> course;
+    private Collection<DeliveryPoint> deliveryPoints;
+    private int courierId;
 
-    public Tour(Courier aCourier) {
-        this.courier = aCourier;
+    public Tour(int aCourierId) {
+        this.courierId = aCourierId;
+        this.course = new ArrayList<>();
+        this.deliveryPoints = new ArrayList<>();
+    }
+
+    public Tour(){
         this.course = new ArrayList<>();
         this.deliveryPoints = new ArrayList<>();
     }
 
     
+    
 
+
+   
+
+   
     /**
      * @return List<Segment> return the course
      */
-    public List<Segment> getCourse() {
+    public Collection<Segment> getCourse() {
         return course;
     }
 
     /**
      * @param course the course to set
      */
-    public void setCourse(List<Segment> course) {
+    public void setCourse(Collection<Segment> course) {
         this.course = course;
     }
 
     /**
      * @return Courier return the courier
      */
-    public Courier getCourier() {
-        return courier;
+    public int getCourierId() {
+        return courierId;
     }
 
     /**
       * @param courier the courier to set
       */
-    public void setCourier(Courier courier) {
-         this.courier = courier;
+    public void setCourier(int courierId) {
+         this.courierId = courierId;
     }
 
-    public List<DeliveryPoint> getDeliveryPoints(){
-        return this.deliveryPoints;
-    }
-
+    /**
+     * Adds a segment to a tour
+     * @param segment segment to add
+     */
     public void addSegment(Segment segment){
         this.course.add(segment);
     }
 
+    /**
+     * Adds a delivery point to a tour
+     * @param point Delivery point to consider
+     */
     public void addDeliveryPoint(DeliveryPoint point){
         this.deliveryPoints.add(point);
+    }
+    public void setDeliveryPoints(Collection<DeliveryPoint> deliveryPoints){
+        this.deliveryPoints=deliveryPoints;
+    }
+
+    public Collection<DeliveryPoint> getDeliveryPoints(){
+        return this.deliveryPoints;
     }
 
 }
