@@ -9,7 +9,6 @@ import java.util.Optional;
 import h4131.controller.Controller;
 import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
-import h4131.model.DeliveryPoint;
 import h4131.model.GlobalTour;
 import h4131.model.Intersection;
 import h4131.model.Map;
@@ -20,8 +19,8 @@ import h4131.observer.Observable;
 import h4131.observer.Observer;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -35,7 +34,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -171,13 +169,6 @@ public class WindowBuilder implements Observer {
         displayMapSceneController.setNumberOfCourierFieldValue(String.valueOf(controller.getNumberOfCourier()));
     }
 
-    public void setLoadingAnimation(boolean bool){
-        System.out.println("passe 1" + bool);
-        // disableBackground(bool);
-        displayMapSceneController.setBikeWheelVisible(bool);        
-        System.out.println("passe 2" + bool);
-    }
-
     /**
      * Method called to draw the map using shapes
      * 
@@ -294,6 +285,10 @@ public class WindowBuilder implements Observer {
      * @param the Global Tour to display
      */
     public void drawGlobalTour(GlobalTour globalTour) {
+        for(Node n : displayMapSceneController.getContainer().getChildren()){
+            n.setDisable(false);
+        }
+        displayMapSceneController.getContainer().setCursor(Cursor.DEFAULT);
         hideOldTour();
         // Get screen dimensions
         Screen screen = Screen.getPrimary();

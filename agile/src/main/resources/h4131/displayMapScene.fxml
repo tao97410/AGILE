@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane stylesheets="@stylePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
+<StackPane fx:id="container" stylesheets="@stylePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
    <children>
       <VBox fx:id="layout" stylesheets="@styleMap.css" />
       <Group StackPane.alignment="TOP_LEFT">
@@ -198,7 +198,7 @@
          </children>
       </Pane>
       <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT">
-         <ScrollPane fx:id="scrollPane" maxHeight="800.0">
+         <ScrollPane fx:id="scrollPane" maxHeight="600.0">
             <VBox fx:id="tourListGroup" disable="false" visible="true">
                <padding>
                   <Insets bottom="10.0" right="10.0" />

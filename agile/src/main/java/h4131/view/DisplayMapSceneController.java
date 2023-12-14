@@ -65,10 +65,6 @@ public class DisplayMapSceneController {
     @FXML
     private Pane logo;
 
-    //Loading animation
-    @FXML
-    private Group bikeWheel;
-
     // Main menu controls
     @FXML
     private Button loadTourButton;
@@ -213,15 +209,6 @@ public class DisplayMapSceneController {
         cancelResearch.setOnMouseEntered(this::onMouseEnteredCancel);
         cancelResearch.setOnMouseExited(this::onMouseExitedCancel);
 
-        RotateTransition rotateTransition = new RotateTransition();
-        rotateTransition.setNode(bikeWheel);
-        rotateTransition.setDuration(Duration.seconds(2)); // Set the duration of the rotation
-        rotateTransition.setByAngle(360); // Rotate by 360 degrees (one full rotation)
-        rotateTransition.setCycleCount(RotateTransition.INDEFINITE); // Indefinite looping
-        rotateTransition.play();
-
-        // bikeWheel.setVisible(true);
-
         alertCourierChange.setVisible(false);
         alertMapChange.setVisible(false);
     }
@@ -321,7 +308,10 @@ public class DisplayMapSceneController {
 
     @FXML
     void doComputeGlobalTour(ActionEvent event) {
-        bikeWheel.setVisible(true);
+        for(Node n : container.getChildren()){
+            n.setDisable(true);
+        }        
+        container.setCursor(Cursor.WAIT);
         controller.computeGlobalTour();
     }
 
@@ -435,8 +425,8 @@ public class DisplayMapSceneController {
         this.cancelResearch.setGraphic(imageView);
     }
 
-    public void setBikeWheelVisible(boolean bool){
-        this.bikeWheel.setVisible(bool);
+    public StackPane getContainer(){
+        return this.container;
     }
 
     public int getPreviousCourierChoice() {

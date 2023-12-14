@@ -16,17 +16,11 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.xml.sax.SAXException;
 
 import h4131.calculus.Graph;
-
-import h4131.calculus.TemplateGraph;
-import h4131.calculus.TSP;
-import h4131.calculus.TSP1;
-import h4131.calculus.Arc;
 import h4131.model.GlobalTour;
 import h4131.model.Map;
 import h4131.model.Tour;
 import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
-import h4131.model.Segment;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.PDFgenerator;
@@ -86,7 +80,6 @@ public class InitialState implements State{
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             if (!e.getMessage().equals("Problem when opening file")) {
                 w.alert(e.getMessage());
-                e.printStackTrace();
             }
             w.setFullScreen(true);
             
@@ -106,7 +99,6 @@ public class InitialState implements State{
             return true;
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             w.alert(e.getMessage());
-            e.printStackTrace();
             return false;
         } 
     }
@@ -167,18 +159,18 @@ public class InitialState implements State{
                     c.getGlobalTour().addTour(new Tour());
                 }
             }
-            windowBuilder.drawGlobalTour(c.getGlobalTour());
         } catch (NullPointerException e) {
             windowBuilder.alert("No path found. Check that every intersections are accessibles in both ways.");
-        }finally {            
-            windowBuilder.setLoadingAnimation(false);
+        }finally{
+            windowBuilder.drawGlobalTour(c.getGlobalTour());
         }
-        windowBuilder.drawGlobalTour(c.getGlobalTour());
+        
     }
 
     @Override
     public void saveGlobalTour(Controller c, WindowBuilder w){
         try {
+            w.setFullScreen(false);
             XMLserializer serializer = XMLserializer.getInstance();
             String resulting_path = serializer.save(c.getGlobalTour());
             Path path = Paths.get(resulting_path);
@@ -190,9 +182,12 @@ public class InitialState implements State{
                 PDFgenerator.getPdfInstructions(g, tourId, resulting_path + "\\..\\" + file_name + "_instructions_" + tourId + ".pdf");
                 tourId ++;
             }
+            
         } catch (ParserConfigurationException | ExceptionXML | TransformerFactoryConfigurationError | TransformerException e) {
             w.alert(e.getMessage());
-            e.printStackTrace();
+        }catch (NullPointerException e){
+        }finally {
+            w.setFullScreen(true);
         }
     }
 
