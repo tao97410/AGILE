@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<globalTour>
+    <map name="largeMap.xml"/>
+    <tour courierId="1">
+        <route destination="25321456" length="64.89446" name="Rue Feuillat" origin="25303831"/>
+        <route destination="25321433" length="174.66516" name="Rue Fiol" origin="25321456"/>
+        <route destination="25321422" length="77.777405" name="Rue du Docteur Rebatel" origin="25321433"/>
+        <route destination="1288817934" length="250.5025" name="Rue de Montbrillant" origin="25321422"/>
+        <route destination="25335981" length="144.92577" name="Rue de Montbrillant" origin="1288817934"/>
+        <route destination="195272" length="72.58715" name="Rue du Professeur Paul Sisley" origin="25335981"/>
+        <route destination="25451370" length="154.44595" name="Rue Saint-Philippe" origin="195272"/>
+        <route destination="195268" length="127.95288" name="Rue Saint-Philippe" origin="25451370"/>
+        <route destination="195270" length="95.865654" name="Rue du Dauphiné" origin="195268"/>
+        <route destination="25336178" length="117.45386" name="Rue du Dauphiné" origin="195270"/>
+        <route destination="25336189" length="222.6015" name="Rue du Dauphiné" origin="25336178"/>
+        <route destination="2026239409" length="73.50747" name="Rue du Dauphiné" origin="25336189"/>
+        <route destination="26125366" length="69.514244" name="Rue du Dauphiné" origin="2026239409"/>
+        <route destination="565375197" length="71.13966" name="Rue du Dauphiné" origin="26125366"/>
+        <route destination="26317248" length="32.646736" name="Rue du Dauphiné" origin="565375197"/>
+        <route destination="26317212" length="38.124634" name="Rue du Dauphiné" origin="26317248"/>
+        <route destination="26317242" length="110.82931" name="Rue du Dauphiné" origin="26317212"/>
+        <route destination="25611428" length="139.95462" name="Rue du Dauphiné" origin="26317242"/>
+        <route destination="1368674799" length="63.594482" name="Rue du Dauphiné" origin="25611428"/>
+        <route destination="1368674800" length="36.126144" name="Route de Genas" origin="1368674799"/>
+        <route destination="55463812" length="68.41653" name="Route de Genas" origin="1368674800"/>
+        <route destination="25611425" length="21.551727" name="Route de Genas" origin="55463812"/>
+        <route destination="25611424" length="83.16971" name="Route de Genas" origin="25611425"/>
+        <route destination="26317294" length="234.77402" name="Rue Bellicard" origin="25611424"/>
+        <route destination="26317293" length="78.770195" name="Rue Félix" origin="26317294"/>
+        <route destination="25303841" length="111.942184" name="Rue Feuillat" origin="26317293"/>
+        <route destination="25321689" length="83.108986" name="Rue Feuillat" origin="25303841"/>
+        <route destination="25303831" length="153.72511" name="Rue Feuillat" origin="25321689"/>
+        <route destination="25303832" length="91.81539" name="Avenue Lacassagne" origin="25303831"/>
+        <route destination="25303833" length="104.95519" name="Avenue Lacassagne" origin="25303832"/>
+        <route destination="2365376415" length="59.433758" name="Avenue Lacassagne" origin="25303833"/>
+        <route destination="25303836" length="201.18849" name="Rue Lamartine Rue de Bonnefond" origin="2365376415"/>
+        <route destination="1383027249" length="199.94739" name="Rue Amiral Courbet" origin="25303836"/>
+        <route destination="251171098" length="261.12875" name="Rue Jeanne d'Arc" origin="1383027249"/>
+        <route destination="25303832" length="266.44214" name="Rue Jules Verne" origin="251171098"/>
+        <route destination="25303833" length="104.95519" name="Avenue Lacassagne" origin="25303832"/>
+        <route destination="2365376415" length="59.433758" name="Avenue Lacassagne" origin="25303833"/>
+        <route destination="25303836" length="201.18849" name="Rue Lamartine Rue de Bonnefond" origin="2365376415"/>
+        <route destination="1383027249" length="199.94739" name="Rue Amiral Courbet" origin="25303836"/>
+        <route destination="251171098" length="261.12875" name="Rue Jeanne d'Arc" origin="1383027249"/>
+        <route destination="25303841" length="110.330574" name="Rue Jeanne d'Arc" origin="251171098"/>
+        <route destination="25321689" length="83.108986" name="Rue Feuillat" origin="25303841"/>
+        <route destination="25303831" length="153.72511" name="Rue Feuillat" origin="25321689"/>
+        <route destination="25321456" length="64.89446" name="Rue Feuillat" origin="25303831"/>
+        <route destination="25321433" length="174.66516" name="Rue Fiol" origin="25321456"/>
+        <route destination="25321422" length="77.777405" name="Rue du Docteur Rebatel" origin="25321433"/>
+        <route destination="1288817934" length="250.5025" name="Rue de Montbrillant" origin="25321422"/>
+        <route destination="25335981" length="144.92577" name="Rue de Montbrillant" origin="1288817934"/>
+        <route destination="195272" length="72.58715" name="Rue du Professeur Paul Sisley" origin="25335981"/>
+        <route destination="25451370" length="154.44595" name="Rue Saint-Philippe" origin="195272"/>
+        <route destination="195268" length="127.95288" name="Rue Saint-Philippe" origin="25451370"/>
+        <route destination="195270" length="95.865654" name="Rue du Dauphiné" origin="195268"/>
+        <route destination="522100855" length="54.50388" name="Rue Roger Bréchan" origin="195270"/>
+        <route destination="195271" length="197.0728" name="Rue Roger Bréchan" origin="522100855"/>
+        <route destination="25335981" length="75.26833" name="Rue du Professeur Paul Sisley" origin="195271"/>
+        <route destination="195272" length="72.58715" name="Rue du Professeur Paul Sisley" origin="25335981"/>
+        <route destination="195273" length="29.069725" name="Rue du Professeur Paul Sisley" origin="195272"/>
+        <route destination="25321407" length="362.365" name="Rue des Dahlias" origin="195273"/>
+        <route destination="25321359" length="85.53022" name="Rue du Docteur Rebatel" origin="25321407"/>
+        <route destination="25321334" length="20.22657" name="Rue du Docteur Rebatel" origin="25321359"/>
+        <route destination="25321330" length="129.78181" name="Rue de l'Harmonie" origin="25321334"/>
+        <route destination="25321327" length="99.70037" name="Rue de l'Harmonie" origin="25321330"/>
+        <route destination="251167391" length="58.375137" name="Rue Feuillat" origin="25321327"/>
+        <route destination="25321469" length="92.586105" name="Rue Feuillat" origin="251167391"/>
+        <route destination="25321456" length="90.44906" name="Rue Feuillat" origin="25321469"/>
+        <route destination="25303831" length="64.89446" name="Rue Feuillat" origin="25321456"/>
+        <deliveryPoint idIntersection="25303831" timeWindow="0"/>
+        <deliveryPoint idIntersection="25336178" timeWindow="1"/>
+        <deliveryPoint idIntersection="25336189" timeWindow="1"/>
+        <deliveryPoint idIntersection="565375197" timeWindow="1"/>
+        <deliveryPoint idIntersection="26317242" timeWindow="1"/>
+        <deliveryPoint idIntersection="25611428" timeWindow="1"/>
+        <deliveryPoint idIntersection="25611425" timeWindow="2"/>
+        <deliveryPoint idIntersection="25611424" timeWindow="2"/>
+        <deliveryPoint idIntersection="26317294" timeWindow="2"/>
+        <deliveryPoint idIntersection="25303841" timeWindow="2"/>
+        <deliveryPoint idIntersection="251171098" timeWindow="2"/>
+        <deliveryPoint idIntersection="25303832" timeWindow="3"/>
+        <deliveryPoint idIntersection="25303833" timeWindow="3"/>
+        <deliveryPoint idIntersection="1383027249" timeWindow="3"/>
+        <deliveryPoint idIntersection="25321456" timeWindow="3"/>
+        <deliveryPoint idIntersection="25321433" timeWindow="4"/>
+        <deliveryPoint idIntersection="25321422" timeWindow="4"/>
+        <deliveryPoint idIntersection="1288817934" timeWindow="4"/>
+        <deliveryPoint idIntersection="195271" timeWindow="4"/>
+        <deliveryPoint idIntersection="25335981" timeWindow="4"/>
+    </tour>
+    <tour courierId="0"/>
+    <tour courierId="0"/>
+</globalTour>
