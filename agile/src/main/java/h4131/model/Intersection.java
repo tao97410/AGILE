@@ -53,6 +53,12 @@ public class Intersection {
         this.longitude = longitude;
     }
 
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("(" + this.latitude + ", " + this.longitude + ")");
+        return result.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

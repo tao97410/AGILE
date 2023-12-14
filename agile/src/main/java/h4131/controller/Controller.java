@@ -1,6 +1,8 @@
 package h4131.controller;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -8,17 +10,14 @@ import org.xml.sax.SAXException;
 
 import h4131.model.GlobalTour;
 import h4131.model.Map;
+import h4131.calculus.Graph;
 import h4131.model.CurrentDeliveryPoint;
 import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
 import h4131.view.WindowBuilder;
 import h4131.xml.ExceptionXML;
 import h4131.xml.XMLdeserializer;
-import javafx.animation.FadeTransition;
-import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Controller {
 
@@ -27,6 +26,7 @@ public class Controller {
 	private CurrentDeliveryPoint currentDeliveryPoint;
 	private GlobalTour globalTour;
 	private int numberOfCourier;
+	private List<Graph> graphs;
 	private String nameOfMap;
 
 	private State currentState;
@@ -53,6 +53,7 @@ public class Controller {
 		currentState = initialState;
 		numberOfCourier = 3;
 		globalTour = new GlobalTour();
+		graphs = new LinkedList<Graph>();
 		nameOfMap = "largeMap.xml";
 		currentDeliveryPoint = new CurrentDeliveryPoint(numberOfCourier);
 		currentDeliveryPoint.addObserver(windowBuilder);
@@ -70,7 +71,26 @@ public class Controller {
 		currentState = state;
 	}
 
-	public int getNumberOfCourier() {
+	/**
+	 * Adds a Graph to the list of Graphs
+	 * @param aGraph Graph to be added
+	 */
+	public void addGraph(Graph aGraph) {
+		this.graphs.add(aGraph);
+	}
+
+	/**
+	 * Clears all the graphs
+	 */
+	public void clearAllGraphs() {
+		this.graphs.clear();
+	}
+
+	public List<Graph> getGraphs() {
+		return this.graphs;
+	}
+
+	public int getNumberOfCourier(){
 		return this.numberOfCourier;
 	}
 

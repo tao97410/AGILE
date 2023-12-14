@@ -3,6 +3,7 @@ module h4131 {
     requires transitive javafx.controls;
     requires javafx.fxml;
     requires java.xml;
+    requires itextpdf;
 
     opens h4131.app to javafx.fxml;
     opens h4131.view to javafx.fxml;

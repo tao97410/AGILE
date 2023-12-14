@@ -25,14 +25,29 @@ public class Map {
         return this.intersections.get(id);
     }
 
+    /**
+     * Checks if an intersection exists
+     * @param id the id of the Intersection
+     * @return boolean whether or not the intersection exists
+     */
+
     public boolean hasIntersection (long id) {
         return intersections.get(id) != null;
     }
 
+    /**
+     * Adds an intersection to the map
+     * @param inter Intersection to add
+     */
     public void addIntersection (Intersection inter) {
         intersections.put(inter.getId(),inter);
     } 
 
+
+    /**
+     * Adds a segment to the map
+     * @param seg Segment to add
+     */
     public void addSegment(Segment seg) {
         if (adjacency.containsKey(seg.getOrigin().getId())){
             // If the origin exists, add the segment to the existing list
@@ -47,6 +62,12 @@ public class Map {
         
     }
 
+    /**
+     * Finds a segment of the map
+     * @param idOrigin Id of the origin intersection
+     * @param idDestination Id of the destination intersection
+     * @return The wanted segment
+     */
     private Segment findSegment (long idOrigin,long idDestination){
         Segment res = null;
         Collection<Segment>  segs = new ArrayList<>();
@@ -61,6 +82,12 @@ public class Map {
         return res;
     }
 
+    /**
+     * Gets the graph of the shortest paths between delivery points.
+     * We consider only paths between delivery points which can be delivered consecutively
+     * @param deliveryPointsCol Delivery points considered
+     * @return The wanted graph
+     */
     public Graph getGraphFromPoints(Collection<DeliveryPoint> deliveryPointsCol) throws NullPointerException {
 
         Graph graph = new Graph();
@@ -98,12 +125,13 @@ public class Map {
 
     }
 
+    /**
+     * Gets all the possible destinations which can be served directly after a current point
+     * @param currentPoint Current delivery point
+     * @param deliveryPoints List of other delivery points
+     * @param possibleDestinations List of possible destinations, to be filled in this method
+     */
     private void getPossibleDestinations(DeliveryPoint currentPoint, Collection<DeliveryPoint> deliveryPoints,Collection<Intersection> possibleDestinations){
-            
-
-            // Searching the minimum TimeWindow, STRICTLY GREATER THAN the current TimeWindow
-            // If there isn't any point with a strictly greater TimeWindow, its value will be WAREHOUSE
-            // It's logic, because it means that we will come back to the warehouse after having delivered all points of this window
             TimeWindow minWindow = TimeWindow.WAREHOUSE;
             for (DeliveryPoint otherPoint : deliveryPoints) {
                 if (minWindow.compareTo(TimeWindow.WAREHOUSE) == 0) {
@@ -115,10 +143,6 @@ public class Map {
                 }
             }
 
-            // The possible destinations are the ones with the same TimeWindow than the current point
-            // or with the TimeWindow equal to the minWindow calculated before
-            // Indeed, we can't "jump over" a TimeWindow
-            // For example, a 11-12 delivery can't be delivered after a 9-10 delivery if a 10-11 delivery exists
             for (DeliveryPoint otherPoint : deliveryPoints) {
                 if (otherPoint != currentPoint && (otherPoint.getTime().compareTo(currentPoint.getTime()) == 0 || otherPoint.getTime().compareTo(minWindow) == 0)) {
                     possibleDestinations.add(otherPoint.getPlace());
@@ -127,6 +151,13 @@ public class Map {
 
     }
 
+    /**
+     * Gets the complete path from one point to another
+     * @param origin Origin intersection
+     * @param destination Destination intersetion
+     * @param map Array resulting from the Dijkstra algorithm
+     * @param path Complete path, to be filled in this method
+     */
     private void getPath(Intersection origin, Intersection destination, HashMap<Intersection,InterInfo> map, Collection<Segment> path){
         
         if (origin.getId() != destination.getId()){
@@ -135,6 +166,12 @@ public class Map {
         } 
     }
 
+    /**
+     * Gets the delivery point corresponding to a particular intersection
+     * @param deliveries List of delivery points to search into
+     * @param intersection Intersection to consider
+     * @return Corresponding delivery point
+     */
     private DeliveryPoint getDeliveryPointFromIntersection(Collection<DeliveryPoint> deliveries, Intersection intersection) {
         for (DeliveryPoint d : deliveries) {
             if (d.getPlace().getId() == intersection.getId()) {
@@ -144,6 +181,12 @@ public class Map {
         return null;
     }
 
+    /**
+     * Processing Dijkstra algorithm
+     * @param origin Origin for the algorithm
+     * @param destinations Destinations to consider
+     * @return Resulting array including all informations
+     */
     private HashMap<Intersection,InterInfo> dijkstra(Intersection origin, Collection<Intersection> destinations){
         
         PriorityQueue<InterCompare> queue = new PriorityQueue<>();
@@ -227,7 +270,10 @@ public class Map {
         return result.toString();
     }
          
-    
+    /**
+     * @param id the id of the intersection
+     * @return Collection<Segment> return the intersection corresponding to the id
+     */
 
     public Collection<Segment> getDestinationsById(long id){
         return this.adjacency.get(id);
