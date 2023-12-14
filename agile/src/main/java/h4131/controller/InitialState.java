@@ -45,30 +45,36 @@ public class InitialState implements State{
         try {
             w.setFullScreen(false);
             Element file = XMLdeserializer.loadGlobalTourFirst(loadedGlobalTour);
+            boolean maploaded = true;
             if(!loadedGlobalTour.getMap().equals(c.getNameOfMap())){
-                loadMap(c, w, loadedGlobalTour.getMap());
+                maploaded = loadMap(c, w, loadedGlobalTour.getMap());
             }
-            XMLdeserializer.buildRestFromDOMXMLGT(file, loadedGlobalTour, c.getMap(), loadedCurrentDeliveryPoint);
-            c.setGlobalTour(loadedGlobalTour);
-            System.out.println("quand meme");
-            loadedCurrentDeliveryPoint.addObserver(w);
-            c.setCurrentDeliveryPoint(loadedCurrentDeliveryPoint);
-            c.getCurrentDeliveryPoint().update();
-            int currentNumberOfCourier = c.getNumberOfCourier();
-            int loadedNumberOfCourier = c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size();
-            if(loadedNumberOfCourier>currentNumberOfCourier){
-                if(w.NumberCourierChoice(currentNumberOfCourier, loadedNumberOfCourier))
-                    setNumberOfCourier(c, w, loadedNumberOfCourier);
-                else{
-                    setNumberOfCourier(c, w, currentNumberOfCourier);
-                    computeGlobalTour(c, w);
+            if(maploaded){
+                XMLdeserializer.buildRestFromDOMXMLGT(file, loadedGlobalTour, c.getMap(), loadedCurrentDeliveryPoint);
+                c.setGlobalTour(loadedGlobalTour);
+                System.out.println("quand meme");
+                loadedCurrentDeliveryPoint.addObserver(w);
+                c.setCurrentDeliveryPoint(loadedCurrentDeliveryPoint);
+                c.getCurrentDeliveryPoint().update();
+                int currentNumberOfCourier = c.getNumberOfCourier();
+                int loadedNumberOfCourier = c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size();
+                if(loadedNumberOfCourier>currentNumberOfCourier){
+                    if(w.NumberCourierChoice(currentNumberOfCourier, loadedNumberOfCourier))
+                        setNumberOfCourier(c, w, loadedNumberOfCourier);
+                    else{
+                        setNumberOfCourier(c, w, currentNumberOfCourier);
+                        computeGlobalTour(c, w);
+                    }
                 }
+                
+                
+                
+                w.drawGlobalTour(c.getGlobalTour());
+                w.refreshNumberOfCourier();
             }
             
-            
+
             w.setFullScreen(true);
-            w.drawGlobalTour(c.getGlobalTour());
-            w.refreshNumberOfCourier();
             
 
             
@@ -85,7 +91,7 @@ public class InitialState implements State{
     }
 
     @Override
-    public void loadMap(Controller c, WindowBuilder w, String fileName){
+    public boolean loadMap(Controller c, WindowBuilder w, String fileName){
         Map newMap = new Map();
         try {
             XMLdeserializer.loadMap(fileName, newMap);
@@ -93,10 +99,12 @@ public class InitialState implements State{
             c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.drawMap(newMap);
             c.setMap(newMap);
+            return true;
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println("plutot la");
             w.alert(e.getMessage());
             e.printStackTrace();
+            return false;
         } 
     }
 

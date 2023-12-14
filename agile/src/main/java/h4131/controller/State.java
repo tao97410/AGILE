@@ -13,12 +13,13 @@ public interface State {
 	public default void loadGlobalTour(Controller c, WindowBuilder w){};
 	
 	/**
-	 * Method called by the controller after a click on the button "Load chosen map"
+	 * Method called by the controller after a click on the button "Load chosen map" or by the loadGlobalTour
 	 * @param c the controller
 	 * @param w the window
 	 * @param fileName which is the name of the xml map file
+	 * @return boolean whether an exception has been thrown or not
 	 */
-	public default void loadMap(Controller c, WindowBuilder w, String fileName){};
+	public default boolean loadMap(Controller c, WindowBuilder w, String fileName){return true;};
 
 	/**
 	 * Method called by controller after click on "OK" button when adding delivery
