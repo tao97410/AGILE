@@ -76,24 +76,24 @@ public class Map {
         DeliveryPoint point1 = new DeliveryPoint(allIntersections.get(1), TimeWindow.EIGHT_NINE);
         deliveryPoints.add(point1);
         System.out.println(point1.toString());
-        DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(51), TimeWindow.EIGHT_NINE);
-        deliveryPoints.add(point2);
-        System.out.println(point2.toString());
-        DeliveryPoint point15 = new DeliveryPoint(allIntersections.get(52), TimeWindow.EIGHT_NINE);
+        // DeliveryPoint point2 = new DeliveryPoint(allIntersections.get(51), TimeWindow.EIGHT_NINE);
+        // deliveryPoints.add(point2);
+        // System.out.println(point2.toString());
+        DeliveryPoint point15 = new DeliveryPoint(allIntersections.get(2), TimeWindow.EIGHT_NINE);
         deliveryPoints.add(point15);
         System.out.println(point15.toString());
-        DeliveryPoint point16 = new DeliveryPoint(allIntersections.get(53), TimeWindow.EIGHT_NINE);
+        DeliveryPoint point16 = new DeliveryPoint(allIntersections.get(3), TimeWindow.EIGHT_NINE);
         deliveryPoints.add(point16);
         System.out.println(point16.toString());
-        DeliveryPoint point17 = new DeliveryPoint(allIntersections.get(54), TimeWindow.EIGHT_NINE);
-        deliveryPoints.add(point17);
-        System.out.println(point17.toString());
-        DeliveryPoint point18 = new DeliveryPoint(allIntersections.get(58), TimeWindow.EIGHT_NINE);
-        deliveryPoints.add(point18);
-        System.out.println(point18.toString());
-        DeliveryPoint point19 = new DeliveryPoint(allIntersections.get(56), TimeWindow.EIGHT_NINE);
-        deliveryPoints.add(point19);
-        System.out.println(point19.toString());
+        // DeliveryPoint point17 = new DeliveryPoint(allIntersections.get(4), TimeWindow.EIGHT_NINE);
+        // deliveryPoints.add(point17);
+        // System.out.println(point17.toString());
+        // DeliveryPoint point18 = new DeliveryPoint(allIntersections.get(8), TimeWindow.EIGHT_NINE);
+        // deliveryPoints.add(point18);
+        // System.out.println(point18.toString());
+        // DeliveryPoint point19 = new DeliveryPoint(allIntersections.get(56), TimeWindow.EIGHT_NINE);
+        // deliveryPoints.add(point19);
+        // System.out.println(point19.toString());
 
        
         DeliveryPoint point74 = new DeliveryPoint(allIntersections.get(91), TimeWindow.NINE_TEN);

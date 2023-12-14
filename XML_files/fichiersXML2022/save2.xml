@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<globalTour>
+    <map name=" "/>
+    <tour courierId="1">
+        <route destination="25321689" length="153.72511" name="Rue Feuillat" origin="25303831"/>
+        <route destination="25303841" length="83.108986" name="Rue Feuillat" origin="25321689"/>
+        <route destination="26317293" length="111.942184" name="Rue Feuillat" origin="25303841"/>
+        <route destination="25611425" length="238.35002" name="Rue Feuillat" origin="26317293"/>
+        <route destination="55463792" length="104.732445" name="Rue Meunier" origin="25611425"/>
+        <route destination="55463799" length="13.81556" name="Rue Meunier" origin="55463792"/>
+        <route destination="1368674810" length="61.247414" name="Place des Maisons Neuves" origin="55463799"/>
+        <route destination="1368674811" length="11.389846" name="Rue Frédéric Mistral" origin="1368674810"/>
+        <route destination="2672660419" length="150.36613" name="Rue Paul Bert" origin="1368674811"/>
+        <route destination="26057106" length="120.3281" name="Rue Paul Bert" origin="2672660419"/>
+        <route destination="26057098" length="126.56524" name="Rue Paul Bert" origin="26057106"/>
+        <route destination="26057085" length="211.31693" name="Rue Paul Bert" origin="26057098"/>
+        <route destination="26057084" length="84.381294" name="Rue Paul Bert" origin="26057085"/>
+        <route destination="26079654" length="153.978" name="Rue Baraban" origin="26057084"/>
+        <route destination="26079655" length="79.02355" name="Rue Antoine Charial" origin="26079654"/>
+        <route destination="26057085" length="145.00984" name="Rue Turbil" origin="26079655"/>
+        <route destination="26317229" length="232.252" name="Rue Turbil" origin="26057085"/>
+        <route destination="26317214" length="61.443684" name="Place Rouget de l'Isle" origin="26317229"/>
+        <route destination="3509898986" length="58.81714" name="Avenue Lacassagne" origin="26317214"/>
+        <route destination="2026239409" length="175.30086" name="Avenue Lacassagne" origin="3509898986"/>
+        <route destination="1603856892" length="65.81088" name="Avenue Lacassagne" origin="2026239409"/>
+        <route destination="25336254" length="96.2063" name="Avenue Lacassagne" origin="1603856892"/>
+        <route destination="2129259176" length="47.480927" name="Avenue Lacassagne" origin="25336254"/>
+        <route destination="251047560" length="88.17194" name="Avenue Lacassagne" origin="2129259176"/>
+        <route destination="25321447" length="113.25773" name="Avenue Lacassagne" origin="251047560"/>
+        <route destination="2129259178" length="50.40357" name="Avenue Lacassagne" origin="25321447"/>
+        <route destination="25303831" length="118.890465" name="Avenue Lacassagne" origin="2129259178"/>
+        <deliveryPoint idIntersection="25303831" timeWindow="0"/>
+        <deliveryPoint idIntersection="25303841" timeWindow="1"/>
+        <deliveryPoint idIntersection="1368674811" timeWindow="1"/>
+        <deliveryPoint idIntersection="26079654" timeWindow="1"/>
+    </tour>
+    <tour courierId="0"/>
+    <tour courierId="0"/>
+</globalTour>
