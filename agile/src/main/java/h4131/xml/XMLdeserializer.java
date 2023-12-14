@@ -26,6 +26,8 @@ import h4131.model.DeliveryPoint;
 public class XMLdeserializer {
 	/**
 	 * Open an XML file and create different objects from this file
+	 * @param fileType the name of the file
+	 * @return Element the root Element of the xml document
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
@@ -41,6 +43,18 @@ public class XMLdeserializer {
 	} 
 
 	/////////////////MAP////////////////////////////////
+
+
+	/**
+	 * loads a map thanks to a xml file
+	 * @param mapFileName the name of the file
+	 * @param map the map which is going to be loaded by the xml document
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ExceptionXML
+	 */
+
 	public static void loadMap(String mapFileName, Map map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
 		InputStream xml;
 		xml = XMLdeserializer.class.getResourceAsStream("/h4131/"+mapFileName);
@@ -56,6 +70,14 @@ public class XMLdeserializer {
 			throw new ExceptionXML("Wrong format");
 		
 	}
+
+	/**
+	 * Builds a map thanks to the root Element
+	 * @param noeudDOMRacine the root Element of the xml document
+	 * @param map the map which is going to be loaded by the xml document
+	 * @throws NumberFormatException
+	 * @throws ExceptionXML
+	 */
 	
     private static void buildFromDOMXMLMap(Element noeudDOMRacine, Map map) throws ExceptionXML, NumberFormatException{
        	NodeList intersectionsList = noeudDOMRacine.getElementsByTagName("intersection");
@@ -76,6 +98,16 @@ public class XMLdeserializer {
     }
 	
 	//////////////////GLOBAL TOUR////////////////////////////
+
+	/**
+	 * Loads a global tour thanks to a xml file
+	 * @param gt the Global tour which is going to be loaded by the xml document
+	 * @return Element the root element of the xml document
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ExceptionXML
+	 */
 	public static Element loadGlobalTourFirst(GlobalTour gt) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
 		Element root = openFile("Choose a tour");
         if (root.getNodeName().equals("globalTour")) {
@@ -86,6 +118,13 @@ public class XMLdeserializer {
 		return root;
 	}
 
+	/**
+	 * Builds the first part of a global tour thanks to the root element
+	 * @param noeudDOMRacine the root Element of the xml document
+	 * @param gt the global tour which is going to be loaded by the xml document
+	 * @throws NumberFormatException
+	 * @throws ExceptionXML
+	 */
 	
 	
     private static void buildMapFromDOMXMLGT(Element noeudDOMRacine,GlobalTour gt) throws ExceptionXML, NumberFormatException{
@@ -93,6 +132,17 @@ public class XMLdeserializer {
 		gt.setMap(nameOfMap);
        		
     }
+
+	/**
+	 * Builds the rest of the global tour thanks to the root element
+	 * @param noeudDOMRacine the root Element of the xml document
+	 * @param gt the global tour to load
+	 * @param map the map on which the global tour will be loaded
+	 * @param currentDp the CurrentDeliveryPoints of the Global Tour
+	 * @param gt the global tour which is going to be loaded by the xml document
+	 * @throws NumberFormatException
+	 * @throws ExceptionXML
+	 */ 
 
 
 	 public static void buildRestFromDOMXMLGT(Element noeudDOMRacine, GlobalTour gt,Map map, CurrentDeliveryPoint currentDp) throws ExceptionXML, NumberFormatException{
@@ -105,6 +155,13 @@ public class XMLdeserializer {
        		
     }
 
+	/**
+	 * Creates an intersection for an intersection element
+	 * @param elt the intersection element
+	 * @return Intersection the intersection created
+	 * @throws ExceptionXML
+	 */ 
+
     
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
    		double latitude = Double.parseDouble(elt.getAttribute("latitude"));
@@ -114,6 +171,14 @@ public class XMLdeserializer {
 			throw new ExceptionXML("Error when reading file: The id of an intersection must be positive");
    		return new Intersection(id,latitude,longitude);
     }
+
+	/**
+	 * Creates a segment for an segment element
+	 * @param elt the segment element
+	 * @param map the map to which the segment belongs
+	 * @return Segment the segment created
+	 * @throws ExceptionXML
+	 */ 
     
     private static Segment createSegment(Element elt,Map map) throws ExceptionXML{
    		long idDestination = Long.parseLong(elt.getAttribute("destination"));
@@ -128,6 +193,15 @@ public class XMLdeserializer {
 		String name = elt.getAttribute("name");
    		return new Segment(origin, destination,length,name);
     }
+
+	/**
+	 * Creates a tour for an tour element
+	 * @param elt the tour element
+	 * @param map the map to which the tour belongs
+	 * @param currentDp the CurrentDeliveryPoints associated to the global tour
+	 * @return Tour the tour created
+	 * @throws ExceptionXML
+	 */ 
 
 	private static Tour createTour(Element elt, Map map, CurrentDeliveryPoint currentDp) throws ExceptionXML{
 		int CourierId = Integer.parseInt(elt.getAttribute("courierId"));
@@ -156,6 +230,14 @@ public class XMLdeserializer {
 		return tour;
 		
 	}
+
+	/**
+	 * Creates a DeliveryPoint for an DeliveryPoint element
+	 * @param elt the DeliveryPoint element
+	 * @param map the map to which the DeliveryPoint belongs
+	 * @return DeliveryPoint the DeliveryPoint created
+	 * @throws ExceptionXML
+	 */ 
 
 	private static DeliveryPoint createDeliveryPoint(Element elt, Map map) throws ExceptionXML{
 		TimeWindow[] timeWindows = TimeWindow.values();

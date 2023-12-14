@@ -50,6 +50,7 @@ public class InitialState implements State{
             }
             XMLdeserializer.buildRestFromDOMXMLGT(file, loadedGlobalTour, c.getMap(), loadedCurrentDeliveryPoint);
             c.setGlobalTour(loadedGlobalTour);
+            System.out.println("quand meme");
             loadedCurrentDeliveryPoint.addObserver(w);
             c.setCurrentDeliveryPoint(loadedCurrentDeliveryPoint);
             c.getCurrentDeliveryPoint().update();
@@ -73,6 +74,7 @@ public class InitialState implements State{
             
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             if(!e.getMessage().equals("Problem when opening file")){
+                System.out.println("ici");
                 w.alert(e.getMessage());
                 e.printStackTrace();
             }
@@ -92,6 +94,7 @@ public class InitialState implements State{
             w.drawMap(newMap);
             c.setMap(newMap);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
+            System.out.println("plutot la");
             w.alert(e.getMessage());
             e.printStackTrace();
         } 

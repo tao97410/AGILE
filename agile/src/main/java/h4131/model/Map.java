@@ -25,6 +25,12 @@ public class Map {
         return this.intersections.get(id);
     }
 
+    /**
+     * Checks if an intersection exists
+     * @param id the id of the Intersection
+     * @return boolean whether or not the intersection exists
+     */
+
     public boolean hasIntersection (long id) {
         return intersections.get(id) != null;
     }
@@ -263,7 +269,10 @@ public class Map {
         return result.toString();
     }
          
-    
+    /**
+     * @param id the id of the intersection
+     * @return Collection<Segment> return the intersection corresponding to the id
+     */
 
     public Collection<Segment> getDestinationsById(long id){
         return this.adjacency.get(id);
