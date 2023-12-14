@@ -12,6 +12,7 @@ import h4131.model.TimeWindow;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
+import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -63,6 +64,10 @@ public class DisplayMapSceneController {
     //Logo
     @FXML
     private Pane logo;
+
+    //Loading animation
+    @FXML
+    private Group bikeWheel;
 
     // Main menu controls
     @FXML
@@ -208,6 +213,15 @@ public class DisplayMapSceneController {
         cancelResearch.setOnMouseEntered(this::onMouseEnteredCancel);
         cancelResearch.setOnMouseExited(this::onMouseExitedCancel);
 
+        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition.setNode(bikeWheel);
+        rotateTransition.setDuration(Duration.seconds(2)); // Set the duration of the rotation
+        rotateTransition.setByAngle(360); // Rotate by 360 degrees (one full rotation)
+        rotateTransition.setCycleCount(RotateTransition.INDEFINITE); // Indefinite looping
+        rotateTransition.play();
+
+        // bikeWheel.setVisible(true);
+
         alertCourierChange.setVisible(false);
         alertMapChange.setVisible(false);
     }
@@ -307,6 +321,7 @@ public class DisplayMapSceneController {
 
     @FXML
     void doComputeGlobalTour(ActionEvent event) {
+        bikeWheel.setVisible(true);
         controller.computeGlobalTour();
     }
 
@@ -418,6 +433,10 @@ public class DisplayMapSceneController {
         imageView.setFitWidth(30.0);
         imageView.setFitHeight(30.0);
         this.cancelResearch.setGraphic(imageView);
+    }
+
+    public void setBikeWheelVisible(boolean bool){
+        this.bikeWheel.setVisible(bool);
     }
 
     public int getPreviousCourierChoice() {

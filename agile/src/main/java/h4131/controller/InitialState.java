@@ -115,6 +115,8 @@ public class InitialState implements State {
             windowBuilder.drawGlobalTour(c.getGlobalTour());
         } catch (NullPointerException e) {
             windowBuilder.alert("No path found. Check that every intersections are accessibles in both ways.");
+        }finally {            
+            windowBuilder.setLoadingAnimation(false);
         }
     }
 

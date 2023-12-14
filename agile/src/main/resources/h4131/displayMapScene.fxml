@@ -209,5 +209,14 @@
             <Insets right="20.0" top="20.0" />
          </StackPane.margin>
       </Group>
+      <Group fx:id="bikeWheel" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@bike-wheel.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
    </children>
 </StackPane>

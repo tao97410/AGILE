@@ -31,6 +31,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -128,6 +129,13 @@ public class WindowBuilder implements Observer {
      */
     public void setFullScreen(boolean bool) {
         stage.setFullScreen(bool);
+    }
+
+    public void setLoadingAnimation(boolean bool){
+        System.out.println("passe 1" + bool);
+        // disableBackground(bool);
+        displayMapSceneController.setBikeWheelVisible(bool);        
+        System.out.println("passe 2" + bool);
     }
 
     /**
