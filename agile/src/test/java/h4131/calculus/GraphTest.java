@@ -11,33 +11,12 @@ import h4131.model.Segment;
 import h4131.model.TimeWindow;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.xml.sax.SAXException;
-
-import h4131.model.DeliveryPoint;
-import h4131.model.GlobalTour;
-import h4131.model.Intersection;
-import h4131.model.Map;
-import h4131.model.TimeWindow;
-import h4131.model.Tour;
-import h4131.xml.ExceptionXML;
-import h4131.xml.XMLdeserializer;
 
 public class GraphTest {
 

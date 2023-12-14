@@ -1,14 +1,7 @@
 package h4131.calculus;
-import h4131.model.DeliveryPoint;
-import h4131.model.TimeWindow;
-import java.util.LinkedList;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-
-
-
 
 public class Unvisited {
     private Integer[][] candidates;

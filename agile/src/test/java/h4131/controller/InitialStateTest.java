@@ -2,7 +2,6 @@ package h4131.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.configuration.GlobalConfiguration;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import h4131.calculus.Arc;
@@ -302,7 +300,7 @@ public class InitialStateTest {
 
         mockedInitialState.computeGlobalTour(spyController, mockedWindowBuilder);
 
-        verify(mockedWindowBuilder).alert("error on this time window : EIGHT_NINEon tour n°1");
+        verify(mockedWindowBuilder).alert("No path found. Check that every intersections are accessibles in both ways.");
         verify(mockedWindowBuilder).drawGlobalTour(globalTour);
     }
 

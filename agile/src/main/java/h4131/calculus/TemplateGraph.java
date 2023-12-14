@@ -1,8 +1,5 @@
 package h4131.calculus;
 
-
-import java.util.List;
-
 import h4131.model.DeliveryPoint;
 import h4131.model.TimeWindow;
 

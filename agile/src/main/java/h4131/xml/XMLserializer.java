@@ -1,7 +1,6 @@
 package h4131.xml;
 
 import java.io.File;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,7 +25,6 @@ import h4131.model.Tour;
 
 public class XMLserializer {// Singleton
 	
-	private Element shapeRoot;
 	private Document document;
 	private static XMLserializer instance = null;
 	private XMLserializer(){}

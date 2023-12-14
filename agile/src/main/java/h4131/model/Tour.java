@@ -1,8 +1,6 @@
 package h4131.model;
 import java.util.ArrayList;
 import java.util.Collection;
-import h4131.calculus.Arc;
-import h4131.calculus.Graph;
 
 public class Tour {
     private Collection<Segment> course;

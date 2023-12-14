@@ -2,7 +2,6 @@ package h4131.calculus;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,6 @@ import org.mockito.Mock;
 
 import h4131.model.DeliveryPoint;
 import h4131.model.Intersection;
-import h4131.model.Map;
 import h4131.model.TimeWindow;
 
 public class TSP1Test {

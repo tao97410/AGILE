@@ -3,13 +3,9 @@ package h4131.calculus;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.security.auth.login.CredentialException;
 
 import h4131.model.DeliveryPoint;
 import h4131.model.Segment;
@@ -19,8 +15,6 @@ import h4131.model.GlobalTour;
 
 
 public class Graph implements TemplateGraph{
-    private static final double MAX_COST = 10000;
-	private static final double MIN_COST = 100;
     public Collection<DeliveryPoint> nodes;
     public Collection<Arc> arcs;
     private double [][] cost;

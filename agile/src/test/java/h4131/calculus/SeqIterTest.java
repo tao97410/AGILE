@@ -127,8 +127,6 @@ public class SeqIterTest {
         iteratorMock=new SeqIter(uMock, g, 3);
         iteratorMock.next();
         Integer DeliveryPoint=3;
-
-        Integer actual=DeliveryPoint;
         Integer expected=iteratorMock.remove();
         assertEquals(expected,DeliveryPoint);
    

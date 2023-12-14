@@ -1,7 +1,5 @@
 package h4131.calculus;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Arrays;
 
 
@@ -12,7 +10,6 @@ import java.util.Arrays;
 public class SeqIter {
 	private Integer[][] candidates;
 	private int[] nbCandidates;
-	private int[] getInitialiseNbCandidate;
 	private TemplateGraph g;
 	private int currentWindow;
 	private Unvisited unvisited;

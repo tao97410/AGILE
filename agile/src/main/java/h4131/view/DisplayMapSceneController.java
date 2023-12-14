@@ -1,10 +1,8 @@
 package h4131.view;
 
-import java.text.Collator;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.LinkedList;
-import java.util.Locale;
 
 import h4131.controller.Controller;
 import h4131.model.DeliveryPoint;
@@ -12,9 +10,7 @@ import h4131.model.TimeWindow;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
-import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
