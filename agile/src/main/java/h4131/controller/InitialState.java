@@ -150,6 +150,7 @@ public class InitialState implements State{
         try{
             c.setGlobalTour(new GlobalTour());
             c.setNameOfMap(c.getNameOfMap());
+            c.getGlobalTour().setMap(c.getNameOfMap());
             int courier = 0;
             c.clearAllGraphs();
             for(LinkedList<DeliveryPoint> listDeliveryPoints : c.getCurrentDeliveryPoint().getAffectedDeliveryPoints()){
