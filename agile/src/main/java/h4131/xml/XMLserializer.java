@@ -37,9 +37,9 @@ public class XMLserializer {// Singleton
 	}
  
 	/**
-	 * Open an XML file and write an XML description of the plan in it 
-	 * @param plan the plan to serialise
-     * @return 
+	 * Open an XML file and write an XML description of the global tour in it 
+	 * @param gt the plan to serialise
+     * @return String path
 	 * @throws ParserConfigurationException
 	 * @throws TransformerFactoryConfigurationError
 	 * @throws TransformerException
