@@ -3,57 +3,42 @@ package h4131.calculus;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+
+
 
 public abstract class TemplateTSP implements TSP {
-	private Integer[] bestSol;
+	protected Integer[] bestSol;
 	protected TemplateGraph g;
-	private double bestSolCost;
-	private int timeLimit;
-	private long startTime;
-	private int indexDeliveryErreur=-1;
+	protected double bestSolCost;
+	protected int timeLimit;
+	protected long startTime;
+	protected int indexDeliveryError;
+	private int maxnbVisitedNodes=0;
 	
-	
+
+
+	/**
+	 * Template method of a branch and bound algorithm for solving the TSP in <code>g</code>.
+	 * @param timeLimit stops the research if the timeLimit is exceeded
+	 * @param g the completeGraph for which we want to search a solution
+	 */	
 	public void searchSolution(int timeLimit, Graph g){
 		if (timeLimit <= 0) return;
 		startTime = System.currentTimeMillis();	
 		this.timeLimit = timeLimit;
 		this.g = g;
 		bestSol = new Integer[g.getNbVertices()];
-		Collection<Integer> unvisited = new ArrayList<Integer>(g.getNbVertices()-1);
-		for (int i=1; i<g.getNbVertices(); i++) unvisited.add(i);
+		Collection<Integer> unvisitedCollection = new ArrayList<Integer>(g.getNbVertices()-1);
+		for (int i=1; i<g.getNbVertices(); i++) unvisitedCollection.add(i);
+		Unvisited unvisited = new Unvisited(unvisitedCollection, g);
 		Collection<Integer> visited = new ArrayList<Integer>(g.getNbVertices());
 		visited.add(0); // The first visited vertex is 0
 		bestSolCost = Double.MAX_VALUE;
-		branchAndBound(0, unvisited, visited, 0,g.getTimeBegining().ordinal()+7.0,0,g.getTimeBegining().ordinal(),0);
+		branchAndBound(0, unvisited, visited, 0,g.getTimeBegining().ordinal()+7.0,0);
 	}
 	
-	public Integer[] getSolution(){
-		return bestSol;
-	}
-	
-	public double getSolutionCost(){
-		if (g != null)
-			return bestSolCost;
-		return -1;
-	}
-	
-	/**
-	 * Method that must be defined in TemplateTSP subclasses
-	 * @param currentVertex
-	 * @param unvisited
-	 * @return a lower bound of the cost of paths in <code>g</code> starting from <code>currentVertex</code>, visiting 
-	 * every vertex in <code>unvisited</code> exactly once, and returning back to vertex <code>0</code>.
-	 */
-	protected abstract int bound(Integer currentVertex, Collection<Integer> unvisited);
-	
-	/**
-	 * Method that must be defined in TemplateTSP subclasses
-	 * @param currentVertex
-	 * @param unvisited
-	 * @param g
-	 * @return an iterator for visiting all vertices in <code>unvisited</code> which are successors of <code>currentVertex</code>
-	 */
-	protected abstract Iterator<Integer> iterator(Integer currentVertex, Collection<Integer> unvisited, TemplateGraph g);
+
 	
 	/**
 	 * Template method of a branch and bound algorithm for solving the TSP in <code>g</code>.
@@ -61,57 +46,49 @@ public abstract class TemplateTSP implements TSP {
 	 * @param unvisited the set of vertex that have not yet been visited
 	 * @param visited the sequence of vertices that have been already visited (including currentVertex)
 	 * @param currentCost the cost of the path corresponding to <code>visited</code>
+	 * @param time the current run time of the method
+	 * @param nbVisitedNodes the number of visited nodes 
 	 */	
-	private void branchAndBound(int currentVertex, Collection<Integer> unvisited, 
-			Collection<Integer> visited, double currentCost,double time,int nbSommetVisited,int plageHoraire,int nbPlageHoraire){
-		int maxNbSommetVisited=0;
-		int newNbPlageHoraire=nbPlageHoraire+1;
+	private void branchAndBound(int currentVertex, Unvisited unvisited, 
+		Collection<Integer> visited, double currentCost,double time,int nbVisitedNodes){
 		if (System.currentTimeMillis() - startTime > timeLimit) return;
-	    if (unvisited.size() == 0){ 
-	    	if (g.isArc(currentVertex,0)){ 
-	    		visited.toArray(bestSol);
-	    		bestSolCost = currentCost+g.getCost(currentVertex,0);
-	    	}
-	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
-	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);
-			
+		SeqIter it=new SeqIter(unvisited, g,currentVertex);
+	    if (!it.hasNext()){ 
+	    	if(g.getCost(currentVertex,0)==Double.MAX_VALUE && nbVisitedNodes>=this.maxnbVisitedNodes){
+				if(currentCost<bestSolCost){
+					bestSolCost=currentCost;
+					visited.toArray(bestSol);
+					maxnbVisitedNodes=nbVisitedNodes;
+				}
 
-			
+			}
+			else if(g.getCost(currentVertex,0)!=Double.MAX_VALUE){
+				if(currentCost+g.getCost(currentVertex, 0)<bestSolCost){
+					bestSolCost=currentCost+g.getCost(currentVertex, 0);
+					visited.toArray(bestSol);
+					maxnbVisitedNodes=nbVisitedNodes+1;
+				}
+			}
+	    } else if (currentCost<bestSolCost){
 	        while (it.hasNext()){
-				
 	        	Integer nextVertex = it.next();
-				
-				
-				
-				if(g.getNbPlageHoraire(plageHoraire-1)!=nbPlageHoraire && g.getWindow(nextVertex).ordinal()!=plageHoraire){
-					
-					continue;
-				}
-				
-				else if(g.getNbPlageHoraire(plageHoraire-1)==nbPlageHoraire){
-					newNbPlageHoraire=1;
-				}
-				
 				if(g.getCost(currentVertex,nextVertex)!= Double.MAX_VALUE && time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0>g.getWindow(1,nextVertex)){
-					
-					if(nbSommetVisited>=maxNbSommetVisited){
-						if(nbSommetVisited==maxNbSommetVisited){
+					if(nbVisitedNodes>=this.maxnbVisitedNodes){
+						if(nbVisitedNodes==this.maxnbVisitedNodes){
 							if(currentCost+g.getCost(currentVertex,nextVertex)<bestSolCost){
 								visited.toArray(bestSol);
 								bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
-								indexDeliveryErreur=nextVertex;
+								indexDeliveryError=nextVertex;
+								this.maxnbVisitedNodes=nbVisitedNodes;
 							}
 						}
 						else{
-							
-
+							this.maxnbVisitedNodes=nbVisitedNodes;
 							visited.toArray(bestSol);
 							bestSolCost = currentCost+g.getCost(currentVertex,nextVertex);
-							indexDeliveryErreur=nextVertex;
-							
+							indexDeliveryError=nextVertex;
 						}
 					}
-					//verifier le bestSol
 				}
 				else{
 					double newTime;
@@ -122,18 +99,49 @@ public abstract class TemplateTSP implements TSP {
 						newTime=time+g.timeTravel(currentVertex,nextVertex)+5.0/60.0;
 					}
 					visited.add(nextVertex);
-					unvisited.remove(nextVertex);
+					Integer develeryPointDelete=it.remove();
 					branchAndBound(nextVertex, unvisited, visited, 
-							currentCost+g.getCost(currentVertex, nextVertex),newTime,nbSommetVisited++,g.getWindow(nextVertex).ordinal(),newNbPlageHoraire);
+							currentCost+g.getCost(currentVertex, nextVertex),newTime,nbVisitedNodes++);
 					visited.remove(nextVertex);
-					unvisited.add(nextVertex);
+					it.addFollowing(develeryPointDelete);
 				}
 	        }	    
 	    }
 	}
-	public int getIndexDeliveryErreur(){
-		return indexDeliveryErreur;
+
+	// ******************GET METHODS********************
+	
+	public int getIndexDeliveryError(){
+		return indexDeliveryError;
 	}
+
+
+	public Integer[] getSolution(){
+		return bestSol;
+	}
+	
+	public double getSolutionCost(){
+		if (g != null)
+			return bestSolCost;
+		return -1;
+	}
+
+	// ******************GET METHODS********************
+
+
+	// ******************SET METHODS********************
+		
+	public void setG(TemplateGraph g) {
+		this.g = g;
+	}
+
+	public void setBestSolCost(double bestSolCost) {
+		this.bestSolCost = bestSolCost;
+	}
+
+
+	// ******************SET METHODS********************
+	
 	
 
 }

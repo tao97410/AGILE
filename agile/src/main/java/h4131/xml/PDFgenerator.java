@@ -238,7 +238,7 @@ public class PDFgenerator {
     private static void generatePdf(String path, String content) {
         Document document = new Document();
         try {
-            com.itextpdf.text.Image img = com.itextpdf.text.Image.getInstance(System.getProperty("user.dir") + "\\agile\\src\\main\\resources\\h4131\\main_logo.png");
+            com.itextpdf.text.Image img = com.itextpdf.text.Image.getInstance(PDFgenerator.class.getResource("/h4131/main_logo.png"));
             img.scalePercent(10);
             img.setAlignment(Image.RIGHT);
             try {

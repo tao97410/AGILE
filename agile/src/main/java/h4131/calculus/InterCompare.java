@@ -12,6 +12,7 @@ public class InterCompare implements Comparable<InterCompare> {
         this.intersection = anIntersection;
     }
 
+    
     @Override
     public int compareTo(InterCompare o) {
         return ((Double) distance).compareTo(o.distance);
