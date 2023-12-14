@@ -1,6 +1,10 @@
 package h4131.view;
 
+import java.text.Collator;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import h4131.controller.Controller;
 import h4131.model.DeliveryPoint;
@@ -8,7 +12,9 @@ import h4131.model.TimeWindow;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
+import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -27,6 +33,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -34,6 +43,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -49,6 +59,15 @@ public class DisplayMapSceneController {
     private StackPane container;
     @FXML
     private VBox layout;
+    private Pane shapesPane;
+
+    //Logo
+    @FXML
+    private Pane logo;
+
+    //Loading animation
+    @FXML
+    private Group bikeWheel;
 
     // Main menu controls
     @FXML
@@ -58,9 +77,19 @@ public class DisplayMapSceneController {
     @FXML
     private Button saveGlobalTourButton;
     @FXML
-    private ChoiceBox<String> mapChoiceBox;
-    @FXML
     private TextField numberOfCourierField;
+    @FXML
+    private ChoiceBox<String> mapChoiceBox;
+
+    // Search bar menu
+    @FXML
+    private Button cancelResearch;
+    @FXML
+    private TextField searchBar;
+    @FXML
+    private ImageView numberOfBike;
+    @FXML
+    private HBox hBoxResearch;
 
     // Delivery point validation menu
     @FXML
@@ -98,21 +127,25 @@ public class DisplayMapSceneController {
 
     // Alert texts
     @FXML
-    private Text courierChangeAlert;
+    private Pane alertCourierChange;
     @FXML
-    private Pane alertPane;
+    private Pane alertMapChange;
+    @FXML
+    private Text mapChangeText;
+    @FXML
+    private Text courierChangeText;
 
     @FXML
     private void initialize() {
-        mapChoiceBox.setValue("Select a map  ");
-        mapChoiceBox.getItems().addAll("smallMap", "mediumMap", "largeMap");
+        mapChoiceBox.setValue("Map  ");
+        mapChoiceBox.getItems().addAll("small", "medium", "large");
 
         // Add a ChangeListener to the ChoiceBox to detect selection changes
         mapChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 // load the chosen map
-                String fileName = mapChoiceBox.getValue() + ".xml";
+                String fileName = mapChoiceBox.getValue() + "Map.xml";
                 controller.loadMap(fileName);
             }
         });
@@ -124,8 +157,9 @@ public class DisplayMapSceneController {
             if (numberOfCourierField.getText().equals("0")) {
                 numberOfCourierField.setText(previousNumberOfCourier);
             }
-
         });
+
+        searchBar.setPromptText("Search a street name...");
 
         timeWindowChoice.getItems().addAll(TimeWindow.EIGHT_NINE.getRepresentation(),
                 TimeWindow.NINE_TEN.getRepresentation(),
@@ -140,7 +174,99 @@ public class DisplayMapSceneController {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        alertPane.setVisible(false);
+        Tooltip tooltip = new Tooltip("Load a global tour");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(loadTourButton, tooltip);
+        tooltip = new Tooltip("Save the current tour");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(saveGlobalTourButton, tooltip);
+        tooltip = new Tooltip("Compute global tour");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(computeTourButton, tooltip);
+        tooltip = new Tooltip("Number of couriers available");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(numberOfBike, tooltip);
+
+        
+        tooltip = new Tooltip("Version : 1.0 \nAuthors : H4131 (ALFACATA)");
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setHideDelay(Duration.millis(100));
+        tooltip.setFont(javafx.scene.text.Font.font("Arial", 14));
+        Tooltip.install(logo, tooltip);
+
+        loadTourButton.setOnMouseEntered(this::onMouseEnteredLoad);
+        computeTourButton.setOnMouseEntered(this::onMouseEnteredCompute);
+        saveGlobalTourButton.setOnMouseEntered(this::onMouseEnteredSave);
+        loadTourButton.setOnMouseExited(this::onMouseExitedLoad);
+        computeTourButton.setOnMouseExited(this::onMouseExitedCompute);
+        saveGlobalTourButton.setOnMouseExited(this::onMouseExitedSave);
+        
+        
+        cancelResearch.setOnMouseEntered(this::onMouseEnteredCancel);
+        cancelResearch.setOnMouseExited(this::onMouseExitedCancel);
+
+        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition.setNode(bikeWheel);
+        rotateTransition.setDuration(Duration.seconds(2)); // Set the duration of the rotation
+        rotateTransition.setByAngle(360); // Rotate by 360 degrees (one full rotation)
+        rotateTransition.setCycleCount(RotateTransition.INDEFINITE); // Indefinite looping
+        rotateTransition.play();
+
+        // bikeWheel.setVisible(true);
+
+        alertCourierChange.setVisible(false);
+        alertMapChange.setVisible(false);
+    }
+
+    @FXML
+    void doCancelResearch(ActionEvent event) {
+        for (Node node : shapesPane.getChildren()) {
+            if (node instanceof SegmentLine) {
+                SegmentLine segment = (SegmentLine) node;
+                segment.setStroke(
+                        segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
+            }
+        }
+        searchBar.setText("");
+        searchBar.setPromptText("Search a street name...");
+
+    }
+
+    @FXML
+    void doSearch(KeyEvent event) {
+        // hide previous results
+        for (Node node : shapesPane.getChildren()) {
+            if (node instanceof SegmentLine) {
+                SegmentLine segment = (SegmentLine) node;
+                segment.setStroke(
+                        segment.getPreviousColor().equals(Color.BLUE) ? Color.WHITE : segment.getPreviousColor());
+            }
+        }
+
+        if (!searchBar.getText().equals("")) {
+            // show new results
+            for (Node node : shapesPane.getChildren()) {
+                if (node instanceof SegmentLine) {
+                    SegmentLine segment = (SegmentLine) node;
+                    String segmentName = Normalizer.normalize(segment.getSegment().getName(), Form.NFD)
+                            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                    String searchTextWithoutAccent = Normalizer.normalize(searchBar.getText(), Form.NFD)
+                            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+                    if (segmentName.toLowerCase().contains(searchTextWithoutAccent.toLowerCase())) {
+                        segment.setStroke(Color.BLUE);
+                    }
+
+                }
+            }
+        }
     }
 
     @FXML
@@ -151,11 +277,10 @@ public class DisplayMapSceneController {
             this.controller.changeNumberOfCourier(Integer.parseInt(numberOfCourierField.getText()));
 
             // Alert the user of the number of courier effectively changed
-            courierChangeAlert.setText(numberOfCourierField.getText());
-
-            fadeIn(alertPane);
+            courierChangeText.setText(numberOfCourierField.getText());
+            fadeIn(alertCourierChange);
             PauseTransition pause = new PauseTransition(Duration.seconds(2));
-            pause.setOnFinished(e -> fadeOut(alertPane));
+            pause.setOnFinished(e -> fadeOut(alertCourierChange));
             pause.play();
         }
     }
@@ -196,6 +321,7 @@ public class DisplayMapSceneController {
 
     @FXML
     void doComputeGlobalTour(ActionEvent event) {
+        bikeWheel.setVisible(true);
         controller.computeGlobalTour();
     }
 
@@ -206,6 +332,11 @@ public class DisplayMapSceneController {
 
     /*--------- Styling and animation methods ---------*/
 
+    /**
+     * Used to display a node with fading effect
+     * 
+     * @param node the node to display
+     */
     public void fadeIn(Node node) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), node);
         fadeIn.setFromValue(0);
@@ -214,6 +345,11 @@ public class DisplayMapSceneController {
         node.setVisible(true);
     }
 
+    /**
+     * Used to hide a node with fading effect
+     * 
+     * @param node the node to hide
+     */
     public void fadeOut(Node node) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
         fadeOut.setFromValue(1);
@@ -247,6 +383,62 @@ public class DisplayMapSceneController {
         node.setOnMouseExited(event -> inverseScaleTransition.play());
     }
 
+    public void onMouseEnteredLoad(MouseEvent event) {
+        Image image = new Image(getClass().getResourceAsStream("/h4131/open-white.png"));
+        ImageView imageView = new ImageView(image);
+        this.loadTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseEnteredCompute(MouseEvent event) {
+        Image image = new Image(getClass().getResourceAsStream("/h4131/play-white.png"));
+        ImageView imageView = new ImageView(image);
+        this.computeTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseEnteredSave(MouseEvent event) {
+        Image image = new Image(getClass().getResourceAsStream("/h4131/save-white.png"));
+        ImageView imageView = new ImageView(image);
+        this.saveGlobalTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseExitedLoad(MouseEvent event) {
+        Image image = new Image(getClass().getResourceAsStream("/h4131/open.png"));
+        ImageView imageView = new ImageView(image);
+        this.loadTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseExitedCompute(MouseEvent event) {
+        Image image = new Image(getClass().getResourceAsStream("/h4131/play.png"));
+        ImageView imageView = new ImageView(image);
+        this.computeTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseExitedSave(MouseEvent event) {
+        Image image = new Image(getClass().getResourceAsStream("/h4131/save.png"));
+        ImageView imageView = new ImageView(image);
+        this.saveGlobalTourButton.setGraphic(imageView);
+    }
+
+    public void onMouseEnteredCancel(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/red-cross.png"));
+        ImageView imageView = new ImageView(image); 
+        imageView.setFitWidth(30.0);
+        imageView.setFitHeight(30.0);
+        this.cancelResearch.setGraphic(imageView);
+    }
+
+    public void onMouseExitedCancel(MouseEvent event){
+        Image image = new Image(getClass().getResourceAsStream("/h4131/cross.png"));
+        ImageView imageView = new ImageView(image); 
+        imageView.setFitWidth(30.0);
+        imageView.setFitHeight(30.0);
+        this.cancelResearch.setGraphic(imageView);
+    }
+
+    public void setBikeWheelVisible(boolean bool){
+        this.bikeWheel.setVisible(bool);
+    }
+
     public int getPreviousCourierChoice() {
         return previousCourierChoice;
     }
@@ -271,8 +463,20 @@ public class DisplayMapSceneController {
         return this.validationButton;
     }
 
-    public Pane getvalidationPane() {
+    public Pane getValidationPane() {
         return this.validationPane;
+    }
+
+    public Pane getAlertMapChange() {
+        return this.alertMapChange;
+    }
+
+    public Pane getAlertCourierChange() {
+        return this.alertCourierChange;
+    }
+
+    public ChoiceBox<String> getMapChoiceBox() {
+        return this.mapChoiceBox;
     }
 
     public void setChoiceBoxValue(String value) {
@@ -303,8 +507,16 @@ public class DisplayMapSceneController {
         return modifyPane;
     }
 
+    public Text getMapChangeText() {
+        return this.mapChangeText;
+    }
+
     public ChoiceBox<String> getModifyTimeWindowChoice() {
         return modifyTimeWindowChoice;
+    }
+
+    public void setShapesPane(Pane newShapesPane) {
+        this.shapesPane = newShapesPane;
     }
 
     /**
@@ -545,4 +757,5 @@ public class DisplayMapSceneController {
             scroller.setVvalue(scroller.getVmin());
         }
     }
+
 }

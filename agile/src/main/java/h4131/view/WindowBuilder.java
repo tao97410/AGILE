@@ -19,6 +19,8 @@ import h4131.model.Tour;
 import h4131.observer.Observable;
 import h4131.observer.Observer;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -33,12 +35,14 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -60,7 +64,8 @@ public class WindowBuilder implements Observer {
     private double latMin;
     private double latMax;
 
-    private final Color[] colors = { Color.RED, Color.BLUE, Color.YELLOW, Color.BLUEVIOLET, Color.ORANGE, Color.GREEN};
+    private final Color[] colors = { Color.CHARTREUSE, Color.DARKSALMON, Color.DEEPPINK, Color.GOLD,Color.BLUEVIOLET, Color.TOMATO,
+            Color.GREEN, Color.AQUA, Color.RED, Color.DARKBLUE };
 
     /**
      * creates a window builder and displays the first scene of the application
@@ -95,6 +100,10 @@ public class WindowBuilder implements Observer {
                 IntersectionCircle circle = (IntersectionCircle) node;
                 circle.setFill(Color.TRANSPARENT);
                 circle.setRadius(2);
+            } else if (node instanceof Text) {
+                Text number = (Text) node;
+                number.setVisible(false);
+                number.setManaged(false);
             }
         }
         displayPointsOnMap();
@@ -160,6 +169,13 @@ public class WindowBuilder implements Observer {
 
     public void refreshNumberOfCourier(){
         displayMapSceneController.setNumberOfCourierFieldValue(String.valueOf(controller.getNumberOfCourier()));
+    }
+
+    public void setLoadingAnimation(boolean bool){
+        System.out.println("passe 1" + bool);
+        // disableBackground(bool);
+        displayMapSceneController.setBikeWheelVisible(bool);        
+        System.out.println("passe 2" + bool);
     }
 
     /**
@@ -256,6 +272,7 @@ public class WindowBuilder implements Observer {
             Tooltip.install(warehouse, tooltip);
 
             Group group = new Group(shapesPane);
+            displayMapSceneController.setShapesPane(shapesPane);
             Parent zoomPane = displayMapSceneController.createZoomPane(group);
             layout = displayMapSceneController.getLayout();
             layout.getChildren().setAll(zoomPane);
@@ -308,14 +325,15 @@ public class WindowBuilder implements Observer {
             }
         }
 
-        //drawing intersections order
-        for(Tour tour : globalTour.getTours()){
+        // drawing intersections order
+        for (Tour tour : globalTour.getTours()) {
             int deliveryNumber = 1;
-            for(DeliveryPoint delivery : tour.getDeliveryPoints()){
-                if(delivery.getTime()!=TimeWindow.WAREHOUSE){
+            for (DeliveryPoint delivery : tour.getDeliveryPoints()) {
+                if (delivery.getTime() != TimeWindow.WAREHOUSE) {
                     double lat = delivery.getPlace().getLatitude();
                     double longi = delivery.getPlace().getLongitude();
-                    double deliveryX = ((longi - longMin) / (longMax - longMin)) * screenHeight + (screenWidth - screenHeight) / 2;
+                    double deliveryX = ((longi - longMin) / (longMax - longMin)) * screenHeight
+                            + (screenWidth - screenHeight) / 2;
                     double deliveryY = screenHeight - ((lat - latMin) / (latMax - latMin)) * screenHeight;
                     Text deliveryOrder = new Text(String.valueOf(deliveryNumber));
                     deliveryOrder.setFont(Font.font("Calibri", FontWeight.BOLD, 4));
@@ -325,25 +343,28 @@ public class WindowBuilder implements Observer {
                     deliveryOrder.setY(deliveryY + deliveryOrder.getBoundsInLocal().getHeight() / 4);
                     shapesPane.getChildren().add(deliveryOrder);
                     deliveryOrder.setViewOrder(-1);
-                    deliveryNumber++; 
-                }      
+                    deliveryNumber++;
+                }
             }
         }
     }
 
+    /**
+     * Method called before printing new tour to hide the old one
+     */
     private void hideOldTour() {
-        for (Node node : shapesPane.getChildren()){
-            if (node instanceof SegmentLine){
+        for (Node node : shapesPane.getChildren()) {
+            if (node instanceof SegmentLine) {
                 SegmentLine segment = (SegmentLine) node;
-                if (segment.getStroke() != Color.WHITE) {
+                if (segment.getStroke() != Color.WHITE && segment.getStroke() != Color.BLUE) {
                     segment.setVisible(false);
                     segment.setManaged(false);
                 }
-            } else if (node instanceof Polygon){
+            } else if (node instanceof Polygon) {
                 Polygon arrow = (Polygon) node;
                 arrow.setVisible(false);
                 arrow.setManaged(false);
-            } else if(node instanceof Text){
+            } else if (node instanceof Text) {
                 Text number = (Text) node;
                 number.setVisible(false);
                 number.setManaged(false);
@@ -369,7 +390,7 @@ public class WindowBuilder implements Observer {
         whichIntersection.setText(
                 "Intersection coordinates:\n" + intersection.getLatitude() + "°, " + intersection.getLongitude() + "°");
         whichIntersection.setWrapText(true);
-        Pane validationPane = displayMapSceneController.getvalidationPane();
+        Pane validationPane = displayMapSceneController.getValidationPane();
         fadeIn(validationPane);
         validationPane.setDisable(false);
         disableBackground(true);
@@ -431,6 +452,7 @@ public class WindowBuilder implements Observer {
     private void addLine(double startX, double startY, double endX, double endY, Segment segment) {
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(Color.WHITE);
+        line.setPreviousColor(Color.WHITE);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
         Tooltip tooltip = new Tooltip("Name : " + segment.getName() + "\nLength : " + segment.getLength() + "m");
@@ -455,6 +477,7 @@ public class WindowBuilder implements Observer {
     private void addLineTour(double startX, double startY, double endX, double endY, int color, Segment segment) {
         SegmentLine line = new SegmentLine(startX, startY, endX, endY, segment);
         line.setStroke(colors[(color % colors.length)]);
+        line.setPreviousColor(colors[(color % colors.length)]);
         line.setStrokeWidth(2.0);
         line.setOnMouseEntered(displayMapSceneController::handleSegmentEntered);
         line.setOnMouseExited(displayMapSceneController::handleSegmentExited);
@@ -526,11 +549,11 @@ public class WindowBuilder implements Observer {
             if (!list.isEmpty()) {
                 VBox listDeliveryPoint = new VBox();
                 TitledPane titledPane = new TitledPane();
-                Rectangle rectangle = new Rectangle(17.5, 17.5, colors[(courier - 1) % colors.length]);
-                rectangle.setStroke(Color.BLACK);
+                Circle circle = new Circle(8.75, colors[(courier - 1) % colors.length]);
+                circle.setStroke(Color.BLACK);
                 Label title = new Label("Courier : " + courier);
                 HBox titleContent = new HBox(12);
-                titleContent.getChildren().addAll(rectangle, title);
+                titleContent.getChildren().addAll(circle, title);
                 titledPane.setGraphic(titleContent);
                 titledPane.setContent(listDeliveryPoint);
                 tourListGroup.getChildren().add(titledPane);
@@ -592,6 +615,9 @@ public class WindowBuilder implements Observer {
         disableBackground(true);
     }
 
+    /**
+     * Called by update to display the current delivery points on the map
+     */
     public void displayPointsOnMap() {
         Screen screen = Screen.getPrimary();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -624,20 +650,42 @@ public class WindowBuilder implements Observer {
         }
     }
 
-    /* Styling and animation methods */
-    public void fadeIn(Pane pane) {
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
+    /**
+     * Used to notify the user with a pane
+     * 
+     * @param pane the pane to show
+     */
+    public void alertMapChange(String mapSize) {
+        displayMapSceneController.getMapChangeText().setText(mapSize);
+        fadeIn(displayMapSceneController.getAlertMapChange());
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(e -> fadeOut(displayMapSceneController.getAlertMapChange()));
+        pause.play();
+    }
+
+    /**
+     * Used to display an element with fading
+     * 
+     * @param node the element to show
+     */
+    public void fadeIn(Node node) {
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), node);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.play();
-        pane.setVisible(true);
+        node.setVisible(true);
     }
 
-    public void fadeOut(Pane pane) {
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
+    /**
+     * Used to hide an element with fading
+     * 
+     * @param node the element to hide
+     */
+    public void fadeOut(Node node) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), node);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
         fadeOut.play();
-        pane.setVisible(false);
+        node.setVisible(false);
     }
 }

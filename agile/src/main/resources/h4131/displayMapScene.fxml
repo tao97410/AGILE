@@ -19,66 +19,117 @@
 <StackPane stylesheets="@stylePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="h4131.view.DisplayMapSceneController">
    <children>
       <VBox fx:id="layout" stylesheets="@styleMap.css" />
-      <Group disable="false" layoutX="100.0" visible="true" StackPane.alignment="TOP_LEFT">
-         <Pane fx:id="topLeftMenuPane" layoutX="-28.0" layoutY="-30.0" style="                   -fx-background-color: rgba(40, 40, 40, 0.96);                   -fx-padding: 10px;                   -fx-background-radius: 7px;">
-            <VBox alignment="CENTER" layoutX="10.0" spacing="15.0">
+      <Group StackPane.alignment="TOP_LEFT">
+         <StackPane.margin>
+            <Insets left="20.0" top="20.0" />
+         </StackPane.margin>
+         <children>
+            <Pane fx:id="logo" prefHeight="125.0" prefWidth="125.0">
+               <children>
+                  <ImageView fitHeight="105.0" fitWidth="105.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@main_logo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+         </children>
+      </Group>
+      <Group disable="false" visible="true" StackPane.alignment="TOP_LEFT">
+         <VBox fx:id="buttonList" alignment="CENTER" maxWidth="100.0" prefHeight="336.0" prefWidth="100.0" spacing="10.0">
             <children>
-               <Button fx:id="loadTourButton" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="40.0" prefWidth="175.0" text="Load a tour">
-                  <padding>
-                     <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
-                  </padding>
-                  <font>
-                     <Font name="System Bold" size="18.0" />
-                  </font>
+               <Button fx:id="loadTourButton" mnemonicParsing="false" onAction="#doLoadTour" prefHeight="30.0" prefWidth="30.0">
+                  <graphic>
+                     <ImageView fitHeight="50.0" fitWidth="50.0">
+                        <image>
+                           <Image url="@open.png" /> 
+                        </image>
+                     </ImageView>
+                  </graphic>
+               </Button>   
+               <Button fx:id="computeTourButton" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefHeight="30.0" prefWidth="30.0">
+                  <graphic>
+                     <ImageView fitHeight="50.0" fitWidth="50.0">
+                        <image>
+                           <Image url="@play.png" /> 
+                        </image>
+                     </ImageView>
+                  </graphic>
+               </Button>
+               <Button fx:id="saveGlobalTourButton" mnemonicParsing="false" onAction="#doSaveGlobalTour" prefHeight="30.0" prefWidth="30.0">
+                  <graphic>
+                     <ImageView fitHeight="50.0" fitWidth="50.0">
+                        <image>
+                           <Image url="@save.png" /> 
+                        </image>
+                     </ImageView>
+                  </graphic>
                </Button>
                <ChoiceBox fx:id="mapChoiceBox" prefHeight="40.0" prefWidth="175.0">
                   <padding>
                      <Insets bottom="4.0" left="7.0" right="7.0" top="5.0" />
                   </padding>  
-               </ChoiceBox>   
-               <Button fx:id="computeTourButton" mnemonicParsing="false" onAction="#doComputeGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Compute a global tour" textAlignment="CENTER">
-                  <padding>
-                     <Insets bottom="9.0" left="7.0" right="7.0" top="9.0" />
-                  </padding>
-                  <font>
-                     <Font name="System Bold" size="18.0" />
-                  </font></Button>
-               <Button fx:id="saveGlobalTourButton" maxHeight="40.0" mnemonicParsing="false" onAction="#doSaveGlobalTour" prefHeight="40.0" prefWidth="175.0" text="Save a global tour">
-                  <padding>
-                     <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
-                  </padding>
-                  <font>
-                     <Font name="System Bold" size="18.0" />
-                  </font></Button>
-               <HBox spacing="5.0">
-               <children>   
-                  <Text fill="WHITE" text="Number of courier(s) : " wrappingWidth="174.1578369140625">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font></Text>
-                  <TextField fx:id="numberOfCourierField" onKeyReleased="#onNumberOfCouriersChanged" prefWidth="30.0" />
-               </children> 
+               </ChoiceBox>
+               <HBox alignment="CENTER" maxWidth="75.0" prefWidth="75.0" spacing="5.0">
+                  <children>
+                     <TextField fx:id="numberOfCourierField" onKeyReleased="#onNumberOfCouriersChanged" prefHeight="26.0" prefWidth="36.0" />
+                     <ImageView fx:id="numberOfBike" fitHeight="43.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                           <Image url="@bike.png" />
+                        </image>
+                     </ImageView>
+                  </children> 
                </HBox> 
             </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>            
-            </VBox>
-         </Pane>
+            <padding>
+               <Insets left="5.0" right="5.0" top="10.0" />
+            </padding>            
+         </VBox>
          <StackPane.margin>
-            <Insets left="20.0" top="20.0" />
+            <Insets left="20.0" top="170.0" />
+         </StackPane.margin>
+      </Group>
+      <Group layoutY="10.0" StackPane.alignment="TOP_CENTER">
+         <HBox fx:id="hBoxResearch" alignment="CENTER" spacing="-10.0">
+            <children> 
+               <TextField fx:id="searchBar" onKeyReleased="#doSearch" prefHeight="48.0" prefWidth="250.0" /> 
+               <Button fx:id="cancelResearch" maxHeight="47.0" mnemonicParsing="false" onAction="#doCancelResearch" prefHeight="0.0" prefWidth="54.0">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0">
+                     <image>
+                        <Image url="@cross.png" /> 
+                     </image>
+                  </ImageView>
+               </graphic>
+                  </Button>   
+            </children>        
+         </HBox>
+         <StackPane.margin>
+            <Insets top="10.0" />
          </StackPane.margin>
       </Group>
       <Group layoutX="100.0" StackPane.alignment="TOP_CENTER">
-         <Pane fx:id="alertPane" prefHeight="68.0" prefWidth="424.0">
-            <Text fx:id="courierAlertTitle" layoutX="62.0" layoutY="43.0" text="Number of courier(s) set to : " textAlignment="CENTER">
+         <Pane fx:id="alertCourierChange" prefHeight="65.0" prefWidth="420.0" styleClass="alertPane">
+            <Text layoutX="62.0" layoutY="41.0" styleClass="alertText" text="Number of courier(s) set to : " textAlignment="CENTER">
             </Text>
-            <Text fx:id="courierChangeAlert" layoutX="366.0" layoutY="45.0" text="3" textAlignment="CENTER">
+            <Text fx:id="courierChangeText" layoutX="366.0" layoutY="42.0" styleClass="secondaryAlertText" textAlignment="CENTER">
             </Text>
          </Pane>
          
          <StackPane.margin>
-            <Insets top="20.0" />
+            <Insets top="30.0" />
+         </StackPane.margin>
+      </Group>
+      <Group layoutX="100.0" StackPane.alignment="TOP_CENTER">
+         <Pane fx:id="alertMapChange" prefHeight="65.0" prefWidth="420.0" styleClass="alertPane">
+            <Text layoutX="62.0" layoutY="41.0" styleClass="alertText" text="Map set to : " textAlignment="CENTER">
+            </Text>
+            <Text fx:id="mapChangeText" layoutX="270.0" layoutY="41.0" styleClass="secondaryAlertText" textAlignment="CENTER">
+            </Text>
+         </Pane>
+         
+         <StackPane.margin>
+            <Insets top="30.0" />
          </StackPane.margin>
       </Group>
       <Pane fx:id="validationPane" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" visible="false" StackPane.alignment="CENTER">
@@ -105,7 +156,7 @@
                <children>
                   <ImageView fitHeight="150.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@bike.png" />
+                        <Image url="@black-bike.png" />
                      </image>
                   </ImageView>
                   <ChoiceBox fx:id="courierChoice" prefWidth="150.0" />
@@ -136,7 +187,7 @@
                <children>
                   <ImageView fitHeight="150.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@bike.png" />
+                        <Image url="@black-bike.png" />
                      </image>
                   </ImageView>
                   <ChoiceBox fx:id="modifyCourierChoice" prefHeight="46.0" prefWidth="149.0" />
@@ -146,12 +197,26 @@
             <Button fx:id="deleteButton" layoutX="20.0" layoutY="240.0" mnemonicParsing="false" onAction="#deleteDeliveryPoint" text="Delete Point" />
          </children>
       </Pane>
-      <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT"><ScrollPane fx:id="scrollPane" maxHeight="1000.0"><VBox fx:id="tourListGroup" disable="false" visible="true">
+      <Group fx:id="groupScrollable" StackPane.alignment="TOP_RIGHT">
+         <ScrollPane fx:id="scrollPane" maxHeight="800.0">
+            <VBox fx:id="tourListGroup" disable="false" visible="true">
                <padding>
-                  <Insets right="10.0" />
-               </padding></VBox></ScrollPane>
+                  <Insets bottom="10.0" right="10.0" />
+               </padding>
+            </VBox>
+         </ScrollPane>
          <StackPane.margin>
             <Insets right="20.0" top="20.0" />
-         </StackPane.margin></Group>
+         </StackPane.margin>
+      </Group>
+      <Group fx:id="bikeWheel" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@bike-wheel.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
    </children>
 </StackPane>

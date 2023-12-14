@@ -58,7 +58,6 @@ public class InitialState implements State{
             if(maploaded){
                 XMLdeserializer.buildRestFromDOMXMLGT(file, loadedGlobalTour, c.getMap(), loadedCurrentDeliveryPoint);
                 c.setGlobalTour(loadedGlobalTour);
-                System.out.println("quand meme");
                 loadedCurrentDeliveryPoint.addObserver(w);
                 c.setCurrentDeliveryPoint(loadedCurrentDeliveryPoint);
                 c.getCurrentDeliveryPoint().update();
@@ -85,13 +84,11 @@ public class InitialState implements State{
 
             
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
-            if(!e.getMessage().equals("Problem when opening file")){
-                System.out.println("ici");
+            if (!e.getMessage().equals("Problem when opening file")) {
                 w.alert(e.getMessage());
                 e.printStackTrace();
             }
             w.setFullScreen(true);
-            
             
         } 
     }
@@ -104,6 +101,7 @@ public class InitialState implements State{
             c.setNameOfMap(fileName);
             c.getCurrentDeliveryPoint().empty(c.getNumberOfCourier());
             w.drawMap(newMap);
+            w.alertMapChange(fileName.substring(0, fileName.length() - "Map.xml".length()));
             c.setMap(newMap);
             return true;
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
@@ -115,22 +113,23 @@ public class InitialState implements State{
     }
 
     @Override
-    public void setNumberOfCourier(Controller c, WindowBuilder w, int numberOfCourier){
+    public void setNumberOfCourier(Controller c, WindowBuilder w, int numberOfCourier) {
         c.setNumberOfCourier(numberOfCourier);
         int size = c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().size();
-        if(size>numberOfCourier){
-            for(int i = size-1; i>=numberOfCourier; i--){
-                c.getCurrentDeliveryPoint().addAllNonAffectedDeliveryPoints(c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().get(i));
+        if (size > numberOfCourier) {
+            for (int i = size - 1; i >= numberOfCourier; i--) {
+                c.getCurrentDeliveryPoint().addAllNonAffectedDeliveryPoints(
+                        c.getCurrentDeliveryPoint().getAffectedDeliveryPoints().get(i));
                 c.getCurrentDeliveryPoint().removeLastCourier();
             }
-        }else{
-            for(int i = size; i<numberOfCourier; i++){
+        } else {
+            for (int i = size; i < numberOfCourier; i++) {
                 c.getCurrentDeliveryPoint().addNewCourier();
             }
         }
     }
     @Override
-    public void leftClick(Controller c, WindowBuilder windowBuilder, Long intersectionId){
+    public void leftClick(Controller c, WindowBuilder windowBuilder, Long intersectionId) {
         Map map = c.getMap();
         c.addDeliveryPointState.setCurrentIntersection(map.getIntersectionById(intersectionId));
         c.setCurrentState(c.addDeliveryPointState);
@@ -138,7 +137,8 @@ public class InitialState implements State{
     }
 
     @Override
-    public void modifyDeliveryPoint(Controller c, WindowBuilder windowBuilder, DeliveryPoint deliveryPoint, int courier){
+    public void modifyDeliveryPoint(Controller c, WindowBuilder windowBuilder, DeliveryPoint deliveryPoint,
+            int courier) {
         c.modifyDeliveryPointState.setCurrentDeliveryPoint(deliveryPoint);
         c.modifyDeliveryPointState.setCourier(courier);
         windowBuilder.openMenuModifyDeliveryPoint(c.getNumberOfCourier(), deliveryPoint, courier);
@@ -146,8 +146,8 @@ public class InitialState implements State{
     }
 
     @Override
-    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder){        
-        try{
+    public void computeGlobalTour(Controller c, WindowBuilder windowBuilder) {
+        try {
             c.setGlobalTour(new GlobalTour());
             c.setNameOfMap(c.getNameOfMap());
             c.getGlobalTour().setMap(c.getNameOfMap());
@@ -158,19 +158,21 @@ public class InitialState implements State{
                 if(!listDeliveryPoints.isEmpty()){
                 
                     Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
-                    graph.computeBestTour(c.getGlobalTour(),courier);    
+                    graph.computeBestTour(c.getGlobalTour(),courier);
                     c.addGraph(graph);
-                    if(graph.getDeliveryErreur()!=null){
-                        windowBuilder.alert("Calculation impossible on tour n°" + courier +" and on the time window : " + graph.getDeliveryErreur().getTime().getRepresentation());
+                    if (graph.getDeliveryErreur() != null) {
+                        windowBuilder.alert("Calculation impossible on tour n°" + courier + " and on the time window : "
+                                + graph.getDeliveryErreur().getTime().getRepresentation());
                     }
-                }
-                else{
+                } else {
                     c.getGlobalTour().addTour(new Tour());
                 }
-            }                
+            }
             windowBuilder.drawGlobalTour(c.getGlobalTour());
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             windowBuilder.alert("No path found. Check that every intersections are accessibles in both ways.");
+        }finally {            
+            windowBuilder.setLoadingAnimation(false);
         }
         windowBuilder.drawGlobalTour(c.getGlobalTour());
     }

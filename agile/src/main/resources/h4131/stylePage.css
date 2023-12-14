@@ -1,6 +1,27 @@
-.root { 
-    -fx-focus-color: transparent; 
+.root {
+    -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+
+.titled-pane {
+    -fx-effect: dropshadow(gaussian, #555555, 10, 0, 2, 2);
+}
+
+.titled-pane>.title {
+    -fx-background-color: cornflowerblue;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 7 20 7 20;
+}
+
+
+.titled-pane>.title>.arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.titled-pane>*.content {
+    -fx-background-insets: 0, 0 1 1 1;
+    -fx-padding: 0.167em;
 }
 
 /* ------- ChoiceBox styles ------- */
@@ -8,27 +29,39 @@
 ChoiceBox {
     -fx-font-size: 18px;
     -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-border-radius: 3px;
 }
 
 ChoiceBox:hover {
     -fx-cursor: hand;
-} 
+}
 
-#timeWindowChoice, #courierChoice, #modifyTimeWindowChoice, #modifyCourierChoice {
+#timeWindowChoice,
+#courierChoice,
+#modifyTimeWindowChoice,
+#modifyCourierChoice {
     -fx-border-color: black;
     -fx-border-width: 3px;
     -fx-border-radius: 3px;
 }
 
-ChoiceBox .menu-item:focused { -fx-background-color: rgb(150, 150, 150); }
-ChoiceBox .menu-item:focused > .label { -fx-text-fill: white; }
+
+ChoiceBox .menu-item:focused {
+    -fx-background-color: rgb(150, 150, 150);
+}
+
+ChoiceBox .menu-item:focused>.label {
+    -fx-text-fill: white;
+}
 
 /* ------- Pane styles ------- */
 
-#validationPane, #modifyPane{
+#validationPane,
+#modifyPane {
     -fx-background-color: white;
 }
+
+
 
 /* ------- Button styles ------- */
 
@@ -36,39 +69,96 @@ Button {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
     -fx-cursor: hand;
-    -fx-transition: all 0.3s; /* Add transition for all properties over 0.3 seconds */
+    -fx-transition: all 0.3s;
 }
 
-Button:hover, #mapChoiceBox:hover {
-    -fx-scale-x: 1.1; /* Scale effect on hover */
+#loadTourButton:hover, #computeTourButton:hover, #saveGlobalTourButton:hover ,
+#mapChoiceBox:hover {
+    -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
 }
 
-#loadTourButton, #computeTourButton {
-    -fx-background-color: linear-gradient(to bottom, rgb(25, 110, 205), rgba(30, 135, 250, 1));
-    -fx-text-fill: rgb(255, 255, 255);
+#hBoxResearch {
+    -fx-background-color: white;
+    -fx-background-radius:20px;
+    -fx-border-width: 5px;
+    -fx-border-radius: 7px;
+    -fx-border-color: rgb(100,149,237);
 }
 
-#validationButton, #modifyButton {
+#buttonList {
+    -fx-background-color: white;
+    -fx-background-radius: 25px;
+    -fx-border-radius: 6px;
+    -fx-border-width: 7px;
+    -fx-border-color: rgb(100, 149, 237);
+    -fx-padding: 15px;
+}
+
+#logo {
+    -fx-background-color: white;
+    -fx-background-radius: 25px;
+    -fx-border-radius: 6px;
+    -fx-border-width: 7px;
+    -fx-border-color: rgb(100, 149, 237);
+}
+
+#loadTourButton,
+#computeTourButton,
+#saveGlobalTourButton {
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-border-color: rgb(100, 149, 237);
+    -fx-border-width: 3px;
+    -fx-background-color: white;
+}
+
+#loadTourButton:hover,
+#computeTourButton:hover,
+#saveGlobalTourButton:hover {
+    -fx-background-color: rgb(100, 149, 237);
+    -fx-border-radius: 12px;
+}
+
+#cancelResearch {   
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0; 
+    -fx-background-radius: 5px;
+    -fx-background-color : white;
+}
+
+#searchBar :focused{
+    -fx-min-height:65;
+    -fx-min-width:300.0;
+}
+
+#searchBar {
+    -fx-background-radius: 5px;
+}
+
+#validationButton,
+#modifyButton {
     -fx-background-color: rgb(50, 140, 50);
     -fx-text-fill: white;
 }
 
-#cancelButton, #deleteButton {
+#cancelButton,
+#deleteButton {
     -fx-text-fill: white;
     -fx-background-color: rgb(255, 56, 56);
 }
 
 /* ------- Group styles ------- */
 
-#tourListGroup {    
-    -fx-margin:50px;
-    -fx-spacing:10px;
-} 
+#tourListGroup {
+    -fx-margin: 50px;
+    -fx-spacing: 10px;
+}
 
 #groupScrollable {
-    -fx-padding:10 50 0 0;
+    -fx-padding: 10 50 0 0;
 }
 
 /* ------- ScrollPane styles ------- */
@@ -77,7 +167,7 @@ Button:hover, #mapChoiceBox:hover {
     -fx-background-color: transparent;
 }
 
-#scrollPane > .viewport {
+#scrollPane>.viewport {
     -fx-background-color: transparent;
 }
 
@@ -87,38 +177,43 @@ Label {
     -fx-alignment: center;
 }
 
-DeliveryPointLabel:hover{
+DeliveryPointLabel:hover {
     -fx-cursor: hand;
     -fx-text-fill: red;
 }
 
 /* ------- Font styles ------- */
 
-#computeTourButton, #loadTourButton, #mapChoiceBox {
+#mapChoiceBox {
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: rgb(100, 149, 237);
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
 
-#saveGlobalTourButton {
-    -fx-background-color :white;
-    -fx-font-size: 17px;
-    -fx-font-weight: bold;
+ChoiceBox .menu-item:focused {
+    -fx-background-color: rgb(150, 150, 150);
 }
 
-#alertPane {
+ChoiceBox .menu-item:focused>.label {
+    -fx-text-fill: white;
+}
+
+.alertPane {
     -fx-padding: 10px;
     -fx-background-radius: 10px;
     -fx-background-color: rgba(255, 255, 255, 0.90);
 }
 
-#courierChangeAlert {
-    -fx-fill: rgb(25, 110, 205);
-    -fx-font-weight : bold;
-    -fx-font-size : 24px;
+.alertText {
+    -fx-fill: rgb(30, 30, 30);
+    -fx-font-weight: bold;
+    -fx-font-size: 22px;
 }
 
-#courierAlertTitle {
-    -fx-fill: rgb(30, 30, 30);
-    -fx-font-weight : bold;
-    -fx-font-size : 22px;
+.secondaryAlertText {
+    -fx-fill: rgb(25, 110, 205);
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
 }
