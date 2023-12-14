@@ -105,7 +105,6 @@ public class InitialState implements State{
             c.setMap(newMap);
             return true;
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
-            System.out.println("plutot la");
             w.alert(e.getMessage());
             e.printStackTrace();
             return false;
