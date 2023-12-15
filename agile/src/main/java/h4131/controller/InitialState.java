@@ -151,10 +151,16 @@ public class InitialState implements State{
                     Graph graph = c.getMap().getGraphFromPoints(listDeliveryPoints);
                     graph.computeBestTour(c.getGlobalTour(),courier);
                     c.addGraph(graph);
-                    if (graph.getDeliveryErreur() != null) {
+                    if(graph.getTimeExceeded()==true){
+                        windowBuilder.alert("Time exceeded for the tour n° "+ courier+". Calculation was not possible and tour is not displayed.");
+                        c.getGlobalTour().addTour(new Tour());
+       
+                    }
+                    else if (graph.getDeliveryErreur() != null) {
                         windowBuilder.alert("Calculation impossible on tour n°" + courier + " and on the time window : "
                                 + graph.getDeliveryErreur().getTime().getRepresentation());
                     }
+                    
                 } else {
                     c.getGlobalTour().addTour(new Tour());
                 }

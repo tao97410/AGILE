@@ -27,6 +27,7 @@ public class Graph implements TemplateGraph{
     private DeliveryPoint deliveryErreur;
     private int sizeNbTimeWindow;
     private DeliveryPoint[] tabDeliveryPoint;
+    private boolean timeExceeded=false;
 
     public Graph() {
         nodes = new ArrayList<>();
@@ -142,11 +143,16 @@ public class Graph implements TemplateGraph{
                 +(System.currentTimeMillis() - startTime)+"ms : ");
         this.nodes=tabToCollection(tsp.getSolution());
         this.arcs=findArc(this.nodes);
-        Tour tour=new Tour();
-        tour.setCourse(this.buildCourse());
-        tour.setCourier(courier);
-        tour.setDeliveryPoints(new ArrayList<>(this.nodes));
-        globalTour.addTour(tour);
+        this.timeExceeded=tsp.getTimeExceeded();
+        if(!timeExceeded){
+            Tour tour=new Tour();
+            tour.setCourse(this.buildCourse());
+            tour.setCourier(courier);
+            tour.setDeliveryPoints(new ArrayList<>(this.nodes));
+            globalTour.addTour(tour);
+
+        }
+        
 
     }
 
@@ -325,6 +331,13 @@ public class Graph implements TemplateGraph{
     public double getWindow(int firstOrLast,Integer i){
         return timeWindow[i][firstOrLast];
     }
+
+    @Override
+    public boolean getTimeExceeded(){
+        return this.timeExceeded;
+    }
+
+
 
     
 

@@ -50,4 +50,6 @@ public interface TemplateGraph {
 	public abstract DeliveryPoint getTabDeliveryPoint(int index);
 
 	public abstract DeliveryPoint getWareHouse();
+
+	public boolean getTimeExceeded();
 }

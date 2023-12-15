@@ -63,12 +63,8 @@ public class SeqIter {
 	 *@return true if the currentWindow's column of candidates is empty(full of -1), false otherwise
 	 */
 	public boolean isEmpty(){
-		for(Integer i:candidates[currentWindow]){
-			if(i!=null && i!=-1){
-				return false;
-			}
-		}
-		return true;
+		
+		return unvisited.getNbCandidateTotal(currentWindow)==0;
 	}
 
 	/**
@@ -86,16 +82,22 @@ public class SeqIter {
 	/**
   	 * This method has been conceived especially for the 2D tab candidates
 	 * @return -1 if the next candidate doesn't exist and the candidate otherwise and place
-	 * the iterator on the next candidate
+	 * the iterator on the next candidate if there is one
 	 */
 	private int putFollowingCandidate(){
+		int memNbCandidate=nbCandidates[currentWindow];
+		Integer folowingCandidate=-1;
 		for(int i=nbCandidates[currentWindow]-1;i>=0;i--){
 			nbCandidates[currentWindow]-=1;
 			if(candidates[currentWindow][i]!=-1){
-				return candidates[currentWindow][i];
+				folowingCandidate= candidates[currentWindow][i];
+				break;
 			}
 		}
-		return -1;
+		if(folowingCandidate==-1){
+			nbCandidates[currentWindow]=memNbCandidate;
+		}
+		return folowingCandidate;
 	}
 
 	/**
@@ -103,14 +105,15 @@ public class SeqIter {
 	 * @return the followingCandidate in candidates 
 	 */
 	public Integer next() {
-		if(followingCandidate()==-1){
-			while(followingCandidate()==-1){
+
+		Integer folowingCandidate;
+		while((folowingCandidate=putFollowingCandidate())==-1){
 				currentWindow++;
 
-			}
+		
 			
 		}
-		return putFollowingCandidate();
+		return folowingCandidate;
 	}
 	
 	/**
@@ -122,7 +125,7 @@ public class SeqIter {
 		// int window=g.getWindow(deliveryPoint).ordinal()-1;
 		Integer elemDelete=candidates[currentWindow][nbCandidates[currentWindow]];
 		candidates[currentWindow][nbCandidates[currentWindow]]=-1;
-		
+		unvisited.reduceNbCandidateTotal(currentWindow);
 		return elemDelete;
 	}
 
@@ -131,7 +134,9 @@ public class SeqIter {
 	 * @param deliveryPoint to add
 	 */
 	public void addFollowing(Integer deliveryPoint){
+
 		int window=g.getWindow(deliveryPoint).ordinal()-1;
+		unvisited.addNbCandidateTotal(window);
 		candidates[window][nbCandidates[window]]=deliveryPoint;
 	}
 

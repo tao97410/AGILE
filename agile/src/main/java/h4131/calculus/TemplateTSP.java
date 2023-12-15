@@ -13,6 +13,7 @@ public abstract class TemplateTSP implements TSP {
 	protected long startTime;
 	protected int indexDeliveryError;
 	private int maxnbVisitedNodes=0;
+	private boolean timeExceeded=false;
 	
 
 
@@ -22,7 +23,10 @@ public abstract class TemplateTSP implements TSP {
 	 * @param g the completeGraph for which we want to search a solution
 	 */	
 	public void searchSolution(int timeLimit, Graph g){
-		if (timeLimit <= 0) return;
+		if (timeLimit <= 0){
+			return;
+		}
+		
 		startTime = System.currentTimeMillis();	
 		this.timeLimit = timeLimit;
 		this.g = g;
@@ -49,7 +53,10 @@ public abstract class TemplateTSP implements TSP {
 	 */	
 	private void branchAndBound(int currentVertex, Unvisited unvisited, 
 		Collection<Integer> visited, double currentCost,double time,int nbVisitedNodes){
-		if (System.currentTimeMillis() - startTime > timeLimit) return;
+		if (System.currentTimeMillis() - startTime > timeLimit) {
+			this.timeExceeded=true;
+			return;
+		}
 		SeqIter it=new SeqIter(unvisited, g,currentVertex);
 	    if (!it.hasNext()){ 
 	    	if(g.getCost(currentVertex,0)==Double.MAX_VALUE && nbVisitedNodes>=this.maxnbVisitedNodes){
@@ -135,6 +142,9 @@ public abstract class TemplateTSP implements TSP {
 
 	public void setBestSolCost(double bestSolCost) {
 		this.bestSolCost = bestSolCost;
+	}
+	public boolean getTimeExceeded(){
+		return this.timeExceeded;
 	}
 
 
